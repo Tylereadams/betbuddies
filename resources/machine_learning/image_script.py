@@ -52,10 +52,8 @@ def getDirectoryData(path):
 
 	return directoryData
 
-# Change the directory to the script's path
-abspath = os.path.abspath(__file__)
-dname = os.path.dirname(abspath)
-os.chdir(dname)
+# Change the directory to this script's path
+os.chdir(os.path.dirname(os.path.abspath(__file__)))
 
 ImageToCheckPath = sys.argv[1]
 dataPath = os.getcwd() + '/data/' + sys.argv[2]
@@ -100,14 +98,14 @@ if(diff > 0):
 		if(len(imageToCheck) > clf.n_features_):
 			imageToCheck.pop(i) # Remove the difference if image has more
 		else:
-			imageToCheck.append(255) # Add black (255) if image has less
+			imageToCheck.append(0) # Add white (0) if image has less
 
 predicted = clf.predict([imageToCheck]) # [1]
 
 #move to folder that it predicted
-if(predicted == 1):
-	os.rename(testPath, goodDestination)
-else:
-	os.rename(testPath, badDestination)
+#if(predicted == 1):
+#	os.rename(testPath, goodDestination)
+#else:
+#	os.rename(testPath, badDestination)
 
 print(predicted)

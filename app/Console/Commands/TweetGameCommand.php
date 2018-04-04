@@ -41,6 +41,7 @@ class TweetGameCommand extends Command
     {
         $date = Carbon::parse($this->argument('date'));
 
+        // Add buffer time for game so that we get games past midnight
         $minDate = $date->subHours(6)->format('Y-m-d H:i:s');
         $maxDate = $date->addHours(4)->format('Y-m-d H:i:s');
 
