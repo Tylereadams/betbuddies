@@ -27,8 +27,8 @@ def getFileData(filePath):
 
 		# At this point the image's pixels are all in memory and can be accessed
 		# individually using data[row][col].
-		os.remove(filePath)
-		
+		#os.remove(filePath)
+
 		arr = array(img)
 
 		imgValues = []
@@ -102,9 +102,9 @@ if(diff > 0):
 predicted = clf.predict([imageToCheck]) # [1]
 
 #move to folder that it predicted
-#if(predicted == 1):
-#	os.rename(tempPath, goodDestination)
-#else:
-#	os.rename(tempPath, badDestination)
+if(predicted == 1):
+	os.rename(tempPath, goodDestination)
+else:
+	os.rename(tempPath, badDestination)
 
 print(predicted)
