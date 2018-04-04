@@ -10,6 +10,7 @@ import urllib
 # Returns data about the file given
 def getFileData(filePath):
 		
+		# Remote file, so save it temporarily
 		if(filePath.startswith("http")):
 			newFilename = os.path.basename(filePath);
 			urllib.urlretrieve(filePath, 'data/temp/' + newFilename)
@@ -17,7 +18,6 @@ def getFileData(filePath):
 
 		# convert image to 8-bit grayscale
 		img = Image.open(filePath).convert('L')
-
 		WIDTH, HEIGHT = img.size
 		
 		img = img.resize([400,400],Image.ANTIALIAS)
@@ -27,7 +27,8 @@ def getFileData(filePath):
 
 		# At this point the image's pixels are all in memory and can be accessed
 		# individually using data[row][col].
-
+		os.remove(filePath)
+		
 		arr = array(img)
 
 		imgValues = []
@@ -59,15 +60,13 @@ ImageToCheckPath = sys.argv[1]
 dataPath = os.getcwd() + '/data/' + sys.argv[2]
 imageToCheck = getFileData(ImageToCheckPath)
 imageFileName = os.path.basename(ImageToCheckPath)
-testPath = os.getcwd() + "/data/temp/" + os.path.basename(ImageToCheckPath)
+tempPath = os.getcwd() + "/data/temp/" + os.path.basename(ImageToCheckPath)
 goodDestination = dataPath + "/good/" + imageFileName
 badDestination = dataPath + "/bad/" + imageFileName
 goodLabels = []
 badLabels = []
 size = 100, 100 # max size of image
-goodTestValues = []
 goodTestValues = getDirectoryData(dataPath + '/good/')
-badTestValues = []
 badTestValues = getDirectoryData(dataPath + '/bad/')
 
 # Setup the training data
@@ -104,8 +103,8 @@ predicted = clf.predict([imageToCheck]) # [1]
 
 #move to folder that it predicted
 #if(predicted == 1):
-#	os.rename(testPath, goodDestination)
+#	os.rename(tempPath, goodDestination)
 #else:
-#	os.rename(testPath, badDestination)
+#	os.rename(tempPath, badDestination)
 
 print(predicted)

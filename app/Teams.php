@@ -86,7 +86,7 @@ class Teams extends Model
 
             // Check the original tweet if this is a retweet, assign it if that's what we want
             if(isset($tweet->retweeted_status)){
-                $tweet = Twitter::getTweet($tweet->retweeted_status->id, ['include_entities' => 1, 'trim_user' => 1, 'tweet_mode=extended' => 1]);
+                $tweet = Twitter::getTweet($tweet->retweeted_status->id, ['include_entities' => 1, 'trim_user' => 1]);
                 if(!$tweet){
                     continue;
                 }
@@ -186,6 +186,7 @@ class Teams extends Model
 
         $output = str_replace(array("\n", ""), '', $process->getOutput());
 
+        // output is a string: "[0]" or "[1]"
         return (bool) $output[1];
     }
 }
