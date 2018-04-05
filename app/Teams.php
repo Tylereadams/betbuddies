@@ -70,6 +70,8 @@ class Teams extends Model
             'secret' => env('TWITTER_ACCESS_TOKEN_SECRET'.$this->getKey())
         ]);
 
+        $this->clearTweets();
+        dd($this);
         echo 'Getting tweets from '.$this->twitter."\n";
         // Get only videos from this team, including both got the order off.
         $timeline = $this->getTimeline([$this->twitter]);
@@ -145,7 +147,7 @@ class Teams extends Model
 
         // Merge and sort collection by most recent
 //        return $timelines[0]->merge($timelines[1])->sortByDesc('created_at');
-        return collect(Twitter::getUserTimeline(['screen_name' => $teamHandles[0], 'count' => 20, 'include_entities' => 1]))->sortByDesc('created_at');
+        return collect(Twitter::getUserTimeline(['screen_name' => $teamHandles[0], 'count' => 200, 'include_entities' => 1]))->sortByDesc('created_at');
     }
 
     private function isValidTweet($tweet, $game)

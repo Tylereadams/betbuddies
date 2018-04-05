@@ -30,7 +30,7 @@ class Kernel extends ConsoleKernel
                   ->monthly(1, '3:00');
 
         // Update games for today
-        $schedule->command('betbuddies:import-games today')
+        $schedule->command('betbuddies:import-games')
             ->everyFiveMinutes();
 
         // Keep the schedule up to date a week in advance

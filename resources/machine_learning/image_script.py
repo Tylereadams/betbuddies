@@ -61,8 +61,6 @@ dataPath = os.getcwd() + '/data/' + sys.argv[2]
 imageToCheck = getFileData(ImageToCheckPath)
 imageFileName = os.path.basename(ImageToCheckPath)
 tempPath = os.getcwd() + "/data/temp/" + os.path.basename(ImageToCheckPath)
-goodDestination = dataPath + "/good/" + imageFileName
-badDestination = dataPath + "/bad/" + imageFileName
 goodLabels = []
 badLabels = []
 size = 100, 100 # max size of image
@@ -102,9 +100,9 @@ if(diff > 0):
 predicted = clf.predict([imageToCheck]) # [1]
 
 #move to folder that it predicted
-if(predicted == 1):
-	os.rename(tempPath, goodDestination)
-else:
-	os.rename(tempPath, badDestination)
+# if(predicted == 1):
+# 	os.rename(tempPath, dataPath + "/good/" + imageFileName)
+# else:
+# 	os.rename(tempPath, dataPath + "/bad/" + imageFileName)
 
 print(predicted)
