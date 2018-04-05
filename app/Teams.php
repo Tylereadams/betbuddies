@@ -69,9 +69,7 @@ class Teams extends Model
             'token' => env('TWITTER_ACCESS_TOKEN'.$this->getKey()),
             'secret' => env('TWITTER_ACCESS_TOKEN_SECRET'.$this->getKey())
         ]);
-
-        $this->clearTweets();
-        dd($this);
+        
         echo 'Getting tweets from '.$this->twitter."\n";
         // Get only videos from this team, including both got the order off.
         $timeline = $this->getTimeline([$this->twitter]);
