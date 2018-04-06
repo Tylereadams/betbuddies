@@ -46,6 +46,11 @@ class ImportGames extends Command
     {
         $date = $this->argument('date');
 
+        // If it's 3am or earlier, get last night's games instead. Those could still be playing
+        if($date == 'now' && date('H') < 3){
+            $date = 'yesterday';
+        }
+
         $leagues = Leagues::all();
         // Update each league's games
         foreach($leagues as $league){
