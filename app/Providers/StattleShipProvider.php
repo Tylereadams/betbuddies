@@ -51,9 +51,9 @@ class StattleShipProvider extends ServiceProvider
      * @param $startDate
      * @return array
      */
-    public function getGames(Leagues $league, $since = 'yesterday')
+    public function getGames(Leagues $league, $date = 'now')
     {
-        $res = $this->client->request('GET', $league->long_name.'/'.$league->name.'/games?on='.$since);
+        $res = $this->client->request('GET', $league->long_name.'/'.$league->name.'/games?on='.$date);
         $results = json_decode($res->getBody());
 
         if(!$results->games){
