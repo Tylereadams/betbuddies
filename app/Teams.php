@@ -42,7 +42,7 @@ class Teams extends Model
      */
     public function logoUrl()
     {
-        return asset('img/logos/'.str_slug($this->nickname.' '.$this->league).'.png');
+        return asset('img/logos/'.str_slug($this->nickname.' '.$this->league->name).'.png');
     }
 
     public function getKey()
@@ -145,7 +145,7 @@ class Teams extends Model
 
         // Merge and sort collection by most recent
 //        return $timelines[0]->merge($timelines[1])->sortByDesc('created_at');
-        return collect(Twitter::getUserTimeline(['screen_name' => $teamHandles[0], 'count' => 10, 'include_entities' => 1]))->sortByDesc('created_at');
+        return collect(Twitter::getUserTimeline(['screen_name' => $teamHandles[0], 'count' => 20, 'include_entities' => 1]))->sortByDesc('created_at');
     }
 
     private function isValidTweet($tweet, $game)
@@ -176,7 +176,7 @@ class Teams extends Model
         }
         $path = $tweet->extended_entities->media[0]->media_url;
 
-        $process = new Process("python resources/machine_learning/image_script.py ".$path." ".$leagueName);
+        $process = new Process("python storage/machine_learning/image_script.py ".$path." ".$leagueName);
         $process->run();
 
         // executes after the command finishes

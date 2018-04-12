@@ -100,9 +100,9 @@ if(diff > 0):
 predicted = clf.predict([imageToCheck]) # [1]
 
 #move to folder that it predicted
-# if(predicted == 1):
-# 	os.rename(tempPath, dataPath + "/good/" + imageFileName)
-# else:
-# 	os.rename(tempPath, dataPath + "/bad/" + imageFileName)
+if(predicted == 1):
+	os.rename(tempPath, dataPath + "/good/" + imageFileName)
+else:
+	os.rename(tempPath, dataPath + "/bad/" + imageFileName)
 
 print(predicted)
