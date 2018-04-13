@@ -64,7 +64,6 @@ class ImportGames extends Command
             // Update games
             $gamesUpdated = [];
             foreach($games as $game) {
-
                 $gamesUpdated[] = Games::updateOrCreate([
                     'home_team_id' => $game['home_team_id'],
                     'away_team_id' => $game['away_team_id'],
@@ -74,6 +73,7 @@ class ImportGames extends Command
                     'league_id' => $game['league_id'],
                     'home_score' => $game['home_score'],
                     'away_score' => $game['away_score'],
+                    'broadcast' => $game['broadcast'],
                     'ended_at' => $game['ended_at']
                 ]);
             }

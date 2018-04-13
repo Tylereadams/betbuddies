@@ -104,6 +104,7 @@ class StattleShipProvider extends ServiceProvider
             'away_score'    => $game->status == 'upcoming' ? null : $game->away_team_score,
             'league_id'     => $league->id,
             'period'        => (int) $game->period,
+            'broadcast'     => $game->broadcast,
             'ended_at'      => $game->ended_at ? Carbon::parse($game->ended_at)->timezone('America/New_York')->format('Y-m-d H:i:s') : null,
             'start_date'    => Carbon::parse($game->started_at, $homeTeam->timezone)->timezone('America/New_York')->format('Y-m-d H:i:s')
         ];

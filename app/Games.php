@@ -8,7 +8,7 @@ use Carbon\Carbon;
 class Games extends Model
 {
 
-    protected $fillable = ['home_team_id', 'home_score', 'away_team_id', 'away_score', 'league_id', 'ended_at', 'start_date'];
+    protected $fillable = ['home_team_id', 'home_score', 'away_team_id', 'away_score', 'league_id', 'broadcast', 'ended_at', 'start_date'];
 
     protected $primaryKey = 'id';
 
