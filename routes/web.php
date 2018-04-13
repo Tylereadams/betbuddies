@@ -14,9 +14,11 @@
 // Normal Routes
 Route::get('/', 'PagesController@index');
 Route::get('/home', 'HomeController@index')->name('home');
-Route::get('/games', 'GamesController@games');
-Route::get('/game/{urlSegment}', 'GamesController@game');
+Route::get('/games/{date?}', 'GamesController@games');
 Route::resource('bets', 'BetsController');
+
+Route::get('machine-learning', 'MachineLearningController@index');
+Route::post('tweets/{tweetId}/save', 'MachineLearningController@store');
 
 
 Route::get('login', 'Auth\LoginController@showLoginForm')->name('login');
@@ -31,7 +33,9 @@ Route::post('register', 'Auth\RegisterController@register');
  */
 Route::group(['middleware' => ['auth']], function () {
 
-    Route::post('bets/accept/{$betId}', 'BetsController@accept');
+    Route::post('bets/accept/{$betId}', 'BetsController@accept')->name('bet.accept');
+    Route::get('/game/{urlSegment}', 'GamesController@game')->name('game');
+    Route::post('/game/{urlSegment}', 'BetsController@store');
 
     Route::get('logout', 'Auth\LoginController@logout')->name('logout');
 // Password Reset Routes...

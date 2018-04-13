@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Redirect;
 
 class BetsController extends Controller
 {
@@ -71,7 +72,7 @@ class BetsController extends Controller
 
         Session::flash('message', 'Bet created!');
 
-        return \Redirect::route('game', ['urlSegment' => $userBet->game->url_segment]);
+        return redirect()->route('game', ['urlSegment' => $userBet->game->url_segment]);
     }
 
     /**

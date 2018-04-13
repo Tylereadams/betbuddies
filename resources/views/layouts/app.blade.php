@@ -18,7 +18,7 @@
 
 </head>
 <body>
-    <div id="app">
+    <div class="container">
         @include('partials.nav')
         @include('partials.errors')
         @yield('content')
@@ -31,8 +31,8 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
 
 
-    <!-- Scripts -->
-    <script src="{{ asset('js/app.js') }}"></script>
+    {{--<!-- Scripts -->--}}
+    {{--<script src="{{ asset('js/app.js') }}"></script>--}}
 
     <!-- Optional JavaScript -->
     <script defer src="https://use.fontawesome.com/releases/v5.0.8/js/all.js"></script>

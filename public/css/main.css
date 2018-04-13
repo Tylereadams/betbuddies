@@ -1,6 +1,49 @@
 .avatar {
     vertical-align: middle;
-    width: 40px;
-    height: 40px;
+    width: 25px;
+    height: 25px;
     border-radius: 50%;
 }
+
+.scrolling-wrapper {
+    overflow-x: scroll;
+    overflow-y: hidden;
+    white-space: nowrap;
+    -webkit-overflow-scrolling: touch;
+}
+
+.card {
+    display: inline-block;
+}
+
+td a {
+    color:#000000 !important;
+    text-decoration:none !important;
+}
+
+html, body {
+    background-color: #fff;
+    color: #636b6f;
+    font-family: 'Raleway', sans-serif;
+    font-weight: 200 !important;
+    font-size: 0.9em;
+}
+
+
+.bet-input__amount {
+    width: 100px;
+}
+
+.bet-input__spread {
+    width: 120px;
+}
+
+.clickable {
+    cursor: pointer;
+}
+
+.fa-plus-circle.success {
+    color: #28a745;
+    font-size: 15px;
+}
+

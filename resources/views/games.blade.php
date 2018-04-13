@@ -2,12 +2,17 @@
 
 @section('content')
     <div class="container">
-        <small class="text-muted">{{ $date }}</small>
-        @if(count($gamesByLeague))
+        <div class="p-2">
+            <a href="{{ url('games', ['date' => $yesterday]) }}"><i class="fas fa-angle-left"></i></a>
+            <small class="text-muted">{{ $date }}</small>
+            <a href="{{ url('games', ['date' => $tomorrow]) }}"><i class="fas fa-angle-right"></i></a>
+        </div>
+
+    @if(count($gamesByLeague))
             <nav>
                 <div class="nav nav-tabs" id="nav-tab" role="tablist">
                     @foreach(array_keys($gamesByLeague) as $key => $league)
-                        <a class="nav-item nav-link {{ $selectedLeague == $league ? 'active' : '' }}" id="nav-{{ $league }}-tab" data-toggle="tab" href="#nav-{{ $league }}" role="tab" aria-controls="nav-{{ $league }}" aria-selected="true">{{ $league }}</a>
+                        <a class="nav-item nav-link {{ $selectedLeague == $league ? 'active' : '' }}" id="nav-{{ $league }}-tab" data-toggle="tab" href="#nav-{{ $league }}" role="tab" aria-controls="nav-{{ $league }}" aria-selected="true">{{ strtoupper($league) }}</a>
                     @endforeach
                 </div>
             </nav>
@@ -25,20 +30,22 @@
                                             <img src="{{ $game['awayTeam']['thumbUrl'] }}" class="avatar">&nbsp;{{ $game['awayTeam']['name'] }}
                                         </a>
                                     </td>
-                                    @if($game['status'] != 'locked')
                                     <td class="align-middle">
-                                        {{ $game['startTime'] }}
+                                        @if($game['status'] == 'upcoming')
+                                            {{ $game['startTime'] }}
+                                        @endif
+                                        @if($game['status'] == 'in progress' || $game['status'] == 'ended')
+                                           {{ $game['homeTeam']['score'] }}<br>
+                                           {{ $game['awayTeam']['score'] }}
+                                        @endif
                                     </td>
-                                    @else
                                     <td class="align-middle">
-                                        {{ $game['homeTeam']['score'] }}<br>
-                                        {{ $game['awayTeam']['score'] }}
+                                        @if($game['status'] == 'ended')
+                                            Final {{ $game['startTime'] }}
+                                        @elseif($game['status'] == 'in progress' && $game['period'])
+                                            {{ $game['period'] }}
+                                        @endif
                                     </td>
-                                    @endif
-
-                                    @if($game['endedAt'])
-                                        <td class="align-middle">Final</td>
-                                    @endif
                                 </tr>
                             @endforeach
                             </tbody>

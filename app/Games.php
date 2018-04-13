@@ -15,6 +15,7 @@ class Games extends Model
     const UPCOMING = 1;
     const IN_PROGRESS = 2;
     const ENDED = 3;
+    const POSTPONED = 4;
 
     /**
      * Register any events for this model.
@@ -86,24 +87,24 @@ class Games extends Model
 
         return $this->url_segment;
     }
-    
 
-    /**
-     * returns status of a games.
-     * @return string
-     */
-    public function getStatus()
+    public function statusName()
     {
-        $status = 'locked';
-        switch(true){
-            case strtotime('now') > Carbon::parse($this->start_date)->timestamp:
-                $status = 'locked';
+        switch($this->status){
+            case GAMES::UPCOMING:
+                $status = 'upcoming';
                 break;
-            case is_null($this->home_score) || is_null($this->away_score):
-                $status = 'pending';
+            case GAMES::IN_PROGRESS:
+                $status = 'in progress';
+                break;
+            case GAMES::ENDED:
+                $status = 'ended';
+                break;
+            case GAMES::POSTPONED:
+                $status = 'postponed';
                 break;
             default:
-                $status = 'locked';
+                $status = 'upcoming';
         }
 
         return $status;
@@ -149,7 +150,7 @@ class Games extends Model
                 'periodLabel' => $this->league->period_label
             ],
             'period' => $this->period ? ordinalNumber($this->period) : null,
-            'status' => $this->getStatus(),
+            'status' => $this->statusName(),
             'urlSegment'  => $this->urlSegment(),
             // TODO: Use the actual game location instead, needs to be imported.
             'location' => $this->homeTeam->location,
@@ -161,7 +162,8 @@ class Games extends Model
                     return  $color->hex;
                 }),
                 'thumbUrl' => $this->homeTeam->logoUrl(),
-                'spread' => (int) $this->getTeamSpread('home')
+                'spread' => (int) $this->getTeamSpread('home'),
+                'isWinner' => $this->home_score > $this->away_score && ($this->ended_at) ? 1 : 0
             ],
             'awayTeam' => [
                 'id'    => $this->awayTeam->id,
@@ -171,7 +173,8 @@ class Games extends Model
                 'colors'    => $this->awayTeam->colors->map(function($color){
                     return  $color->hex;
                 }),
-                'spread' => (int) $this->getTeamSpread('away')
+                'spread' => (int) $this->getTeamSpread('away'),
+                'isWinner' => $this->away_score > $this->home_score && ($this->ended_at) ? 1 : 0
             ],
             'bets' => $this->bets->map(function($bet){
                 return $bet->getCardData();

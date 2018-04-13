@@ -18,7 +18,10 @@ class TeamsTweets extends Model
     /**
      * Relations
      */
-
+    public function team()
+    {
+        return $this->belongsTo(Teams::class, 'team_id');
+    }
 
 
     /**

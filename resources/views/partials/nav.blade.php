@@ -1,4 +1,4 @@
-<nav class="navbar navbar-expand-lg navbar-light bg-light">
+<nav class="navbar navbar-expand-lg navbar-light bg-light mb-2">
     <a class="navbar-brand" href="{{ url('/') }}">
         <i class="fas fa-home"></i>
     </a>

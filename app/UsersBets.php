@@ -77,6 +77,8 @@ class UsersBets extends Model
     public function getCardData()
     {
 //        $startDate = Carbon::parse($this->game->start_date);
+        $opponentTeam = $this->getOpponentTeam();
+
         $betData = [
             'id' => $this->id,
             'user' => [
@@ -92,6 +94,12 @@ class UsersBets extends Model
                 'name' => $this->team->nickname,
                 'logoUrl' => $this->team->logoUrl()
             ],
+            'opponent' => [
+                'team' => [
+                    'name' => $opponentTeam->nickname
+                ],
+                'spread' => $this->spread > 0 ? $this->spread * -1 : abs($this->spread)
+            ]
 //            'homeTeam' => [
 //                'id' => $this->game->homeTeam->id,
 //                'name' => $this->game->homeTeam->nickname,
@@ -112,23 +120,26 @@ class UsersBets extends Model
 //            'startTime' => $startDate->format('g:ia'),
         ];
 
-        if($this->opponent) {
-            $betData['opponent'] = [
-                'id' => $this->opponent->id,
-                'name' => $this->opponent->name,
-                'avatarUrl' => $this->opponent->avatarUrl,
-                'team' => [
-                    'id' => $this->team->id,
-                    'name' => $this->team->nickname,
-                    'logoUrl' => $this->team->logoUrl()
-                ]
+//        if($this->opponent) {
+//            $betData['opponent'] = [
+//                'id' => $this->opponent->id,
+//                'name' => $this->opponent->name,
+//                'avatarUrl' => $this->opponent->avatarUrl,
+//                'team' => [
+//                    'id' => $this->team->id,
+//                    'name' => $this->team->nickname,
+//                    'logoUrl' => $this->team->logoUrl()
+//                ]
 //                'homeOrAway' => ($this->team->id == $this->game->homeTeam->id ? 'home' : 'away')
-            ];
-        }
+//            ];
+//        }
 
         return $betData;
     }
-    
 
+    public function getOpponentTeam()
+    {
+        return $this->game->homeTeam->id == $this->team->id ? $this->game->awayTeam : $this->game->homeTeam;
+    }
 
 }
