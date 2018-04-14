@@ -83,7 +83,6 @@ class Teams extends Model
         $postedTweets = [];
         echo "Checking tweets... \n";
         foreach($timeline as $tweet) {
-
             // Check the original tweet if this is a retweet, assign it if that's what we want
             if(isset($tweet->retweeted_status)){
                 $tweet = Twitter::getTweet($tweet->retweeted_status->id, ['include_entities' => 1, 'trim_user' => 1]);
@@ -109,6 +108,7 @@ class Teams extends Model
                 'team_id' => $this->id,
                 'game_id' => $game->id,
                 'tweet_id' => $tweet->id,
+                'period' => $game->period,
                 'media_url' => $mediaUrl
             ]);
 
@@ -145,7 +145,7 @@ class Teams extends Model
 
         // Merge and sort collection by most recent
 //        return $timelines[0]->merge($timelines[1])->sortByDesc('created_at');
-        return collect(Twitter::getUserTimeline(['screen_name' => $teamHandles[0], 'count' => 20, 'include_entities' => 1]))->sortByDesc('created_at');
+        return collect(Twitter::getUserTimeline(['screen_name' => $teamHandles[0], 'count' => 70, 'include_entities' => 1]))->sortByDesc('created_at');
     }
 
     private function isValidTweet($tweet, $game)

@@ -12,7 +12,7 @@ class TeamsTweets extends Model
 
     protected $primaryKey = 'id';
 
-    protected $fillable = ['team_id', 'game_id', 'tweet_id', 'media_url'];
+    protected $guarded = ['id'];
 
 
     /**

@@ -8,7 +8,7 @@ use Carbon\Carbon;
 class Games extends Model
 {
 
-    protected $fillable = ['home_team_id', 'home_score', 'away_team_id', 'away_score', 'league_id', 'broadcast', 'ended_at', 'start_date'];
+    protected $guarded = ['id'];
 
     protected $primaryKey = 'id';
 
@@ -179,8 +179,9 @@ class Games extends Model
             'bets' => $this->bets->map(function($bet){
                 return $bet->getCardData();
             }),
+            'isBettable' => $this->isBettable(),
+            'broadcast' => $this->broadcast,
             'startDate' => $startDate->format('D M j'),
-
             'startTime' => $startDate->format('g:ia'),
             'endedAt' => $this->ended_at
         ];
@@ -191,7 +192,7 @@ class Games extends Model
 
     public function isBettable()
     {
-        // If now is greater than start time, don't allow the bet.
+        // If now is greater than start time or doesn't have a status of 1, don't allow the bet.
         if(Carbon::now()->gt(Carbon::parse($this->start_date))){
             return false;
         }
