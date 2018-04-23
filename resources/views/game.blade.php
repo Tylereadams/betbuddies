@@ -61,7 +61,7 @@
                                 Bets ({{ count($bets) }})
                                 @if($game['isBettable'])
                                 <!-- Button trigger modal -->
-                                    <a class="btn-sm" data-toggle="modal" data-target="#createBetModal">
+                                    <a class="clickable text-primary" data-toggle="modal" data-target="#createBetModal">
                                         <i class="fas fa-plus"></i>
                                     </a>
                                 @endif
