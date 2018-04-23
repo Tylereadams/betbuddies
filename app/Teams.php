@@ -100,15 +100,15 @@ class Teams extends Model
 
             echo "posting tweet ".$mediaUrl."\n";
             // Post the tweet
-//            Twitter::postTweet([
-//                'status' => '#'.$game->homeTeam->nickname.' #'.$game->awayTeam->nickname.' '.$mediaUrl
-//            ]);
+            Twitter::postTweet([
+                'status' => '#'.$game->homeTeam->nickname.' #'.$game->awayTeam->nickname.' '.$mediaUrl
+            ]);
 
             TeamsTweets::firstOrCreate([
                 'team_id' => $this->id,
                 'game_id' => $game->id,
                 'tweet_id' => $tweet->id,
-                'period' => $game->period,
+                'period' => $game->period ? $this->period : 1,
                 'media_url' => $mediaUrl
             ]);
 
