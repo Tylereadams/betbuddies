@@ -21,6 +21,8 @@ class UserController extends Controller
             $q->orWhere('user_id', Auth::id());
         })->orderBy('created_at', 'DESC')->get();
 
+        $bets->load(['game.homeTeam', 'game.awayTeam', 'user', 'opponent', 'opponentTeam']);
+
         $data['bets'] = [];
 
         $wins = 0;

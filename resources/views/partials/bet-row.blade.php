@@ -56,19 +56,15 @@
                     Delete
                 </button>
                 @include('partials.deleteBetModal', ['bet'=> $bet])
+            @elseif($bet['isAcceptable'] && !$bet['fromMe'])
+                {{-- Modal --}}
+                @include('partials.acceptBetModal')
+                <button type="button" class="btn btn-success btn-sm" data-toggle="modal" data-target="#acceptBetModal">
+                    Accept
+                </button>
             @endif
                 {{ $bet['game']['awayTeam']['score'] }}<br>
                 {{ $bet['game']['homeTeam']['score'] }}
         </div>
     </td>
 </tr>
-
-{{-- Modal --}}
-@if($bet['isAcceptable'] && !$bet['fromMe'])
-
-    @include('partials.acceptBetModal')
-    <!-- Button trigger modal -->
-    <button type="button" class="btn btn-success btn-sm" data-toggle="modal" data-target="#acceptBetModal">
-        Accept
-    </button>
-@endif

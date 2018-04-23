@@ -157,9 +157,9 @@ class Games extends Model
                 'id'    => $this->homeTeam->id,
                 'name'  => $this->homeTeam->nickname,
                 'score'  => $this->home_score,
-                'colors'    => $this->homeTeam->colors->map(function($color){
-                    return  $color->hex;
-                }),
+//                'colors'    => $this->homeTeam->colors->map(function($color){
+//                    return  $color->hex;
+//                }),
                 'thumbUrl' => $this->homeTeam->logoUrl(),
                 'spread' => (int) $this->getTeamSpread('home'),
                 'isWinner' => $this->home_score > $this->away_score && ($this->ended_at) ? true : false
@@ -167,11 +167,11 @@ class Games extends Model
             'awayTeam' => [
                 'id'    => $this->awayTeam->id,
                 'name'  => $this->awayTeam->nickname,
-                'thumbUrl' => $this->awayTeam->logoUrl(),
                 'score'  => $this->away_score,
-                'colors'    => $this->awayTeam->colors->map(function($color){
-                    return  $color->hex;
-                }),
+                'thumbUrl' => $this->awayTeam->logoUrl(),
+//                'colors'    => $this->awayTeam->colors->map(function($color){
+//                    return  $color->hex;
+//                }),
                 'spread' => (int) $this->getTeamSpread('away'),
                 'isWinner' => $this->away_score > $this->home_score && ($this->ended_at) ? true : false
             ],

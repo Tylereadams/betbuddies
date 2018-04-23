@@ -28,6 +28,8 @@ class GamesController extends Controller
             ->orderBy('start_date')
             ->get();
 
+        $games->load(['homeTeam', 'awayTeam', 'league']);
+
         if($games->isEmpty()){
             return 'No games.';
         }
@@ -54,6 +56,7 @@ class GamesController extends Controller
     public function game($urlSegment)
     {
         $game = Games::where('url_segment', $urlSegment)->firstOrFail();
+        $game->load(['bets.user', 'bets.opponent', 'bets.opponentTeam', 'bets.game.homeTeam', 'bets.game.awayTeam']);
 
         $data['game'] = $game->getCardData();
 
