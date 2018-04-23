@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Foundation\Auth\User;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Carbon\Carbon;
+use Auth;
 
 class UsersBets extends Model
 {
@@ -52,32 +53,9 @@ class UsersBets extends Model
         return ($this->opponentTeam->id == $this->game->homeTeam->id ? $this->game->home_spread : $this->game->away_spread);
     }
 
-
-    public function getWinnerData()
-    {
-        if(!$this->opponent || !$this->game->ended_at)
-        {
-            return '';
-        }
-
-        $userScore = ($this->team->id == $this->game->homeTeam->id ? $this->game->home_score : $this->game->away_score);
-        $opponentScore = ($this->opponentTeam->id == $this->game->homeTeam->id ? $this->game->home_score : $this->game->away_score);
-
-        $winner = ($userScore + $this->spread > $opponentScore ? $this->user : $this->opponent);
-
-        $winnerData = [
-            'avatarUrl' => $winner->avatar,
-            'name' => $winner->first_name
-        ];
-
-        return $winnerData;
-    }
-
-
     public function getCardData()
     {
-//        $startDate = Carbon::parse($this->game->start_date);
-        $opponentTeam = $this->getOpponentTeam();
+        $winner = $this->getWinningUser();
 
         $betData = [
             'id' => $this->id,
@@ -85,61 +63,83 @@ class UsersBets extends Model
                 'id' => $this->user->id,
                 'name' => $this->user->name,
                 'avatarUrl' => $this->user->avatarUrl,
-//                'homeOrAway' => ($this->team->id == $this->game->homeTeam->id ? 'home' : 'away')
+                'isWinner' => $winner && $winner->id == $this->user->id ? true : false,
+                'isMe' => $this->user->id == Auth::id() ? true : false,
+            ],
+            'game' => [
+                'id' => $this->game->id,
+                'homeTeam' => [
+                    'name' => $this->game->homeTeam->nickname,
+                    'thumbUrl' => $this->game->homeTeam->logoUrl(),
+                    'score' => $this->game->home_score
+                ],
+                'awayTeam' => [
+                    'name' => $this->game->awayTeam->nickname,
+                    'thumbUrl' => $this->game->awayTeam->logoUrl(),
+                    'score' => $this->game->away_score
+                ]
             ],
             'amount' => (int) $this->amount,
             'spread' => (float) $this->spread,
-            'team' => [
-                'id' => $this->team->id,
-                'name' => $this->team->nickname,
-                'logoUrl' => $this->team->logoUrl()
-            ],
-            'opponent' => [
-                'team' => [
-                    'name' => $opponentTeam->nickname
-                ],
-                'spread' => $this->spread > 0 ? $this->spread * -1 : abs($this->spread)
-            ]
-//            'homeTeam' => [
-//                'id' => $this->game->homeTeam->id,
-//                'name' => $this->game->homeTeam->nickname,
-//                'spread' => $this->game->homeTeam->spread,
-//                'logoUrl' => $this->game->homeTeam->logoUrl()
-//            ],
-//            'awayTeam' => [
-//                'id' => $this->game->awayTeam->id,
-//                'name' => $this->game->awayTeam->nickname,
-//                'spread' => $this->game->awayTeam->spread,
-//                'logoUrl' => $this->game->awayTeam->logoUrl()
-//            ],
-//            'period' => $this->game->period,
-//            'periodLabel' => $this->game->league->period_label,
-//            'league' => $this->game->league->name,
-//            'location' => $this->game->homeTeam->location,
-//            'humanDate' => ($startDate->timestamp < strtotime('+1 hour')  ? $startDate->diffForHumans() : $startDate->format('M j')),
-//            'startTime' => $startDate->format('g:ia'),
+            'isAcceptable' => $this->isAcceptable(),
+            'fromMe' => $this->user_id == Auth::id() ? true : false,
+            'isWinner' => $winner && $winner->id == Auth::id() ? true : false,
+            'isLoser' => $winner && $winner->id != Auth::id() ? true : false,
+            'isHome' => $this->team->id == $this->game->homeTeam->id ? true : false,
         ];
 
-//        if($this->opponent) {
-//            $betData['opponent'] = [
-//                'id' => $this->opponent->id,
-//                'name' => $this->opponent->name,
-//                'avatarUrl' => $this->opponent->avatarUrl,
-//                'team' => [
-//                    'id' => $this->team->id,
-//                    'name' => $this->team->nickname,
-//                    'logoUrl' => $this->team->logoUrl()
-//                ]
-//                'homeOrAway' => ($this->team->id == $this->game->homeTeam->id ? 'home' : 'away')
-//            ];
-//        }
+        if($this->opponent) {
+            $betData['opponent'] = [
+                'id' => $this->opponent->id,
+                'name' => $this->opponent->name,
+                'avatarUrl' => $this->opponent->avatarUrl,
+                'isMe' => $this->opponent->id == Auth::id() ? true : false,
+                'isWinner' => $winner && $winner->id == $this->opponent->id ? true : false,
+                'isHome' => $this->opponentTeam->id == $this->game->homeTeam->id ? true : false
+            ];
+        }
 
         return $betData;
     }
 
+    /**
+     * Returns team of opponent
+     * @return mixed
+     */
     public function getOpponentTeam()
     {
         return $this->game->homeTeam->id == $this->team->id ? $this->game->awayTeam : $this->game->homeTeam;
     }
 
+    /**
+     * Checks if this bet can be accepted
+     * @return bool
+     */
+    public function isAcceptable()
+    {
+         if(!$this->opponent_team_id && $this->game->isBettable()){
+             return true;
+         }
+
+         return false;
+    }
+
+    /**
+     * Returns a winning user objects only if a valid bet was completed
+     * @return bool|mixed
+     */
+    public function getWinningUser()
+    {
+        if(!$this->game->ended_at || !$this->opponent_id){
+            return false;
+        }
+
+        $homeSpread = ($this->team_id == $this->game->hometeam->id) ? $this->spread : $this->opponentSpread();
+
+        if(($this->game->home_score + $homeSpread) > $this->game->away_score){
+            return ($this->team_id == $this->game->homeTeam->id) ? $this->user : $this->opponent;
+        } else {
+            return ($this->team_id == $this->game->awayTeam->id) ? $this->user : $this->opponent;
+        }
+    }
 }

@@ -1,0 +1,3 @@
+<blockquote class="twitter-video" data-lang="en"><p lang="en" dir="ltr">.
+        <a href="https://twitter.com/unclejeffgreen?ref_src=twsrc%5Etfw">@unclejeffgreen</a> is up to 19PTS to cut the deficit on <a href="https://twitter.com/NBAonTNT?ref_src=twsrc%5Etfw">@NBAonTNT</a>! <a href="https://twitter.com/hashtag/AllForOne?src=hash&amp;ref_src=twsrc%5Etfw">#AllForOne</a> <a href="https://t.co/iZdpi0jFal">pic.twitter.com/iZdpi0jFal</a></p>&mdash; Cleveland Cavaliers (@cavs) <a href="https://twitter.com/cavs/status/982081391876685824?ref_src=twsrc%5Etfw">April 6, 2018</a></blockquote>
+<script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>

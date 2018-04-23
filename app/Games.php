@@ -152,7 +152,6 @@ class Games extends Model
             'period' => $this->period ? ordinalNumber($this->period) : null,
             'status' => $this->statusName(),
             'urlSegment'  => $this->urlSegment(),
-            // TODO: Use the actual game location instead, needs to be imported.
             'location' => $this->homeTeam->location,
             'homeTeam'  => [
                 'id'    => $this->homeTeam->id,
@@ -163,7 +162,7 @@ class Games extends Model
                 }),
                 'thumbUrl' => $this->homeTeam->logoUrl(),
                 'spread' => (int) $this->getTeamSpread('home'),
-                'isWinner' => $this->home_score > $this->away_score && ($this->ended_at) ? 1 : 0
+                'isWinner' => $this->home_score > $this->away_score && ($this->ended_at) ? true : false
             ],
             'awayTeam' => [
                 'id'    => $this->awayTeam->id,
@@ -174,7 +173,7 @@ class Games extends Model
                     return  $color->hex;
                 }),
                 'spread' => (int) $this->getTeamSpread('away'),
-                'isWinner' => $this->away_score > $this->home_score && ($this->ended_at) ? 1 : 0
+                'isWinner' => $this->away_score > $this->home_score && ($this->ended_at) ? true : false
             ],
             'bets' => $this->bets->map(function($bet){
                 return $bet->getCardData();
@@ -198,6 +197,21 @@ class Games extends Model
         }
 
         return true;
+    }
+
+    public function isWinner(Teams $team)
+    {
+        if(!$this->ended_at){
+            return false;
+        }
+        // Home is winner
+        if($this->home_score > $this->away_score){
+            return $team->id == $this->homeTeam->id;
+        } else if($this->away_score > $this->home_score) {
+            return $team->id == $this->awayTeam->id;
+        } else {
+            return false;
+        }
     }
 
 }

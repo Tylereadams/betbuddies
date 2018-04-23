@@ -23,17 +23,16 @@ class GamesController extends Controller
         }
 
         $date = Carbon::parse($date)->format('Y-m-d');
-        $games = Games::where('start_date', 'LIKE', $date.'%')->get();
-
-        $games->sortBy(function($game){
-            return strtotime('now') - strtotime($game->start_date);
-        });
+        $games = Games::where('start_date', 'LIKE', $date.'%')
+            ->orderBy('league_id')
+            ->orderBy('start_date')
+            ->get();
 
         if($games->isEmpty()){
             return 'No games.';
         }
 
-        $data = ['gamesByLeague' => null];
+        $data['gamesByLeague'] = [];
         // Add games to data
         foreach($games as $game) {
             $data['gamesByLeague'][$game->league->name][] = $game->getCardData();
@@ -70,13 +69,19 @@ class GamesController extends Controller
             ->get();
         $tweets->load('team');
 
+        $data['tweetsToEmbed'] = [];
         foreach($tweets as $tweet){
-            $data['tweetsToEmbed'][] = Cache::remember('embedded-tweets-'.$tweet->id, 120, function () use($tweet) {
+            $tweetData = Cache::remember('embedded-tweets-'.$tweet->id, 10, function () use($tweet, $game) {
                 return Twitter::getOembed([
                     'url' => 'https://twitter.com/'.$tweet->team->twitter.'/status/'.$tweet->tweet_id,
                     'widget_type' => 'video'
                 ]);
             });
+
+            $data['tweetsToEmbed'][] = [
+                'html' => $tweetData->html,
+                'period' => $tweet->period
+            ];
         }
 
         return view('game', $data);

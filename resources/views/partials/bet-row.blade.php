@@ -1,0 +1,74 @@
+<tr>
+    <td class="border-left border-top-0 border-bottom-0 {{ $bet['isWinner'] ? 'border-success' : '' }} {{ $bet['isLoser'] ? 'border-danger' : '' }}">${{ $bet['amount'] }}</td>
+    <td class="text-truncate align-middle">
+        <img src="{{ $bet['game']['awayTeam']['thumbUrl'] }}" class="avatar">&nbsp;{{ $bet['game']['awayTeam']['name'] }} <small>@if(!$bet['isHome']){{ formatSpread($bet['spread']) }}@else {{ formatSpread($bet['spread'], true) }}@endif</small><br>
+        <img src="{{ $bet['game']['homeTeam']['thumbUrl'] }}" class="avatar">&nbsp;{{ $bet['game']['homeTeam']['name'] }} <small>@if($bet['isHome']){{ formatSpread($bet['spread']) }}@else {{ formatSpread($bet['spread'], true) }}@endif</small>
+    </td>
+    <td class="text-truncate align-middle">
+        {{-- Bet created with home Team --}}
+        @if($bet['isHome'])
+            <small class="font-italic font-weight-light mt-2">
+                @if(isset($bet['opponent']))
+                    <i class="fas fa-user-circle"></i> {{ $bet['opponent']['name'] }}
+                    @if($bet['opponent']['isWinner'] && $bet['opponent']['isMe'])
+                        &nbsp;<i class="fas fa-check text-success"></i>
+                    @elseif($bet['isLoser'] && $bet['opponent']['isMe'])
+                        &nbsp;<i class="fas fa-times text-danger"></i>
+                    @endif
+                @endif
+            </small><br>
+            <small class="font-italic font-weight-light mt-2"><i class="fas fa-user-circle"></i> {{ $bet['user']['name'] }}
+                @if($bet['user']['isWinner'] && $bet['user']['isMe'])
+                    &nbsp;<i class="fas fa-check text-success"></i>
+                @elseif($bet['isLoser'] && $bet['user']['isMe'])
+                    &nbsp;<i class="fas fa-times text-danger"></i>
+                @endif
+            </small>
+        &nbsp;
+        {{-- Bet created with away Team --}}
+        @else
+            <small class="font-italic font-weight-light mt-2"><i class="fas fa-user-circle"></i> {{ $bet['user']['name'] }}
+                @if($bet['user']['isWinner'] && $bet['user']['isMe'])
+                    &nbsp;<i class="fas fa-check text-success"></i>
+                @elseif($bet['isLoser'] && $bet['user']['isMe'])
+                    &nbsp;<i class="fas fa-times text-danger"></i>
+                @endif
+            </small><br>
+            <small class="font-italic font-weight-light mt-2">
+                @if(isset($bet['opponent']))
+                    <i class="fas fa-user-circle"></i> {{ $bet['opponent']['name'] }}
+                    @if($bet['opponent']['isWinner'] && $bet['opponent']['isMe'])
+                        &nbsp;<i class="fas fa-check text-success"></i>
+                    @elseif($bet['isLoser'] && $bet['opponent']['isMe'])
+                        &nbsp;<i class="fas fa-times text-danger"></i>
+                    @endif
+                @endif
+
+            </small>
+            &nbsp;
+        @endif
+    </td>
+    <td class="align-middle">
+        <div class="row">
+            @if($bet['isAcceptable'] && $bet['fromMe'])
+                {{-- Button trigger modal --}}
+                <button type="button" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#deleteBetModal{{ $bet['id'] }}">
+                    Delete
+                </button>
+                @include('partials.deleteBetModal', ['bet'=> $bet])
+            @endif
+                {{ $bet['game']['awayTeam']['score'] }}<br>
+                {{ $bet['game']['homeTeam']['score'] }}
+        </div>
+    </td>
+</tr>
+
+{{-- Modal --}}
+@if($bet['isAcceptable'] && !$bet['fromMe'])
+
+    @include('partials.acceptBetModal')
+    <!-- Button trigger modal -->
+    <button type="button" class="btn btn-success btn-sm" data-toggle="modal" data-target="#acceptBetModal">
+        Accept
+    </button>
+@endif

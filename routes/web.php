@@ -15,7 +15,6 @@
 Route::get('/', 'PagesController@index');
 Route::get('/home', 'HomeController@index')->name('home');
 Route::get('/games/{date?}', 'GamesController@games');
-Route::resource('bets', 'BetsController');
 
 Route::get('machine-learning', 'MachineLearningController@index');
 Route::post('tweets/{tweetId}/save', 'MachineLearningController@store');
@@ -33,7 +32,11 @@ Route::post('register', 'Auth\RegisterController@register');
  */
 Route::group(['middleware' => ['auth']], function () {
 
-    Route::post('bets/accept/{$betId}', 'BetsController@accept')->name('bet.accept');
+    Route::get('profile', 'UserController@profile');
+
+    Route::delete('bets/{usersBets}', 'BetsController@delete')->name('bets.delete');
+    Route::post('bets/{usersBets}/accept', 'BetsController@accept')->name('bets.accept');
+
     Route::get('/game/{urlSegment}', 'GamesController@game')->name('game');
     Route::post('/game/{urlSegment}', 'BetsController@store');
 

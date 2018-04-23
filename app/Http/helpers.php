@@ -3,15 +3,20 @@
 /**
  * Adds +/- if number is positive or negative. Used for the spread.
  * @param $num
+ * @param $oppositeSpread
  * @return string
  */
-function formatSpread($num){
+function formatSpread($num, $oppositeSpread = false){
 
     if($num == 0){
         return 'E';
     } elseif ($num > 0) {
         $num = '+'.$num;
     } else {
+    }
+
+    if($oppositeSpread){
+        $num = $num * -1;
     }
 
     return sprintf("%+s", $num);

@@ -1,7 +1,14 @@
-.avatar {
+.avatar{
     vertical-align: middle;
-    width: 25px;
-    height: 25px;
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+}
+
+.avatar-lg {
+    vertical-align: middle;
+    width: 50px;
+    height: 50px;
     border-radius: 50%;
 }
 
@@ -31,11 +38,11 @@ html, body {
 
 
 .bet-input__amount {
-    width: 100px;
+    width: 60px;
 }
 
 .bet-input__spread {
-    width: 120px;
+    width: 60px;
 }
 
 .clickable {
@@ -47,3 +54,25 @@ html, body {
     font-size: 15px;
 }
 
+.game-teams__header {
+    font-size: 1.75em;
+    margin-bottom: 10px !important;
+}
+
+
+.btn-sm {
+    padding: .03rem .12rem !important;
+}
+
+.table-borderless td,
+.table-borderless th {
+    border-top: 0;
+}
+
+.table th {
+    padding: 0 !important;
+}
+
+.table td {
+    padding: .6em !important;
+}

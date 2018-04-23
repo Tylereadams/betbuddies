@@ -4,93 +4,79 @@
 
     <div class="container">
 
-        <div class="p-2">
-            <p>{{ $game['startDate'] }} {{ $game['startTime'] }}</p>
-        </div>
-        <div class="row text-center p-2">
+        <div class="row text-center game-teams__header">
             <div class="col">
-                <img src="{{ $game['homeTeam']['thumbUrl'] }}" class="avatar"><br>
+                <img src="{{ $game['homeTeam']['thumbUrl'] }}" class="avatar-lg"><br>
                 {{ $game['homeTeam']['name'] }}
+                <p>{{ $game['homeTeam']['score'] }}</p>
             </div>
-            <div class="col text-center">
-                <img src="{{ $game['awayTeam']['thumbUrl'] }}" class="avatar"><br>
+            <div class="col">
+                <img src="{{ $game['awayTeam']['thumbUrl'] }}" class="avatar-lg"><br>
                 {{ $game['awayTeam']['name'] }}
+                <p>{{ $game['awayTeam']['score'] }}</p>
             </div>
         </div>
 
-        <div class="p-2 clickable">
-            <a data-toggle="collapse" data-target="#addBetSection">
-                <i class="fas fa-plus-square"></i> Create Bet
-            </a>
-        </div>
-
-        {{-- Add Bet Form--}}
-        <div id="addBetSection" class="collapse">
-            <div>
-                <div class="container">
-                    {!! Form::open(['url' => 'game/'.$game['urlSegment'], 'method' => 'post']) !!}
-                    <div class="row">
-                        <div class="col">
-                            {!! Form::label('teamId', 'Team') !!}
-                            <div class="custom-control custom-radio">
-                                <input type="radio" id="customRadio1" name="teamId" class="custom-control-input" value="{{ $game['homeTeam']['id'] }}">
-                                <label class="custom-control-label" for="customRadio1">{{ $game['homeTeam']['name'] }}</label>
-                            </div>
-                            <div class="custom-control custom-radio">
-                                <input type="radio" id="customRadio2" name="teamId" class="custom-control-input" value="{{ $game['awayTeam']['id'] }}">
-                                <label class="custom-control-label" for="customRadio2">{{ $game['awayTeam']['name'] }}</label>
-                            </div>
-                        </div>
-                        <div class="col">
-                            {!! Form::label('amount', 'Amount', ['class' => 'control-label']) !!}
-                            {!! Form::number('amount', 'Amount', ['min' => 1, 'max' => 100, 'class' => 'form-control bet-input__amount', 'placeholder' => '$' ]) !!}
-                        </div>
-                        <div class="col">
-                            {!! Form::label('spread', 'Spread') !!}
-                            {!! Form::number('spread', 'Spread',  ['min' => -20, 'max' => 20, 'step' => 0.5, 'class' => 'form-control bet-input__amount', 'placeholder' => '+/-' ]) !!}
-                        </div>
+        <div class="row pb-4">
+            <div class="col">
+                @if($game['status'] == 'upcoming')
+                    <i class="far fa-calendar-alt"></i> {{ $game['startDate'] }} {{ $game['startTime'] }}<br>
+                    @if($game['broadcast'])
+                        <i class="fas fa-tv"></i> {{ $game['broadcast'] }}<br>
+                    @endif
+                @elseif($game['status'] == 'in progress')
+                    {{ $game['period'] }} {{ $game['league']['periodLabel'] }}
+                @elseif($game['status'] == 'postponed')
+                    <div class="text-center">
+                        <strong>Postponed</strong>
                     </div>
-                    <div class="row p-3">
-                    {!! Form::hidden('gameId', $game['id']) !!}
-                    {!! Form::button('Submit', array('type' => 'submit', 'class' => 'btn btn-primary')) !!}
+                @else
+                    <div class="text-center">
+                        <strong>Final</strong>
                     </div>
-                    {!! Form::close() !!}
-                </div>
+                @endif
             </div>
         </div>
 
-        @if($bets)
+        @if($game['isBettable'])
+            @include('partials.createBetModal')
+        @else
+            <div class="scrolling-wrapper">
+                <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+                @foreach($tweetsToEmbed as $tweet)
+                    <div class="card">
+                        {!! $tweet['html'] !!}
+                        <span class="pl-2">{{ ordinalNumber($tweet['period']) }} {{ $game['league']['periodLabel'] }}</span>
+                    </div>
+                @endforeach
+            </div>
+        @endif
         <div class="row">
             <div class="col">
                 <div class="table-responsive">
-                    <table class="table  table-condensed">
+                    <table class="table table-borderless table-condensed table-hover">
                         <thead>
                         <tr>
-                            <th>Amount</th>
-                            <th>Opponent</th>
-                            <th>Team</th>
+                            <th colspan="4">
+                                Bets ({{ count($bets) }})
+                                @if($game['isBettable'])
+                                <!-- Button trigger modal -->
+                                    <a class="btn-sm" data-toggle="modal" data-target="#createBetModal">
+                                        <i class="fas fa-plus"></i>
+                                    </a>
+                                @endif
+                            </th>
                         </tr>
                         </thead>
                         <tbody>
                         @foreach($bets as $bet)
-                            <tr>
-                                <td>${{ $bet['amount'] }}</td>
-                                <td><i class="fas fa-user-circle"></i> {{ $bet['team']['name'] }} {{ formatSpread($bet['spread']) }}</td>
-                                <td>
-                                    {!! Form::open(['route' => ['bet.accept', $bet['id']], 'method' => 'post']) !!}
-                                    {!! Form::hidden('betId', $bet['id']) !!}
-                                    {!! Form::button('<i class="fas fa-plus-circle success"></i>', array('class' => 'btn btn-success-outline btn-sm', 'type' => 'submit')) !!}
-                                    {{ $bet['opponent']['team']['name'] }} {{ formatSpread($bet['opponent']['spread']) }}
-                                    {!! Form::close()  !!}
-                                </td>
-                            </tr>
+                            @include('partials.bet-row')
                         @endforeach
                         </tbody>
                     </table>
                 </div>
             </div>
         </div>
-        @endif
     </div>
 
 @endsection

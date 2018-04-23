@@ -1,9 +1,9 @@
-<nav class="navbar navbar-expand-lg navbar-light bg-light mb-2">
-    <a class="navbar-brand" href="{{ url('/') }}">
-        <i class="fas fa-home"></i>
-    </a>
+<nav class="navbar navbar-light bg-light mb-2">
     <a class="navbar-brand" href="{{ url('/games') }}">
-        <i class="fas fa-calendar-alt"></i>
+        <i class="fas fa-calendar-alt text-secondary"></i>
+    </a>
+    <a class="navbar-brand" href="{{ url('/profile') }}">
+        <i class="far fa-user text-secondary"></i>
     </a>
     <!-- Authentication Links -->
     @guest
@@ -22,7 +22,7 @@
         <div class="collapse navbar-collapse" id="navbarSupportedContent1">
 
             <!-- Links -->
-            <ul class="navbar-nav mr-auto">
+            <ul class="nav justify-content-end">
                 <li class="nav-item active">
                     <a class="nav-link" href="{{ route('logout') }}">Logout</a>
                 </li>

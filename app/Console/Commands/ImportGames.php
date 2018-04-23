@@ -61,22 +61,49 @@ class ImportGames extends Command
                 echo "no games \n";
                 continue;
             }
+
             // Update games
             $gamesUpdated = [];
             foreach($games as $game) {
-                $gamesUpdated[] = Games::updateOrCreate([
-                    'home_team_id' => $game['home_team_id'],
-                    'away_team_id' => $game['away_team_id'],
-                    'start_date' => $game['start_date']
-                ],[
-                    'period' => $game['period'],
-                    'league_id' => $game['league_id'],
-                    'home_score' => $game['home_score'],
-                    'away_score' => $game['away_score'],
-                    'broadcast' => $game['broadcast'],
-                    'ended_at' => $game['ended_at']
-                ]);
+                // Try to find existing game(s) on this day
+                $existingGames = Games::where('start_date', 'LIKE', Carbon::parse($game['start_date'])->toDateString().'%')
+                    ->where('home_team_id', $game['home_team_id'])
+                    ->where('away_team_id', $game['away_team_id'])
+                    ->get();
+
+                if(count($existingGames)){
+                    foreach($existingGames as $gameToUpdate) {
+                        // Check if it's a doubleheader and make sure start dates are at least within 4 hours of each other
+                        if(count($existingGames) > 1 && (strtotime($gameToUpdate->start_date) - strtotime($game['start_date'])) > (3600 * 4)){
+                            continue;
+                        }
+
+                        // Update the game
+                        $gameToUpdate->period = $game['period'];
+                        $gameToUpdate->home_score = $game['home_score'];
+                        $gameToUpdate->away_score = $game['away_score'];
+                        $gameToUpdate->broadcast = $game['broadcast'];
+                        $gameToUpdate->start_date = $game['start_date'];
+                        $gameToUpdate->ended_at = $game['ended_at'];
+                        $gamesUpdated[] = $gameToUpdate->save();
+                    }
+                } else {
+                    // Create the new game
+                    $newGame = new Games();
+                    $newGame->home_team_id = $game['home_team_id'];
+                    $newGame->away_team_id = $game['away_team_id'];
+                    $newGame->period = $game['period'];
+                    $newGame->league_id = $game['league_id'];
+                    $newGame->home_score = $game['home_score'];
+                    $newGame->away_score = $game['away_score'];
+                    $newGame->broadcast = $game['broadcast'];
+                    $newGame->start_date = $game['start_date'];
+                    $newGame->ended_at = $game['ended_at'];
+
+                    $gamesUpdated[] = $newGame->save();
+                }
             }
+
             echo count($gamesUpdated)." checked \n";
         }
     }

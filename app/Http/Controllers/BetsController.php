@@ -9,6 +9,8 @@ use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
+use App\Games;
+use Carbon\Carbon;
 
 class BetsController extends Controller
 {
@@ -43,6 +45,13 @@ class BetsController extends Controller
      */
     public function store()
     {
+        $gameId = \Request::get('gameId');
+        $game = Games::findOrfail($gameId);
+
+        if(!$game || Carbon::parse($game->start_date)->timestamp < Carbon::now()->timestamp){
+            return redirect()->back()->withErrors(['The game has already started.']);
+        }
+
         // validate
         // read more on validation at http://laravel.com/docs/validation
         $rules = array(
@@ -69,8 +78,6 @@ class BetsController extends Controller
         $userBet->user_id = Auth::id();
 
         $userBet->save();
-
-        Session::flash('message', 'Bet created!');
 
         return redirect()->route('game', ['urlSegment' => $userBet->game->url_segment]);
     }
@@ -111,20 +118,41 @@ class BetsController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
+     * @param  UsersBets  $usersBet
      * @return Response
      */
-    public function destroy($id)
+    public function delete(UsersBets $usersBets)
     {
-        //
+        // Make sure it can be deleted
+        if($usersBets->user_id == Auth::id()){
+            $usersBets->delete();
+        }
+
+        if(!$usersBets->game->isBettable()){
+            return back()->withErrors(['message' => 'Game has already started.']);
+        }
+
+        return back();
     }
 
-    // TODO: NOT SURE WHAT TO DO HERE
-    public function accept(UsersBets $userBet)
+    /**
+     * Accepts an existing bet
+     * @param UsersBets $userBet
+     * @return $this|\Illuminate\Http\RedirectResponse
+     */
+    public function accept(UsersBets $usersBets)
     {
-        $userBet->opponent_id = Auth::id();
-        $userBet->team_id = ($userBet->game->homeTeam->id == $userBet->team_id ? $userBet->game->awayTeam->id : $userBet->game->homeTeam->id);
-        $userBet->save();
+        if(Auth::id() == $usersBets->user_id){
+            return back()->withErrors(['message' => 'Can\'t accept your own bet. Accept someone else\'s, dummy.']);
+        }
+
+        if(!$usersBets->game->isBettable()){
+            return back()->withErrors(['message' => 'Game has already started.']);
+        }
+
+        $usersBets->opponent_id = Auth::id();
+        $usersBets->opponent_team_id = $usersBets->team_id == $usersBets->game->homeTeam->id ? $usersBets->game->awayTeam->id : $usersBets->game->homeTeam->id;
+        $usersBets->save();
 
         return back();
     }
