@@ -1,8 +1,8 @@
 <tr>
-    <td class="border-left border-top-0 border-bottom-0 {{ $bet['isWinner'] ? 'border-success' : '' }} {{ $bet['isLoser'] ? 'border-danger' : '' }}">${{ $bet['amount'] }}</td>
+    <td class="border-left {{ $bet['isWinner'] ? 'border-success' : '' }} {{ $bet['isLoser'] ? 'border-danger' : '' }}">${{ $bet['amount'] }}</td>
     <td class="text-truncate align-middle">
-        <img src="{{ $bet['game']['awayTeam']['thumbUrl'] }}" class="avatar">&nbsp;{{ $bet['game']['awayTeam']['name'] }} <small>@if(!$bet['isHome']){{ formatSpread($bet['spread']) }}@else {{ formatSpread($bet['spread'], true) }}@endif</small><br>
-        <img src="{{ $bet['game']['homeTeam']['thumbUrl'] }}" class="avatar">&nbsp;{{ $bet['game']['homeTeam']['name'] }} <small>@if($bet['isHome']){{ formatSpread($bet['spread']) }}@else {{ formatSpread($bet['spread'], true) }}@endif</small>
+        <img src="{{ $bet['game']['awayTeam']['thumbUrl'] }}" class="avatar">&nbsp;{{ $bet['game']['awayTeam']['name'] }} <small>@if(!$bet['isHome']){{ formatSpread($bet['spread']) }}@endif</small><br>
+        <img src="{{ $bet['game']['homeTeam']['thumbUrl'] }}" class="avatar">&nbsp;{{ $bet['game']['homeTeam']['name'] }} <small>@if($bet['isHome']){{ formatSpread($bet['spread']) }}@endif</small>
     </td>
     <td class="text-truncate align-middle">
         {{-- Bet created with home Team --}}
@@ -24,7 +24,6 @@
                     &nbsp;<i class="fas fa-times text-danger"></i>
                 @endif
             </small>
-        &nbsp;
         {{-- Bet created with away Team --}}
         @else
             <small class="font-italic font-weight-light mt-2"><i class="fas fa-user-circle"></i> {{ $bet['user']['name'] }}
@@ -43,9 +42,8 @@
                         &nbsp;<i class="fas fa-times text-danger"></i>
                     @endif
                 @endif
-
             </small>
-            &nbsp;
+            &nbsp
         @endif
     </td>
     <td class="align-middle">

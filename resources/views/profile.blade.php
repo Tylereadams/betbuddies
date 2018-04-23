@@ -35,7 +35,7 @@
                         </div>
                         <div class="col-md-12">
                             <h5 class="mt-2"><span class="fa fa-clock-o ion-clock float-right"></span> Recent Activity</h5>
-                            <table class="table table-condensed table-hover">
+                            <table class="table table-condensed table-borderless table-hover">
                                 <tbody>
                                 @foreach($bets as $bet)
                                     @include('partials.bet-row')

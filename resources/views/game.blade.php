@@ -24,13 +24,13 @@
                     @if($game['broadcast'])
                         <i class="fas fa-tv"></i> {{ $game['broadcast'] }}<br>
                     @endif
-                @elseif($game['status'] == 'in progress')
+                @elseif($game['status'] == 'in progress' && $game['period'])
                     {{ $game['period'] }} {{ $game['league']['periodLabel'] }}
                 @elseif($game['status'] == 'postponed')
                     <div class="text-center">
                         <strong>Postponed</strong>
                     </div>
-                @else
+                @elseif($game['endedAt'])
                     <div class="text-center">
                         <strong>Final</strong>
                     </div>
