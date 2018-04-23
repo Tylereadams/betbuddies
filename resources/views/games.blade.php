@@ -24,7 +24,7 @@
                                 <img src="{{ $game['homeTeam']['thumbUrl'] }}" class="avatar">&nbsp;<span class="{{ $game['homeTeam']['isWinner'] ? 'font-weight-bold' : '' }}">{{ $game['homeTeam']['name'] }}</span><br>
                                 <img src="{{ $game['awayTeam']['thumbUrl'] }}" class="avatar">&nbsp;<span class="{{ $game['awayTeam']['isWinner'] ? 'font-weight-bold' : '' }}">{{ $game['awayTeam']['name'] }}</span>
                             </td>
-                            <td class="align-middle text-center" @if($game['status'] == 'upcoming')colspan="2"@endif>
+                            <td class="align-middle text-right" @if($game['status'] == 'upcoming')colspan="2"@endif>
                                 @if($game['status'] == 'upcoming')
                                     {{ $game['startTime'] }}
                                 @endif
@@ -34,7 +34,7 @@
                                 @endif
                             </td>
                             @if(!$game['status'] == 'upcoming')
-                            <td class="align-middle text-center">
+                            <td class="align-middle text-right">
                                 @if($game['endedAt'])
                                     Final
                                 @elseif($game['status'] == 'in progress' && $game['period'])

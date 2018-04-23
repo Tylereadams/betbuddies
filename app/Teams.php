@@ -36,6 +36,16 @@ class Teams extends Model
         return $this->hasMany(TeamsTweets::class, 'team_id');
     }
 
+    public function homeGames()
+    {
+        return $this->hasMany(Games::class, 'home_team_id');
+    }
+
+    public function awayGames()
+    {
+        return $this->hasMany(Games::class, 'away_team_id');
+    }
+
 
     /**
      * Functions

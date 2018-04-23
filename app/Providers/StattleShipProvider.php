@@ -80,6 +80,24 @@ class StattleShipProvider extends ServiceProvider
         return $teamData;
     }
 
+    public function getTeamGames(Teams $team, $date = null)
+    {
+        $date = $date ? $date : 'today';
+        $res = $this->client->request('GET', $team->league->long_name.'/'.$team->league->name.'/games?on='.$date.'&team_id='.$team->slug);
+        $results = json_decode($res->getBody());
+
+        if(!$results->games){
+            return;
+        }
+
+        $gameData = [];
+        foreach($results->games as $game){
+            $gameData[] = $this->mapGameData($game, $team->league);
+        }
+
+        return array_filter($gameData);
+    }
+
 
     /**
      * @param $games (array)
