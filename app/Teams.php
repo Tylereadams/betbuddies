@@ -99,16 +99,19 @@ class Teams extends Model
             $mediaUrl = $tweet->extended_entities->media[0]->expanded_url;
 
             echo "posting tweet ".$mediaUrl."\n";
-            // Post the tweet
-            Twitter::postTweet([
-                'status' => '#'.$game->homeTeam->nickname.' #'.$game->awayTeam->nickname.' '.$mediaUrl
-            ]);
+            if (\App::environment('production'))
+            {
+                // Post the tweet on production
+                Twitter::postTweet([
+                    'status' => '#'.$game->homeTeam->nickname.' #'.$game->awayTeam->nickname.' '.$mediaUrl
+                ]);
+            }
 
             TeamsTweets::firstOrCreate([
                 'team_id' => $this->id,
                 'game_id' => $game->id,
                 'tweet_id' => $tweet->id,
-                'period' => $game->period ? $this->period : 1,
+                'period' => $game->period ? $game->period : 1,
                 'media_url' => $mediaUrl
             ]);
 
