@@ -62,6 +62,10 @@ class StattleShipProvider extends ServiceProvider
 
         $gameData = [];
         foreach($results->games as $game){
+            // If it's a postseason game and not being broadcast, it might not happen so skip it
+            if($game->interval_type == "postseason" && !$game->broadcast){
+                continue;
+            }
             $gameData[] = $this->mapGameData($game, $league);
         }
 
