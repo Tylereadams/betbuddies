@@ -9,7 +9,7 @@
         <a href="{{ url('games', ['date' => $tomorrow]) }}" class="text-secondary"><i class="fas fa-arrow-right"></i></a>
     </div>
 
-    @if(count($gamesByLeague))
+    @if(isset($gamesByLeague) && count($gamesByLeague))
         @foreach($gamesByLeague as $league => $games)
                 <table class="table table-borderless table-condensed table-hover">
                     <thead>
@@ -50,7 +50,7 @@
                 </table>
         @endforeach
     @else
-        <div>
+        <div class="text-center">
             <p>No games today.</p>
         </div>
     @endif

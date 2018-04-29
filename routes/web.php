@@ -32,7 +32,7 @@ Route::post('register', 'Auth\RegisterController@register');
  */
 Route::group(['middleware' => ['auth']], function () {
 
-    Route::get('profile', 'UserController@profile');
+    Route::get('user/{urlSegment?}', 'UserController@profile');
 
     Route::delete('bets/{usersBets}', 'BetsController@delete')->name('bets.delete');
     Route::post('bets/{usersBets}/accept', 'BetsController@accept')->name('bets.accept');

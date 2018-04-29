@@ -23,6 +23,11 @@ class GamesController extends Controller
         }
 
         $date = Carbon::parse($date)->format('Y-m-d');
+
+        $data['date'] = Carbon::parse($date)->format('M j, Y');
+        $data['tomorrow'] = Carbon::parse($date)->addDay()->format('Y-m-d');
+        $data['yesterday'] = Carbon::parse($date)->subDay()->format('Y-m-d');
+
         $games = Games::where('start_date', 'LIKE', $date.'%')
             ->orderBy('league_id')
             ->orderBy('start_date')
@@ -31,7 +36,7 @@ class GamesController extends Controller
         $games->load(['homeTeam', 'awayTeam', 'league']);
 
         if($games->isEmpty()){
-            return 'No games.';
+            return view('games', $data);
         }
 
         $data['gamesByLeague'] = [];
@@ -41,9 +46,6 @@ class GamesController extends Controller
         }
 
         $data['selectedLeague'] = \Request::get('league') ? \Request::get('league') : array_keys($data['gamesByLeague'])[0];
-        $data['date'] = Carbon::parse($date)->format('M j, Y');
-        $data['tomorrow'] = Carbon::parse($date)->addDay()->format('Y-m-d');
-        $data['yesterday'] = Carbon::parse($date)->subDay()->format('Y-m-d');
 
         return view('games', $data);
     }

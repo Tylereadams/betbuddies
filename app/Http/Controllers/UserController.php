@@ -5,20 +5,22 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\UsersBets;
+use App\User;
 
 class UserController extends Controller
 {
     //
-    public function profile()
+    public function profile($urlSegment = null)
     {
-        $user = Auth::user();
+        $user = $urlSegment ? User::where('url_segment', $urlSegment)->firstOrFail() : Auth::user();
+
         $data = [
             'user' => $user->getCardData(),
         ];
 
-        $bets = UsersBets::where(function($q){
-            $q->where('opponent_id', Auth::id());
-            $q->orWhere('user_id', Auth::id());
+        $bets = UsersBets::where(function($q)use($user){
+            $q->where('opponent_id', $user->id);
+            $q->orWhere('user_id', $user->id);
         })->orderBy('created_at', 'DESC')->get();
 
         $bets->load(['game.homeTeam', 'game.awayTeam', 'user', 'opponent', 'opponentTeam']);

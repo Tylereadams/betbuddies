@@ -63,6 +63,7 @@ class UsersBets extends Model
                 'id' => $this->user->id,
                 'name' => $this->user->name,
                 'avatarUrl' => $this->user->avatarUrl,
+                'urlSegment' => $this->user->url_segment,
                 'isWinner' => $winner && $winner->id == $this->user->id ? true : false,
                 'isMe' => $this->user->id == Auth::id() ? true : false,
             ],
@@ -93,6 +94,7 @@ class UsersBets extends Model
                 'id' => $this->opponent->id,
                 'name' => $this->opponent->name,
                 'avatarUrl' => $this->opponent->avatarUrl,
+                'urlSegment' => $this->opponent->url_segment,
                 'isMe' => $this->opponent->id == Auth::id() ? true : false,
                 'isWinner' => $winner && $winner->id == $this->opponent->id ? true : false,
                 'isHome' => $this->opponentTeam->id == $this->game->homeTeam->id ? true : false
