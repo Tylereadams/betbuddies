@@ -54,7 +54,6 @@ class User extends Authenticatable
 
     public function setUrlSegmentAttribute()
     {
-
         $this->attributes['url_segment'] = $this->createUrlSegment();
     }
 
