@@ -14,7 +14,7 @@
                 <table class="table table-borderless table-condensed table-hover">
                     <thead>
                         <tr>
-                            <th colspan="3"><h5>{{ strtoupper($league) }}</h5></th>
+                            <th colspan="4"><h5>{{ strtoupper($league) }}</h5></th>
                         </tr>
                     </thead>
                     <tbody>
@@ -24,16 +24,16 @@
                                 <img src="{{ $game['homeTeam']['thumbUrl'] }}" class="avatar">&nbsp;<span class="{{ $game['homeTeam']['isWinner'] ? 'font-weight-bold' : '' }}">{{ $game['homeTeam']['name'] }}</span><br>
                                 <img src="{{ $game['awayTeam']['thumbUrl'] }}" class="avatar">&nbsp;<span class="{{ $game['awayTeam']['isWinner'] ? 'font-weight-bold' : '' }}">{{ $game['awayTeam']['name'] }}</span>
                             </td>
-                            <td class="align-middle text-center" @if($game['status'] == 'upcoming')colspan="2"@endif>
+                            <td class="align-middle text-center">
                                 @if($game['status'] == 'upcoming')
                                     {{ $game['startTime'] }}
                                 @endif
                                 @if($game['status'] == 'in progress' || $game['status'] == 'ended')
-                                   {{ $game['homeTeam']['score'] }}<br>
-                                   {{ $game['awayTeam']['score'] }}
+                                        <span class="{{ $game['homeTeam']['isWinner'] ? 'font-weight-bold' : '' }}">{{ $game['homeTeam']['score'] }}</span><br>
+                                        <span class="{{ $game['awayTeam']['isWinner'] ? 'font-weight-bold' : '' }}">{{ $game['awayTeam']['score'] }}</span>
                                 @endif
                             </td>
-                            @if(!$game['status'] == 'upcoming')
+{{--                            @if(!$game['status'] == 'upcoming')--}}
                             <td class="align-middle text-center">
                                 @if($game['endedAt'])
                                     Final
@@ -43,7 +43,7 @@
                                     Postponed
                                 @endif
                             </td>
-                            @endif
+                            {{--@endif--}}
                         </tr>
                     @endforeach
                     </tbody>
