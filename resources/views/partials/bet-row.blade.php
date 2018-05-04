@@ -9,7 +9,7 @@
         @if($bet['isHome'])
             <small class="font-italic font-weight-light mt-2">
                 @if(isset($bet['opponent']))
-                    <i class="fas fa-user-circle"></i> <a href="{{ url('user/'.$bet['opponent']['urlSegment']) }}">{{ $bet['opponent']['name'] }} 1</a>
+                    <i class="fas fa-user-circle"></i> <a href="{{ url('user/'.$bet['opponent']['urlSegment']) }}">{{ $bet['opponent']['name'] }}</a>
                     @if($bet['opponent']['isWinner'] && $bet['opponent']['isMe'])
                         &nbsp;<i class="fas fa-check text-success"></i>
                     @elseif($bet['isLoser'] && $bet['opponent']['isMe'])
@@ -17,7 +17,7 @@
                     @endif
                 @endif
             </small><br>
-            <small class="font-italic font-weight-light mt-2"><i class="fas fa-user-circle"></i> <a href="{{ url('user/'.$bet['user']['urlSegment']) }}">{{ $bet['user']['name'] }} 2</a>
+            <small class="font-italic font-weight-light mt-2"><i class="fas fa-user-circle"></i> <a href="{{ url('user/'.$bet['user']['urlSegment']) }}">{{ $bet['user']['name'] }}</a>
                 @if($bet['user']['isWinner'] && $bet['user']['isMe'])
                     &nbsp;<i class="fas fa-check text-success"></i>
                 @elseif($bet['isLoser'] && $bet['user']['isMe'])
@@ -26,7 +26,7 @@
             </small>
         {{-- Bet created with away Team --}}
         @else
-            <small class="font-italic font-weight-light mt-2"><i class="fas fa-user-circle"></i> <a href="{{ url('user/'.$bet['user']['urlSegment']) }}">{{ $bet['user']['name'] }} 3</a>
+            <small class="font-italic font-weight-light mt-2"><i class="fas fa-user-circle"></i> <a href="{{ url('user/'.$bet['user']['urlSegment']) }}">{{ $bet['user']['name'] }}</a>
                 @if($bet['user']['isWinner'] && $bet['user']['isMe'])
                     &nbsp;<i class="fas fa-check text-success"></i>
                 @elseif($bet['isLoser'] && $bet['user']['isMe'])
@@ -35,7 +35,7 @@
             </small><br>
             <small class="font-italic font-weight-light mt-2">
                 @if(isset($bet['opponent']))
-                    <i class="fas fa-user-circle"></i> <a href="{{ url('user/'.$bet['opponent']['urlSegment']) }}">{{ $bet['opponent']['name'] }} 4</a>
+                    <i class="fas fa-user-circle"></i> <a href="{{ url('user/'.$bet['opponent']['urlSegment']) }}">{{ $bet['opponent']['name'] }}</a>
                     @if($bet['opponent']['isWinner'] && $bet['opponent']['isMe'])
                         &nbsp;<i class="fas fa-check text-success"></i>
                     @elseif($bet['isLoser'] && $bet['opponent']['isMe'])
