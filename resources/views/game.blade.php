@@ -57,11 +57,11 @@
                     <table class="table table-borderless table-condensed table-hover">
                         <thead>
                         <tr>
-                            <th colspan="4">
+                            <th colspan="4" data-toggle="modal" data-target="#createBetModal">
                                 Bets ({{ count($bets) }})
                                 @if($game['isBettable'])
                                 <!-- Button trigger modal -->
-                                    <a class="clickable text-primary" data-toggle="modal" data-target="#createBetModal">
+                                    <a class="clickable text-primary">
                                         <i class="fas fa-plus"></i>
                                     </a>
                                 @endif
@@ -74,6 +74,13 @@
                         @endforeach
                         </tbody>
                     </table>
+                    @if(!count($bets) && $game['isBettable'])
+                        <div class="jumbotron jumbotron-fluid">
+                            <div class="text-center">
+                                <button class="btn btn-primary btn-large " data-toggle="modal" data-target="#createBetModal">Add a bet!</button>
+                            </div>
+                        </div>
+                    @endif
                 </div>
             </div>
         </div>
