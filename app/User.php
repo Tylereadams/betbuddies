@@ -16,9 +16,7 @@ class User extends Authenticatable
      *
      * @var array
      */
-    protected $fillable = [
-        'name', 'email', 'password',
-    ];
+    protected $guarded = ['id'];
 
     /**
      * The attributes that should be hidden for arrays.
@@ -56,7 +54,8 @@ class User extends Authenticatable
 
     public function setUrlSegmentAttribute()
     {
-        $this->attributes['url_segment'] = $this->urlSegment();
+
+        $this->attributes['url_segment'] = $this->createUrlSegment();
     }
 
     /**
@@ -65,8 +64,8 @@ class User extends Authenticatable
     public function getUrlSegmentAttribute()
     {
         // Create URL segment if we don't have one.
-        if(!isset($this->url_segment)){
-            $this->urlSegment();
+        if(!$this->url_segment){
+            $this->createUrlSegment();
         }
 
         return $this->url_segment;
@@ -76,19 +75,17 @@ class User extends Authenticatable
      * Creates URL safe string for game: 'homeTeam-awayTeam-date'
      * @return mixed
      */
-    public function urlSegment()
+    public function createUrlSegment()
     {
         // Create URL segment if we don't have one.
-        if(!isset($this->url_segment)){
-            $newSegment = str_slug($this->name);
+        $newSegment = str_slug($this->name);
 
-            // How many of these segments exists already
-            $count = count(User::whereRaw("url_segment REGEXP '^{$newSegment}(-[0-9]+)?$' and id != '{$this->id}'")->get());
+        // How many of these segments exists already
+        $count = count(User::whereRaw("url_segment REGEXP '^{$newSegment}(-[0-9]+)?$' and id != '{$this->id}'")->get());
 
-            // More than 1, increment by the count
-            $this->url_segment = $count > 0 ? $newSegment.'-'.$count : $newSegment;
-            $this->save();
-        }
+        // More than 1, increment by the count
+        $this->url_segment = $count > 0 ? $newSegment.'-'.$count : $newSegment;
+        $this->save();
 
         return $this->url_segment;
     }
