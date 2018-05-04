@@ -49,12 +49,14 @@
     <td class="align-middle">
         <div class="row">
             @if($bet['isAcceptable'] && $bet['fromMe'])
-                {{-- Button trigger modal --}}
+                {{-- Modal --}}
+                @include('partials.deleteBetModal', ['bet'=> $bet])
                 <button type="button" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#deleteBetModal{{ $bet['id'] }}">
                     Delete
                 </button>
             @elseif($bet['isAcceptable'] && !$bet['fromMe'])
                 {{-- Modal --}}
+                @include('partials.acceptBetModal')
                 <button type="button" class="btn btn-success btn-sm" data-toggle="modal" data-target="#acceptBetModal">
                     Accept
                 </button>
@@ -64,5 +66,3 @@
         </div>
     </td>
 </tr>
-@include('partials.deleteBetModal', ['bet'=> $bet])
-@include('partials.acceptBetModal')
