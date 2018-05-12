@@ -15,7 +15,7 @@ class GamesController extends Controller
      * Returns view for all games
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
-    public function games($date = 'now')
+    public function gamesByDate($date = 'now')
     {
         // Default date to today
         if(!$date){
@@ -30,6 +30,8 @@ class GamesController extends Controller
 
         $games = Games::where('start_date', 'LIKE', $date.'%')
             ->orderBy('league_id')
+            ->orderBy('status')
+            ->orderBy('period')
             ->orderBy('start_date')
             ->get();
 
