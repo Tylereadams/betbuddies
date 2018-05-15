@@ -17,6 +17,7 @@ Route::get('/home', 'HomeController@index')->name('home');
 Route::get('/games/{date?}', 'GamesController@gamesByDate');
 
 Route::get('machine-learning', 'MachineLearningController@index');
+Route::get('tweet-log', 'AdminController@tweetLog');
 Route::post('tweets/{tweetId}/save', 'MachineLearningController@store');
 
 
