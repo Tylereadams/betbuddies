@@ -39,7 +39,7 @@ class Kernel extends ConsoleKernel
 
         // Tweet the games for today
         $schedule->command('betbuddies:tweet-games')
-            ->everyMinute();
+            ->everyFiveMinutes();
     }
 
     /**
