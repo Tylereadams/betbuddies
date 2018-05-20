@@ -81,18 +81,21 @@ class Teams extends Model
             ->toArray();
 
         $postedTweets = [];
-        echo "Checking tweets... \n";
         foreach($timeline as $tweet) {
-            // Check the original tweet if this is a retweet, assign it if that's what we want
-            if(isset($tweet->retweeted_status)){
-                $tweet = Twitter::getTweet($tweet->retweeted_status->id, ['include_entities' => 1, 'trim_user' => 1]);
-                if(!$tweet){
-                    continue;
-                }
+            if(in_array($tweet->id, $existingTweets)){
+                echo "exists already. \n";
+                continue;
             }
 
-            // Make sure it's a tweet we want or haven't tweeted already
-            if(!$this->isValidTweet($tweet, $game) || in_array($tweet->id, $existingTweets)){
+            echo "       checking tweet: ";
+            // If it's a retweet, check the original instead.
+            if(isset($tweet->retweeted_status)){
+                $tweet = Twitter::getTweet($tweet->retweeted_status->id, ['include_entities' => 1, 'trim_user' => 1]);
+            }
+
+            // Make sure it's a tweet we want
+            if(!$this->isValidTweet($tweet, $game)){
+                echo "not valid \n";
                 continue;
             }
 
@@ -107,12 +110,13 @@ class Teams extends Model
                 ]);
             }
 
-            TeamsTweets::firstOrCreate([
+            TeamsTweets::updateOrCreate([
                 'team_id' => $this->id,
                 'game_id' => $game->id,
                 'tweet_id' => $tweet->id,
-                'period' => $game->period ? $game->period : 1,
                 'media_url' => $mediaUrl
+            ], [
+                'period' => $game->period ? $game->period : 1
             ]);
 
             $postedTweets[] = $tweet;
@@ -129,8 +133,6 @@ class Teams extends Model
 
     private function clearTweets()
     {
-        TeamsTweets::where('team_id', $this->id)->delete();
-
         $tweets = Twitter::getUserTimeline(['count' => 200]);
 
         $tweetsDeleted = [];
@@ -148,28 +150,52 @@ class Teams extends Model
 
         // Merge and sort collection by most recent
 //        return $timelines[0]->merge($timelines[1])->sortByDesc('created_at');
-        return collect(Twitter::getUserTimeline(['screen_name' => $teamHandles[0], 'count' => 20, 'include_entities' => 1]))->sortByDesc('created_at');
+        return collect(Twitter::getUserTimeline(['screen_name' => $teamHandles[0], 'count' => 30, 'include_entities' => 1]))->sortByDesc('created_at');
     }
 
     private function isValidTweet($tweet, $game)
     {
+        // Must have media attached and be a video
+        if(!isset($tweet->extended_entities->media[0]->media_url) || $tweet->extended_entities->media[0]->type != 'video') {
+            return false;
+        }
+
         $timeOfTweet = Carbon::parse($tweet->created_at);
         // Add 10 minute buffer to start time since vids will take at least that to be posted. Don't want intro videos.
         $gameStartDate = Carbon::parse($game->start_date);
         // Add 10 minute buffer to end time since vids will take at least that to be posted. Don't want intro videos.
-        $gameEndDate = Carbon::parse($game->ended_at)->addMinutes(10);
+        $gameEndDate = $game->ended_at ? Carbon::parse($game->ended_at)->addMinutes(10) : Carbon::parse('now');
 
-        if($timeOfTweet > $gameStartDate // Tweet posted after game has started
-            && $timeOfTweet < $gameEndDate // Tweet posted before game ended
-            && $tweet->retweeted == false // Didn't retweet ourselves
-            && isset($tweet->extended_entities->media[0]->media_url) // Has media attached
-            && $tweet->extended_entities->media[0]->type == 'video' // Media is a video
-            && $this->checkImage($tweet, $game->league->name) // Machine learning script to identify a highlight
-        ) {
-            return true;
-        } else {
+        switch(false){
+            case isset($tweet->extended_entities->media[0]->media_url) &&  $tweet->extended_entities->media[0]->type == 'video':
+                $statusId = TweetLogs::NOT_A_VIDEO;
+                break;
+            case $timeOfTweet > $gameStartDate && $timeOfTweet < $gameEndDate:
+                $statusId = TweetLogs::GAME_NOT_IN_PROGRESS;
+                break;
+            case $tweet->retweeted == false:
+                $statusId = TweetLogs::RETWEETED_ALREADY;
+                break;
+            case $this->checkImage($tweet, $game->league->name):
+                $statusId = TweetLogs::MACHINE_LEARNING_FAILED;
+                break;
+            default:
+                $statusId = 0;
+        }
+
+        TweetLogs::updateOrCreate([
+            'tweet_id' => $tweet->id,
+            'media_url' => $tweet->extended_entities->media[0]->media_url,
+            'team_id' => $this->id
+        ],[
+            'is_invalid' => $statusId,
+        ]);
+
+        if($statusId > 0) {
             return false;
         }
+
+        return true;
     }
 
     private function checkImage($tweet, $leagueName)
@@ -178,6 +204,7 @@ class Teams extends Model
             return false;
         }
         $path = $tweet->extended_entities->media[0]->media_url;
+
 
         $process = new Process("python storage/machine_learning/image_script.py ".$path." ".$leagueName);
         $process->run();

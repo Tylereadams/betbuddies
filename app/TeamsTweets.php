@@ -14,6 +14,7 @@ class TeamsTweets extends Model
 
     protected $guarded = ['id'];
 
+    protected $softDelete = true;
 
     /**
      * Relations
