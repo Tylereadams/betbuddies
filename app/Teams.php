@@ -47,7 +47,7 @@ class Teams extends Model
 
     public function getKey()
     {
-        return strtoupper('_'.$this->nickname.'_'.$this->id);
+        return strtoupper('_'.str_replace(' ', '', $this->nickname).'_'.$this->id);
     }
 
     /**
