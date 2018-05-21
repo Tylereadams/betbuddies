@@ -36,3 +36,14 @@ function ordinalNumber($number)
         return $number. $ends[$number % 10];
     }
 }
+
+/**
+ * Converts string into hashtag friendly
+ * No spaces
+ * @param $string
+ * @return mixed
+ */
+function hashTagFormat($string)
+{
+    return str_replace(' ', '', $string);
+}
