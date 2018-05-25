@@ -82,20 +82,13 @@ class Teams extends Model
 
         $postedTweets = [];
         foreach($timeline as $tweet) {
-            if(in_array($tweet->id, $existingTweets)){
-                echo "exists already. \n";
-                continue;
-            }
-
-            echo "       checking tweet: ";
             // If it's a retweet, check the original instead.
             if(isset($tweet->retweeted_status)){
                 $tweet = Twitter::getTweet($tweet->retweeted_status->id, ['include_entities' => 1, 'trim_user' => 1]);
             }
 
             // Make sure it's a tweet we want
-            if(!$this->isValidTweet($tweet, $game)){
-                echo "not valid \n";
+            if(!$this->isValidTweet($tweet, $game) || in_array($tweet->id, $existingTweets)){
                 continue;
             }
 
@@ -212,6 +205,8 @@ class Teams extends Model
         // executes after the command finishes
         if (!$process->isSuccessful()) {
             throw new ProcessFailedException($process);
+
+            return false;
         }
 
         $output = str_replace(array("\n", ""), '', $process->getOutput());
