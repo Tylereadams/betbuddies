@@ -9,6 +9,7 @@ use App\TeamsTweets;
 use Carbon\Carbon;
 use Symfony\Component\Process\Process;
 use Symfony\Component\Process\Exception\ProcessFailedException;
+use Illuminate\Support\Facades\Cache;
 
 class Teams extends Model
 {
@@ -191,6 +192,12 @@ class Teams extends Model
         return true;
     }
 
+    /**
+     * Returns true or false if the image is a highlight or not
+     * @param $tweet
+     * @param $leagueName
+     * @return bool|mixed
+     */
     private function checkImage($tweet, $leagueName)
     {
         if(!isset($tweet->extended_entities->media[0])){
@@ -198,20 +205,23 @@ class Teams extends Model
         }
         $path = $tweet->extended_entities->media[0]->media_url;
 
+        // Remember the results of checked tweets for 12 hours
+        $output = Cache::remember('image-check-'.$tweet->id, 60 * 12, function () use ($path, $leagueName) {
+            $process = new Process("python storage/machine_learning/image_script.py ".$path." ".$leagueName);
+            $process->run();
 
-        $process = new Process("python storage/machine_learning/image_script.py ".$path." ".$leagueName);
-        $process->run();
+            // executes after the command finishes
+            if (!$process->isSuccessful()) {
+                throw new ProcessFailedException($process);
 
-        // executes after the command finishes
-        if (!$process->isSuccessful()) {
-            throw new ProcessFailedException($process);
+                return false;
+            }
+            $output = str_replace(array("\n", ""), '', $process->getOutput());
 
-            return false;
-        }
+            // output is a string: "[0]" or "[1]"
+            return (bool) $output[1];
+        });
 
-        $output = str_replace(array("\n", ""), '', $process->getOutput());
-
-        // output is a string: "[0]" or "[1]"
-        return (bool) $output[1];
+        return $output;
     }
 }
