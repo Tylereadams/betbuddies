@@ -33,13 +33,17 @@ class Kernel extends ConsoleKernel
         $schedule->command('betbuddies:import-games')
             ->everyMinute();
 
-        // Keep the schedule up to date a week in advance
+        // Keep the schedule up to date two days in advance
         $schedule->command('betbuddies:import-games '.strtotime('+2 days'))
             ->dailyAt(5);
 
-        // Tweet the games for today
-        $schedule->command('betbuddies:tweet-games')
+        // Tweet the videos for today
+        $schedule->command('betbuddies:tweet-highlights')
             ->everyFiveMinutes();
+
+        // Tweet status messages for today
+        $schedule->command('betbuddies:tweet-start-end')
+            ->everyMinute();
     }
 
     /**

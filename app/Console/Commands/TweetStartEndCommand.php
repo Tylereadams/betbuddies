@@ -3,24 +3,25 @@
 namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
+use Thujohn\Twitter\Facades\Twitter;
 use Carbon\Carbon;
 use App\Games;
 
-class TweetGameCommand extends Command
+class TweetStartEndCommand extends Command
 {
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    protected $signature = 'betbuddies:tweet-highlights {date=now}';
+    protected $signature = 'betbuddies:tweet-start-end {date=now}';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Sends tweets for today\'s games';
+    protected $description = 'Tweets the beginning and end of a game.';
 
     /**
      * Create a new command instance.
@@ -47,17 +48,30 @@ class TweetGameCommand extends Command
         $games = Games::where('start_date', '>', $minDate)
             ->where('start_date', '<', $maxDate)
             ->get();
-        $games->load(['homeTeam.tweets', 'awayTeam.tweets']);
+//        $games->load(['homeTeam.tweets', 'awayTeam.tweets']);
 
         if(!$games){
             return 'No results.';
         }
 
-        $result = [];
         foreach($games as $game) {
-            $teams = [$game->homeTeam, $game->awayTeam];
-            foreach($teams as $team) {
-                $result[] = $team->sendGameTweets($game);
+            $startDate = Carbon::parse($game->start_date);
+
+            // Game hasn't started yet, keep it movin'
+            if(!$startDate->isPast()){
+                continue;
+            }
+
+            // Start date is within the past minute, send the start tweet
+            if($startDate->diffInSeconds() < 60){
+                $game->homeTeam->sendStartTweet($game);
+                $game->awayTeam->sendStartTweet($game);
+            }
+
+            // End date is within the past minute, send the final tweet
+            if(Carbon::parse($game->ended_at)->diffInSeconds() < 60){
+                $game->homeTeam->sendEndTweet($game);
+                $game->awayTeam->sendEndTweet($game);
             }
         }
     }

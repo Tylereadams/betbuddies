@@ -125,6 +125,60 @@ class Teams extends Model
         return $postedTweets;
     }
 
+    /**
+     * Sends a tweet if a game just started.
+     * @param \App\Games $game
+     * @return bool
+     */
+    public function sendStartTweet(Games $game)
+    {
+        // Login to twitter
+        if(!$this->reconfigTeamTwitter()){
+            return false;
+        }
+
+        // Post the tweet on production
+        Twitter::postTweet([
+            'status' => '#'.hashTagFormat($game->homeTeam->nickname).' vs #'.hashTagFormat($game->awayTeam->nickname).' is starting.'
+        ]);
+    }
+
+    /**
+     * Tweet to send at the end of the game
+     * @param \App\Games $game
+     * @return bool
+     */
+    public function sendEndTweet(Games $game)
+    {
+        if(!$this->reconfigTeamTwitter() || !$game->ended_at){
+            return false;
+        }
+
+        // Post the tweet on production
+        Twitter::postTweet([
+            'status' => '#'.hashTagFormat($game->homeTeam->nickname).' '.$game->home_score.' #'.hashTagFormat($game->awayTeam->nickname).' '.$game->away_score.' Final.'
+        ]);
+    }
+
+    /**
+     * Logs into team's twitter account, Todo: move this to the constructor or something.
+     * @return bool
+     */
+    private function reconfigTeamTwitter()
+    {
+        if(getenv('TWITTER_CONSUMER_KEY'.$this->getKey()) === false){
+            return false;
+        }
+
+        // Get the config for this team's twitter account
+        return Twitter::reconfig([
+            'consumer_key' => env('TWITTER_CONSUMER_KEY'.$this->getKey()),
+            'consumer_secret' => env('TWITTER_CONSUMER_SECRET'.$this->getKey()),
+            'token' => env('TWITTER_ACCESS_TOKEN'.$this->getKey()),
+            'secret' => env('TWITTER_ACCESS_TOKEN_SECRET'.$this->getKey())
+        ]);
+    }
+
     private function clearTweets()
     {
         $tweets = Twitter::getUserTimeline(['count' => 200]);
@@ -144,7 +198,7 @@ class Teams extends Model
 
         // Merge and sort collection by most recent
 //        return $timelines[0]->merge($timelines[1])->sortByDesc('created_at');
-        return collect(Twitter::getUserTimeline(['screen_name' => $teamHandles[0], 'count' => 30, 'include_entities' => 1]))->sortByDesc('created_at');
+        return collect(Twitter::getUserTimeline(['screen_name' => $teamHandles[0], 'count' => 15, 'include_entities' => 1]))->sortByDesc('created_at');
     }
 
     private function isValidTweet($tweet, $game)
