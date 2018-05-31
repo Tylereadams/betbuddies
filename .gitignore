@@ -11,4 +11,4 @@ npm-debug.log
 yarn-error.log
 .env
 .DS_Store
-/storage/machine_learning
+/storage/machine_learning/data/*
