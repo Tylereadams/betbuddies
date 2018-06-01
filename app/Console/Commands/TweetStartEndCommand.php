@@ -6,6 +6,7 @@ use Illuminate\Console\Command;
 use Thujohn\Twitter\Facades\Twitter;
 use Carbon\Carbon;
 use App\Games;
+use Illuminate\Support\Facades\Cache;
 
 class TweetStartEndCommand extends Command
 {
@@ -68,10 +69,14 @@ class TweetStartEndCommand extends Command
                 $game->awayTeam->sendStartTweet($game);
             }
 
-            // End date is within the past minute, send the final tweet
-            if(Carbon::parse($game->ended_at)->diffInSeconds() < 60){
-                $game->homeTeam->sendEndTweet($game);
-                $game->awayTeam->sendEndTweet($game);
+            // Send end tweet 10 minutes after game has ended
+            if(Carbon::parse($game->ended_at)->addMinute(10)->isPast()){
+                // Only send the ending tweet once, didn't want to save these tweets to DB so storing in cache for 10 hours if it got sent
+                Cache::remember('ending-tweet-'.$game->id, 60 * 10, function ()use($game) {
+                    $game->homeTeam->sendEndTweet($game);
+                    $game->awayTeam->sendEndTweet($game);
+                    return true;
+                });
             }
         }
     }
