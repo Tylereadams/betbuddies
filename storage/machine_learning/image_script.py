@@ -68,7 +68,7 @@ i = 0
 while i < len(badTestValues):
 	badLabels.append(0)
 	i+=1
-print('training data set\n')
+
 features_train = array(goodTestValues + badTestValues)
 labels_train = array(goodLabels + badLabels)
 
@@ -77,25 +77,18 @@ clf = RandomForestClassifier()
 
 # # train the classifier using the training data
 clf.fit(features_train, labels_train)
-print('trained \n')
+
 # Make sure images have same num of values in their array
 diff = abs(clf.n_features_ - len(imageToCheck))
 # Make image arrays the same size to compare
 if(diff > 0):
-	print('making same size \n')
 	for i in range(0, diff):
 		if(len(imageToCheck) > clf.n_features_):
 			imageToCheck.pop(i) # Remove the difference if image has more
 		else:
 			imageToCheck.append(0) # Add white (0) if image has less
 
-print('predicting \n')
+# Predicting...
 predicted = clf.predict([imageToCheck]) # [1]
-
-#move to folder that it predicted
-if(predicted == 1):
-	os.rename(tempPath, dataPath + "/good/" + imageFileName)
-else:
-	os.rename(tempPath, dataPath + "/bad/" + imageFileName)
 
 print(predicted)
