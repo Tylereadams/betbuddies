@@ -63,8 +63,8 @@ class TweetStartEndCommand extends Command
                 continue;
             }
 
-            // Start date is within the past minute, send the start tweet
-            if($startDate->diffInSeconds() < 60){
+            // 5 minutes before start date is within the past minute, send the start tweet
+            if($startDate->subMinute(5)->diffInSeconds() < 60){
                 $game->homeTeam->sendStartTweet($game);
                 $game->awayTeam->sendStartTweet($game);
             }
