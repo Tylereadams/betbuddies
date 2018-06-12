@@ -117,7 +117,6 @@ class Teams extends Model
             $existingTweets[] = $tweet->id;
         }
 
-
         if(!empty($postedTweets)){
             echo count($postedTweets) ." posted \r\n";
         }
@@ -132,14 +131,14 @@ class Teams extends Model
      */
     public function sendStartTweet(Games $game)
     {
-        // Login to twitter
-        if(!$this->reconfigTeamTwitter()){
+        // Login to twitter only if game hasn't started yet.
+        if(!$this->reconfigTeamTwitter() || $game->ended_at){
             return false;
         }
 
         // Post the tweet on production
         Twitter::postTweet([
-            'status' => '#'.hashTagFormat($game->homeTeam->nickname).' vs #'.hashTagFormat($game->awayTeam->nickname).' is starting.'
+            'status' => '#'.hashTagFormat($game->homeTeam->nickname).' vs #'.hashTagFormat($game->awayTeam->nickname).' is starting soon.'
         ]);
     }
 
@@ -260,7 +259,7 @@ class Teams extends Model
         $path = $tweet->extended_entities->media[0]->media_url;
 
         // Remember the results of checked tweets for 12 hours
-        $output = Cache::remember('image-check-'.$tweet->id, 60 * 12, function () use ($path, $leagueName) {
+       // $output = Cache::remember('image-check-'.$tweet->id, 60 * 12, function () use ($path, $leagueName) {
             $process = new Process("python storage/machine_learning/image_script.py ".$path." ".$leagueName);
             $process->run();
 
@@ -274,7 +273,7 @@ class Teams extends Model
 
             // output is a string: "[0]" or "[1]"
             return (bool) $output[1];
-        });
+      //  });
 
         return $output;
     }
