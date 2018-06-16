@@ -64,10 +64,10 @@ class TweetStartEndCommand extends Command
             }
 
             // 5 minutes before start date is within the past minute, send the start tweet
-            if($startDate->subMinute(5)->diffInSeconds() < 60){
-                $game->homeTeam->sendStartTweet($game);
-                $game->awayTeam->sendStartTweet($game);
-            }
+//            if($startDate->subMinute(5)->diffInSeconds() < 60){
+//                $game->homeTeam->sendStartTweet($game);
+//                $game->awayTeam->sendStartTweet($game);
+//            }
 
             // Send end tweet 10 minutes after game has ended
             if(Carbon::parse($game->ended_at)->addMinute(10)->isPast()){
