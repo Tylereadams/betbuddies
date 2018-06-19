@@ -27,7 +27,7 @@ class Kernel extends ConsoleKernel
 
         // Update teams on the 1st at 3am
         $schedule->command('betbuddies:import-team')
-                  ->monthly(1, '3:00');
+                  ->dailyAt('4:00');
 
         // Update games for today
         $schedule->command('betbuddies:import-games')
