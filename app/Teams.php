@@ -72,8 +72,9 @@ class Teams extends Model
         ]);
 
         echo 'Getting tweets from '.$this->twitter."\n";
+
         // Get only videos from this team, including both got the order off.
-        $timeline = $this->getTimeline([$this->twitter]);
+        $timeline = $this->getTimeline([$game->homeTeam->twitter, $game->awayTeam->twitter]);
 
         // Get the video's we've tweeted already
         $existingTweets = TeamsTweets::where('game_id', $game->id)
@@ -83,6 +84,7 @@ class Teams extends Model
 
         $postedTweets = [];
         foreach($timeline as $tweet) {
+
             // If it's a retweet, check the original instead.
             if(isset($tweet->retweeted_status)){
                 $tweet = Twitter::getTweet($tweet->retweeted_status->id, ['include_entities' => 1, 'trim_user' => 1]);
@@ -191,13 +193,12 @@ class Teams extends Model
 
     private function getTimeline($teamHandles = [])
     {
-//        foreach($teamHandles as $handle){
-//            $timelines[] = collect(Twitter::getUserTimeline(['screen_name' => $handle, 'count' => 200]));
-//        }
+        foreach($teamHandles as $handle){
+            $timelines[] = Twitter::getUserTimeline(['screen_name' => $handle, 'count' => 10, 'include_entities' => 1]);
+        }
 
         // Merge and sort collection by most recent
-//        return $timelines[0]->merge($timelines[1])->sortByDesc('created_at');
-        return collect(Twitter::getUserTimeline(['screen_name' => $teamHandles[0], 'count' => 8, 'include_entities' => 1]))->sortByDesc('created_at');
+        return collect(array_flatten($timelines))->sortByDesc('created_at');
     }
 
     private function isValidTweet($tweet, $game)
