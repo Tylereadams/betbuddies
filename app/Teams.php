@@ -77,10 +77,7 @@ class Teams extends Model
         $timeline = $this->getTimeline([$game->homeTeam->twitter, $game->awayTeam->twitter]);
 
         // Get the video's we've checked already
-        $existingTweets = TweetLogs::where(function($q) use($game) {
-            $q->where('team_id', $game->homeTeam->id);
-            $q->orWhere('team_id', $game->awayTeam->id);
-        })
+        $existingTweets = TweetLogs::where('team_id', $this->id)
             ->where('created_at', '>', Carbon::now()->subHours(24))
             ->pluck('tweet_id')
             ->toArray();
