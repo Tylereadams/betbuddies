@@ -76,9 +76,12 @@ class Teams extends Model
         // Get only videos from this team, including both got the order off.
         $timeline = $this->getTimeline([$game->homeTeam->twitter, $game->awayTeam->twitter]);
 
-        // Get the video's we've tweeted already
-        $existingTweets = TeamsTweets::where('game_id', $game->id)
-            ->where('team_id', $this->id)
+        // Get the video's we've checked already
+        $existingTweets = TweetLogs::where(function($q) use($game) {
+            $q->where('team_id', $game->homeTeam->id);
+            $q->orWhere('team_id', $game->awayTeam->id);
+        })
+            ->where('created_at', '>', Carbon::now()->subHours(24))
             ->pluck('tweet_id')
             ->toArray();
 
@@ -91,7 +94,7 @@ class Teams extends Model
             }
 
             // Make sure it's a tweet we want
-            if(!$this->isValidTweet($tweet, $game) || in_array($tweet->id, $existingTweets)){
+            if(in_array($tweet->id, $existingTweets) || !$this->isValidTweet($tweet, $game)){
                 continue;
             }
 
@@ -194,7 +197,7 @@ class Teams extends Model
     private function getTimeline($teamHandles = [])
     {
         foreach($teamHandles as $handle){
-            $timelines[] = Twitter::getUserTimeline(['screen_name' => $handle, 'count' => 10, 'include_entities' => 1]);
+            $timelines[] = Twitter::getUserTimeline(['screen_name' => $handle, 'count' => 15, 'include_entities' => 1]);
         }
 
         // Merge and sort collection by most recent
