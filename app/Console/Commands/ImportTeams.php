@@ -49,19 +49,12 @@ class ImportTeams extends Command
 
         foreach($leagues as $league){
             //$teams = $this->statProvider->getTeams($league);
-            $teams = Teams::where('league_id', $league->id)->get();
-
-            echo "\n\n\nUpdating teams... \n";
+            $teams = Teams::where('league_id', $league->id)->where('nickname', '!=', 'yankees')->get();
 
             foreach($teams as $team) {
                 $teamToUpdate = Teams::where('location', $team['location'])
                     ->where('nickname', $team['nickname'])
                     ->first();
-
-                if(!$teamToUpdate) {
-                    echo $team['nickname']."... not found \n";
-                    continue;
-                }
 
                 // Swap the twitter keys so we can use it on the team
                 if(getenv('TWITTER_CONSUMER_KEY'.$teamToUpdate->getKey())){
@@ -72,6 +65,8 @@ class ImportTeams extends Command
                         'token' => env('TWITTER_ACCESS_TOKEN'.$teamToUpdate->getKey()),
                         'secret' => env('TWITTER_ACCESS_TOKEN_SECRET'.$teamToUpdate->getKey())
                     ]);
+
+                    echo $teamToUpdate->nickname."...\n";
 
                     $twitterAccount = Twitter::getUsers(['screen_name' => $team->twitter]);
 
@@ -94,7 +89,6 @@ class ImportTeams extends Command
                 $teamToUpdate->updated_at = Carbon::now();
 
                 $teamToUpdate->save();
-                echo "\n";
             }
         }
     }
