@@ -8,6 +8,11 @@ class Leagues extends Model
 {
     public $timestamps = false;
 
+    const NBA_ID = 1;
+    const MLB_ID = 2;
+    const NFL_ID = 3;
+    const NHL_ID = 4;
+
     /**
      * Relations
      */

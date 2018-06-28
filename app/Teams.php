@@ -211,8 +211,8 @@ class Teams extends Model
         $timeOfTweet = Carbon::parse($tweet->created_at);
         // Add 10 minute buffer to start time since vids will take at least that to be posted. Don't want intro videos.
         $gameStartDate = Carbon::parse($game->start_date);
-        // Add 10 minute buffer to end time since vids will take at least that to be posted. Don't want intro videos.
-        $gameEndDate = $game->ended_at ? Carbon::parse($game->ended_at)->addMinutes(10) : Carbon::parse('now');
+        // Add 20 minute buffer to end time since vids will take at least that to be posted.
+        $gameEndDate = $game->ended_at ? Carbon::parse($game->ended_at)->addMinutes(20) : Carbon::parse('now');
 
         switch(false){
             case isset($tweet->extended_entities->media[0]->media_url) &&  $tweet->extended_entities->media[0]->type == 'video':
