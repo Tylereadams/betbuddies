@@ -33,7 +33,6 @@ class CardCreator
             'light' => public_path().'/fonts/Roboto-Light.ttf'
         ];
 
-        dd($this);
         $this->game = $game;
     }
 
