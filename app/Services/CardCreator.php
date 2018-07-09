@@ -5,8 +5,6 @@ namespace App\Services;
 use App\Games;
 use Intervention\Image\Facades\Image;
 use Intervention\Image\ImageManager;
-use Illuminate\Support\Facades\File;
-use Intervention\Image\Gd;
 
 class CardCreator
 {
@@ -28,9 +26,11 @@ class CardCreator
         $this->finalOffsetHeigth = intval($this->imageHeight / 1.35);
 
         $this->fontParams = [
-            'size' => 120,
+            'smallSize' => 65,
+            'largeSize' => 120,
             'medium' => public_path().'/fonts/Roboto-Medium.ttf',
-            'light' => public_path().'/fonts/Roboto-Light.ttf'
+            'light' => public_path().'/fonts/Roboto-Light.ttf',
+            'secondaryColor' => '#000000'
         ];
 
         $this->game = $game;
@@ -65,13 +65,13 @@ class CardCreator
         // Home Team Score
         $img->text($this->game->away_score, $this->awayScoreOffsetWidth + 2, $this->scoreOffsetHeigth + 2, function($font) {
             $font->file($this->fontParams['medium']);
-            $font->size($this->fontParams['size']);
+            $font->size($this->fontParams['largeSize']);
             $font->align('center');
             $font->color('#ffffff');
         });
         $img->text($this->game->away_score, $this->awayScoreOffsetWidth, $this->scoreOffsetHeigth, function($font) {
             $font->file($this->fontParams['medium']);
-            $font->size($this->fontParams['size']);
+            $font->size($this->fontParams['largeSize']);
             $font->align('center');
             $font->color('#000000');
         });
@@ -79,13 +79,13 @@ class CardCreator
         // Away Team Score
         $img->text($this->game->home_score, $this->homeScoreOffsetWidth + 2, $this->scoreOffsetHeigth + 2, function($font) {
             $font->file($this->fontParams['medium']);
-            $font->size($this->fontParams['size']);
+            $font->size($this->fontParams['largeSize']);
             $font->align('center');
             $font->color('#ffffff');
         });
         $img->text($this->game->home_score, $this->homeScoreOffsetWidth, $this->scoreOffsetHeigth, function($font) {
             $font->file($this->fontParams['medium']);
-            $font->size($this->fontParams['size']);
+            $font->size($this->fontParams['largeSize']);
             $font->align('center');
             $font->color('#000000');
         });
@@ -93,9 +93,9 @@ class CardCreator
         // 'Final' text
         $img->text('Final', $this->finalOffsetWidth, $this->finalOffsetHeigth, function($font) {
             $font->file($this->fontParams['light']);
-            $font->size(60);
+            $font->size($this->fontParams['smallSize']);
             $font->align('center');
-            $font->color('#404040');
+            $font->color($this->fontParams['secondaryColor']);
         });
 
         return $img;
