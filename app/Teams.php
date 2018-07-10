@@ -175,7 +175,7 @@ class Teams extends Model
 
         // Post the tweet on production
         Twitter::postTweet([
-            'status' => '#'.hashTagFormat($game->homeTeam->nickname).' '.$game->home_score.' #'.hashTagFormat($game->awayTeam->nickname).' '.$game->away_score.' - Final',
+            'status' => '#'.hashTagFormat($game->awayTeam->nickname).' '.$game->away_score.' #'.hashTagFormat($game->homeTeam->nickname).' '.$game->home_score.' - Final',
             'media_ids' => $media->media_id
         ]);
     }
