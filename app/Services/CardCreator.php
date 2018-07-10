@@ -14,13 +14,13 @@ class CardCreator
         $this->imageHeight = 700;
         $this->imageWidth = 1200;
 
-        $this->logoOffsetWidth =  intval($this->imageWidth / 10);
+        $this->logoOffsetWidth =  intval($this->imageWidth / 8);
         $this->logoOffsetHeigth =  intval($this->imageHeight / 10);
 
         $this->scoreOffsetHeigth =  (int) $this->imageWidth / 2.05;
 
-        $this->homeScoreOffsetWidth =  900;
-        $this->awayScoreOffsetWidth =  300;
+        $this->homeScoreOffsetWidth =  intval($this->imageWidth / 1.37);
+        $this->awayScoreOffsetWidth =  intval($this->imageWidth / 3.75);
 
 //        $this->finalOffsetWidth = intval($this->imageWidth / 2);
 //        $this->finalOffsetHeigth = intval($this->imageHeight / 1.223);
