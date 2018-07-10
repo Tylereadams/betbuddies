@@ -22,8 +22,8 @@ class CardCreator
         $this->homeScoreOffsetWidth =  900;
         $this->awayScoreOffsetWidth =  300;
 
-        $this->finalOffsetWidth = intval($this->imageWidth / 2);
-        $this->finalOffsetHeigth = intval($this->imageHeight / 1.223);
+//        $this->finalOffsetWidth = intval($this->imageWidth / 2);
+//        $this->finalOffsetHeigth = intval($this->imageHeight / 1.223);
 
         $this->fontParams = [
             'smallSize' => 65,
@@ -91,12 +91,12 @@ class CardCreator
         });
 
         // 'Final' text
-        $img->text('Final', $this->finalOffsetWidth, $this->finalOffsetHeigth, function($font) {
-            $font->file($this->fontParams['light']);
-            $font->size($this->fontParams['smallSize']);
-            $font->align('center');
-            $font->color($this->fontParams['secondaryColor']);
-        });
+//        $img->text('Final', $this->finalOffsetWidth, $this->finalOffsetHeigth, function($font) {
+//            $font->file($this->fontParams['light']);
+//            $font->size($this->fontParams['smallSize']);
+//            $font->align('center');
+//            $font->color($this->fontParams['secondaryColor']);
+//        });
 
         return $img;
     }
