@@ -28,19 +28,20 @@ class Games extends Model
 
         // Update the status of the game if ended_at or the score changed
         static::updating(function ($game) {
-            if($game->isDirty(['ended_at', 'home_score', 'away_score'])){
-                switch(true){
-                    case $game->ended_at:
-                        $status = Games::ENDED;
-                        break;
-                    case $game->home_score >= 0:
-                        $status = Games::IN_PROGRESS;
-                        break;
-                    default:
-                        $status = Games::UPCOMING;
-                }
-                $game->status = $status;
+            $status = Games::UPCOMING;
+
+            if($game->isDirty(['home_score', 'away_score'])){
+                    $status = Games::IN_PROGRESS;
             }
+
+            // Send end of game tweets
+            if($game->isDirty(['ended_at'])){
+                $status = Games::ENDED;
+                $game->homeTeam->sendEndTweet($game);
+                $game->awayTeam->sendEndTweet($game);
+            }
+
+            $game->status = $status;
         });
     }
 
