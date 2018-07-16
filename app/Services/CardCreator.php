@@ -22,6 +22,9 @@ class CardCreator
         $this->homeScoreOffsetWidth =  intval($this->imageWidth / 1.37);
         $this->awayScoreOffsetWidth =  intval($this->imageWidth / 3.75);
 
+        $this->homeRgbColor = hex2rgb($game->homeTeam->colors->first()->hex);
+        $this->awayRgbColor = hex2rgb($game->awayTeam->colors->first()->hex);
+
 //        $this->finalOffsetWidth = intval($this->imageWidth / 2);
 //        $this->finalOffsetHeigth = intval($this->imageHeight / 1.223);
 
@@ -62,6 +65,30 @@ class CardCreator
         $img->insert($awayImage, 'top-left', $this->logoOffsetWidth, $this->logoOffsetHeigth);
         $img->insert($homeImage, 'top-right', $this->logoOffsetWidth, $this->logoOffsetHeigth);
 
+        // define polygon points
+        $homePoints = array(
+            $this->imageWidth,  $this->scoreOffsetHeigth - 110,  // Point 1 (x, y)
+            ($this->imageWidth / 2) + 10,  $this->scoreOffsetHeigth - 110, // Point 2 (x, y)
+            ($this->imageWidth / 2) - 40,  $this->scoreOffsetHeigth + 25,  // Point 3 (x, y)
+            $this->imageWidth,  $this->scoreOffsetHeigth + 25,  // Point 4 (x, y)
+        );
+
+        // define polygon points
+        $awayPoints = array(
+            0,  $this->scoreOffsetHeigth - 110,  // Point 1 (x, y)
+            ($this->imageWidth / 2) - 10,  $this->scoreOffsetHeigth - 110, // Point 2 (x, y)
+            ($this->imageWidth / 2) - 60,  $this->scoreOffsetHeigth + 25,  // Point 3 (x, y)
+            0,  $this->scoreOffsetHeigth + 25,  // Point 4 (x, y)
+        );
+
+        // Transparent background for scores
+        $img->polygon($homePoints, function ($draw) {
+            $draw->background('rgba('.$this->homeRgbColor['red'].', '.$this->homeRgbColor['green'].', '.$this->homeRgbColor['blue'].', 0.5)');
+        });
+        $img->polygon($awayPoints, function ($draw) {
+            $draw->background('rgba('.$this->awayRgbColor['red'].', '.$this->awayRgbColor['green'].', '.$this->awayRgbColor['blue'].', 0.5)');
+        });
+
         // Home Team Score
         $img->text($this->game->away_score, $this->awayScoreOffsetWidth + 2, $this->scoreOffsetHeigth + 2, function($font) {
             $font->file($this->fontParams['medium']);
@@ -69,6 +96,7 @@ class CardCreator
             $font->align('center');
             $font->color('#ffffff');
         });
+        // Background Home score
         $img->text($this->game->away_score, $this->awayScoreOffsetWidth, $this->scoreOffsetHeigth, function($font) {
             $font->file($this->fontParams['medium']);
             $font->size($this->fontParams['largeSize']);
@@ -83,12 +111,14 @@ class CardCreator
             $font->align('center');
             $font->color('#ffffff');
         });
+        // Background Away score
         $img->text($this->game->home_score, $this->homeScoreOffsetWidth, $this->scoreOffsetHeigth, function($font) {
             $font->file($this->fontParams['medium']);
             $font->size($this->fontParams['largeSize']);
             $font->align('center');
             $font->color('#000000');
         });
+
 
         // 'Final' text
 //        $img->text('Final', $this->finalOffsetWidth, $this->finalOffsetHeigth, function($font) {
