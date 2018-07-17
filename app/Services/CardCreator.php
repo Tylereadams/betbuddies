@@ -72,10 +72,10 @@ class CardCreator
 
         // define polygon points
         $awayPoints = array(
-            0,  $this->scoreOffsetHeigth - 110,  // Point 1 (x, y)
+            -1,  $this->scoreOffsetHeigth - 110,  // Point 1 (x, y)
             ($this->imageWidth / 1.92) - 10,  $this->scoreOffsetHeigth - 110, // Point 2 (x, y)
             ($this->imageWidth / 1.92) - 60,  $this->scoreOffsetHeigth + 25,  // Point 3 (x, y)
-            0,  $this->scoreOffsetHeigth + 25,  // Point 4 (x, y)
+            -1,  $this->scoreOffsetHeigth + 25,  // Point 4 (x, y)
         );
 
         // Transparent background for scores
