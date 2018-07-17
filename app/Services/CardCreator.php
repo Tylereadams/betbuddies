@@ -89,13 +89,6 @@ class CardCreator
         });
 
         // Home Team Score
-        $img->text($this->game->away_score, $this->awayScoreOffsetWidth + 2, $this->scoreOffsetHeigth + 2, function($font) {
-            $font->file($this->fontParams['medium']);
-            $font->size($this->fontParams['largeSize']);
-            $font->align('center');
-            $font->color('#000000');
-        });
-        // Background Home score
         $img->text($this->game->away_score, $this->awayScoreOffsetWidth, $this->scoreOffsetHeigth, function($font) {
             $font->file($this->fontParams['medium']);
             $font->size($this->fontParams['largeSize']);
@@ -104,13 +97,6 @@ class CardCreator
         });
 
         // Away Team Score
-        $img->text($this->game->home_score, $this->homeScoreOffsetWidth + 2, $this->scoreOffsetHeigth + 2, function($font) {
-            $font->file($this->fontParams['medium']);
-            $font->size($this->fontParams['largeSize']);
-            $font->align('center');
-            $font->color('#000000');
-        });
-        // Background Away score
         $img->text($this->game->home_score, $this->homeScoreOffsetWidth, $this->scoreOffsetHeigth, function($font) {
             $font->file($this->fontParams['medium']);
             $font->size($this->fontParams['largeSize']);
