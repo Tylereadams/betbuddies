@@ -81,9 +81,11 @@ class CardCreator
         // Transparent background for scores
         $img->polygon($homePoints, function ($draw) {
             $draw->background('rgba('.$this->homeRgbColor['red'].', '.$this->homeRgbColor['green'].', '.$this->homeRgbColor['blue'].', 1)');
+            $draw->border(2, '#ffffff');
         });
         $img->polygon($awayPoints, function ($draw) {
             $draw->background('rgba('.$this->awayRgbColor['red'].', '.$this->awayRgbColor['green'].', '.$this->awayRgbColor['blue'].', 1)');
+            $draw->border(2, '#ffffff');
         });
 
         // Home Team Score
