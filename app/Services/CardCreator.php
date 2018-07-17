@@ -25,9 +25,6 @@ class CardCreator
         $this->homeRgbColor = hex2rgb($game->homeTeam->colors->first()->hex);
         $this->awayRgbColor = hex2rgb($game->awayTeam->colors->first()->hex);
 
-//        $this->finalOffsetWidth = intval($this->imageWidth / 2);
-//        $this->finalOffsetHeigth = intval($this->imageHeight / 1.223);
-
         $this->fontParams = [
             'smallSize' => 65,
             'largeSize' => 120,
@@ -83,10 +80,10 @@ class CardCreator
 
         // Transparent background for scores
         $img->polygon($homePoints, function ($draw) {
-            $draw->background('rgba('.$this->homeRgbColor['red'].', '.$this->homeRgbColor['green'].', '.$this->homeRgbColor['blue'].', 0.5)');
+            $draw->background('rgba('.$this->homeRgbColor['red'].', '.$this->homeRgbColor['green'].', '.$this->homeRgbColor['blue'].', 1)');
         });
         $img->polygon($awayPoints, function ($draw) {
-            $draw->background('rgba('.$this->awayRgbColor['red'].', '.$this->awayRgbColor['green'].', '.$this->awayRgbColor['blue'].', 0.5)');
+            $draw->background('rgba('.$this->awayRgbColor['red'].', '.$this->awayRgbColor['green'].', '.$this->awayRgbColor['blue'].', 1)');
         });
 
         // Home Team Score
@@ -94,14 +91,14 @@ class CardCreator
             $font->file($this->fontParams['medium']);
             $font->size($this->fontParams['largeSize']);
             $font->align('center');
-            $font->color('#ffffff');
+            $font->color('#000000');
         });
         // Background Home score
         $img->text($this->game->away_score, $this->awayScoreOffsetWidth, $this->scoreOffsetHeigth, function($font) {
             $font->file($this->fontParams['medium']);
             $font->size($this->fontParams['largeSize']);
             $font->align('center');
-            $font->color('#000000');
+            $font->color('#ffffff');
         });
 
         // Away Team Score
@@ -109,14 +106,14 @@ class CardCreator
             $font->file($this->fontParams['medium']);
             $font->size($this->fontParams['largeSize']);
             $font->align('center');
-            $font->color('#ffffff');
+            $font->color('#000000');
         });
         // Background Away score
         $img->text($this->game->home_score, $this->homeScoreOffsetWidth, $this->scoreOffsetHeigth, function($font) {
             $font->file($this->fontParams['medium']);
             $font->size($this->fontParams['largeSize']);
             $font->align('center');
-            $font->color('#000000');
+            $font->color('#ffffff');
         });
 
 
