@@ -3,10 +3,14 @@
 namespace App\Http\Controllers;
 
 use App\Games;
+use App\Services\CardCreator;
 use App\TeamsTweets;
 use Carbon\Carbon;
+use Intervention\Image\ImageManager;
 use Thujohn\Twitter\Facades\Twitter;
 use Illuminate\Support\Facades\Cache;
+use Intervention\Image\Facades\Image;
+use Illuminate\Support\Facades\File;
 
 class GamesController extends Controller
 {
@@ -92,5 +96,20 @@ class GamesController extends Controller
         }
 
         return view('game', $data);
+    }
+
+    public function image()
+    {
+        $game = Games::find(\Request::get('id'));
+
+        if(!$game){
+            $game = Games::latest()->first();
+        }
+
+        $cardCreator = new CardCreator($game);
+
+        $img = $cardCreator->getGameCard();
+
+        return $img->response('png');
     }
 }
