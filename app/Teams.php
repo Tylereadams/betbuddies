@@ -279,7 +279,7 @@ class Teams extends Model
         $path = $tweet->extended_entities->media[0]->media_url;
 
         // Remember the results of checked tweets for 12 hours
-       // $output = Cache::remember('image-check-'.$tweet->id, 60 * 12, function () use ($path, $leagueName) {
+        $output = Cache::remember('image-check-'.$tweet->id, 60 * 12, function () use ($path, $leagueName) {
             $process = new Process("python storage/machine_learning/image_script.py ".$path." ".$leagueName);
             $process->run();
 
@@ -293,7 +293,7 @@ class Teams extends Model
 
             // output is a string: "[0]" or "[1]"
             return (bool) $output[1];
-      //  });
+        });
 
         return $output;
     }
