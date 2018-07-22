@@ -37,8 +37,14 @@ class Games extends Model
             // Send end of game tweets
             if($game->isDirty(['ended_at'])){
                 $status = Games::ENDED;
-                $game->homeTeam->sendEndTweet($game);
-                $game->awayTeam->sendEndTweet($game);
+
+                // Remember if we sent the tweet for 12 hours
+                Cache::remember($game->id.'-sent-final-tweet'.$game->ended_at, 60 * 12, function () use($game) {
+                    $game->homeTeam->sendEndTweet($game);
+                    $game->awayTeam->sendEndTweet($game);
+                    return true;
+                });
+
             }
 
             $game->status = $status;
