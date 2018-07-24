@@ -108,12 +108,15 @@ class Teams extends Model
 
             $mediaUrl = $tweet->extended_entities->media[0]->expanded_url;
 
+            // Set tweet hashtag, if it's the same as the team name don't add it
+            $tweetHashtag = (strtolower($this->nickname) == strtolower($this->hashtag) ? '' : $this->hashtag);
+
             echo "posting tweet ".$mediaUrl."\n";
             if (\App::environment('production'))
             {
                 // Post the tweet on production
                 Twitter::postTweet([
-                    'status' => '#'.hashTagFormat($game->homeTeam->nickname).' '.$game->home_score.' #'.hashTagFormat($game->awayTeam->nickname).' '.$game->away_score.'                                           '.$this->nickname != $this->hashtag ? '#'.$this->hashtag : ''.'  '.$mediaUrl
+                    'status' => '#'.hashTagFormat($game->homeTeam->nickname).' '.$game->home_score.' #'.hashTagFormat($game->awayTeam->nickname).' '.$game->away_score.'                                                '.$tweetHashtag.'  '.$mediaUrl
                 ]);
             }
 
