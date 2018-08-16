@@ -1,7 +1,7 @@
 <nav class="navbar navbar-light bg-light mb-2">
-    {{--<a class="navbar-brand" href="{{ url('/activity') }}">--}}
-        {{--<i class="far fa-newspaper text-secondary"></i>--}}
-    {{--</a>--}}
+    <a class="navbar-brand" href="{{ url('/home') }}">
+        <i class="fas fa-home text-secondary"></i>
+    </a>
     <a class="navbar-brand" href="{{ url('/games') }}">
         <i class="fas fa-calendar-alt text-secondary"></i>
     </a>
