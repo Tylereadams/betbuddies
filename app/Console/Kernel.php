@@ -34,7 +34,7 @@ class Kernel extends ConsoleKernel
             ->everyMinute();
 
         // Keep the schedule up to date two days in advance
-        $schedule->command('betbuddies:import-games '.strtotime('+2 days'))
+        $schedule->command('betbuddies:import-games '.strtotime('+7 days'))
             ->dailyAt(5);
 
         // Tweet the videos for today
