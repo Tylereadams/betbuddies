@@ -22,7 +22,7 @@ class HomeController extends Controller
      */
     public function index()
     {
-        $bets = UsersBets::latest()->take(5)->get();
+        $bets = UsersBets::latest()->take(10)->get();
         $bets->load(['game.homeTeam', 'game.awayTeam', 'user', 'opponent', 'opponentTeam']);
 
         $data['bets'] = [];
