@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\UsersBets;
 
 class HomeController extends Controller
 {
@@ -21,6 +22,15 @@ class HomeController extends Controller
      */
     public function index()
     {
-        return view('home');
+        $bets = UsersBets::latest()->take(5)->get();
+        $bets->load(['game.homeTeam', 'game.awayTeam', 'user', 'opponent', 'opponentTeam']);
+
+        $data['bets'] = [];
+
+        foreach($bets as $bet) {
+            $data['bets'][] = $bet->getCardData();
+        }
+
+        return view('home', $data);
     }
 }
