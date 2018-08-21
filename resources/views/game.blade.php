@@ -87,3 +87,14 @@
     </div>
 
 @endsection
+
+@section('modal')
+
+    @foreach($bets as $bet)
+        @if($bet['isAcceptable'] && $bet['fromMe'])
+            {{-- Modal --}}
+            @include('partials.deleteBetModal', ['bet'=> $bet])
+        @endif
+    @endforeach
+
+@endsection

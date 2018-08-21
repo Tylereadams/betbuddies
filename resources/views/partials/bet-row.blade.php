@@ -64,8 +64,3 @@
         </div>
     </td>
 </tr>
-
-@if($bet['isAcceptable'] && $bet['fromMe'])
-    {{-- Modal --}}
-    @include('partials.deleteBetModal', ['bet'=> $bet])
-@endif

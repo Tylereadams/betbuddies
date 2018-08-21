@@ -1,9 +1,9 @@
 <!-- Modal -->
-<div class="modal fade" id="deleteBetModal{{ $bet['id'] }}" tabindex="-1" role="dialog" aria-labelledby="deleteBetModalLabel" aria-hidden="true">
+<div class="modal fade" id="deleteBetModal{{ $bet['id'] }}" tabindex="-1" role="dialog" aria-labelledby="deleteBetModalLabel-{{ $bet['id'] }}" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="deleteBetModalLabel">Delete your bet?</h5>
+                <h5 class="modal-title" id="deleteBetModalLabel-{{ $bet['id'] }}">Delete your bet?</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
