@@ -54,8 +54,7 @@
                 </button>
             @elseif($bet['isAcceptable'] && !$bet['fromMe'])
                 {{-- Modal --}}
-                @include('partials.acceptBetModal')
-                <button type="button" class="btn btn-success btn-sm" data-toggle="modal" data-target="#acceptBetModal">
+                <button type="button" class="btn btn-success btn-sm" data-toggle="modal" data-target="#acceptBetModal-{{ $bet['id'] }}">
                     Accept
                 </button>
             @endif

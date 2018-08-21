@@ -95,6 +95,11 @@
             {{-- Modal --}}
             @include('partials.deleteBetModal', ['bet'=> $bet])
         @endif
+
+        @if($bet['isAcceptable'] && !$bet['fromMe'])
+            {{-- Modal --}}
+            @include('partials.acceptBetModal', ['bet' => $bet])
+        @endif
     @endforeach
 
 @endsection
