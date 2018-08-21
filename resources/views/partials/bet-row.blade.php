@@ -49,8 +49,6 @@
     <td class="align-middle">
         <div class="row">
             @if($bet['isAcceptable'] && $bet['fromMe'])
-                {{-- Modal --}}
-                @include('partials.deleteBetModal', ['bet'=> $bet])
                 <button type="button" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#deleteBetModal{{ $bet['id'] }}">
                     Delete
                 </button>
@@ -66,3 +64,8 @@
         </div>
     </td>
 </tr>
+
+@if($bet['isAcceptable'] && $bet['fromMe'])
+    {{-- Modal --}}
+    @include('partials.deleteBetModal', ['bet'=> $bet])
+@endif

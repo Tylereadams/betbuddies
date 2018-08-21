@@ -1,9 +1,5 @@
 @extends('layouts.app')
 
-@if($game['isBettable'])
-    @include('partials.createBetModal')
-@endif
-
 @section('content')
 
     <div class="container">
@@ -42,7 +38,9 @@
             </div>
         </div>
 
-        @if(!$game['isBettable'])
+        @if($game['isBettable'])
+            @include('partials.createBetModal')
+        @else
             <div class="scrolling-wrapper">
                 <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
                 @foreach($tweetsToEmbed as $tweet)
