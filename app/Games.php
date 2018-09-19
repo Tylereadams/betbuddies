@@ -165,23 +165,25 @@ class Games extends Model
                 'id'    => $this->homeTeam->id,
                 'name'  => $this->homeTeam->nickname,
                 'score'  => $this->home_score,
-//                'colors'    => $this->homeTeam->colors->map(function($color){
-//                    return  $color->hex;
-//                }),
-                'thumbUrl' => $this->homeTeam->logoUrl(),
+                'thumbUrl' => $this->homeTeam->logoUrlLarge(),
                 'spread' => (int) $this->getTeamSpread('home'),
-                'isWinner' => $this->home_score > $this->away_score && ($this->ended_at) ? true : false
+                'isWinner' => $this->home_score > $this->away_score && ($this->ended_at) ? true : false,
+                'betCount' => $this->bets()->where(function($q){
+                    $q->where('opponent_team_id', $this->home_team_id);
+                    $q->orWhere('team_id', $this->home_team_id);
+                })->count()
             ],
             'awayTeam' => [
                 'id'    => $this->awayTeam->id,
                 'name'  => $this->awayTeam->nickname,
                 'score'  => $this->away_score,
-                'thumbUrl' => $this->awayTeam->logoUrl(),
-//                'colors'    => $this->awayTeam->colors->map(function($color){
-//                    return  $color->hex;
-//                }),
+                'thumbUrl' => $this->awayTeam->logoUrlLarge(),
                 'spread' => (int) $this->getTeamSpread('away'),
-                'isWinner' => $this->away_score > $this->home_score && ($this->ended_at) ? true : false
+                'isWinner' => $this->away_score > $this->home_score && ($this->ended_at) ? true : false,
+                'betCount' => $this->bets()->where(function($q){
+                    $q->where('opponent_team_id', $this->away_team_id);
+                    $q->orWhere('team_id', $this->away_team_id);
+                })->count()
             ],
             'bets' => $this->bets->map(function($bet){
                 return $bet->getCardData();
