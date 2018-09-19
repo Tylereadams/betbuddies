@@ -33,7 +33,6 @@
                                         <span class="{{ $game['awayTeam']['isWinner'] ? 'font-weight-bold' : '' }}">{{ $game['awayTeam']['score'] }}</span>
                                 @endif
                             </td>
-{{--                            @if(!$game['status'] == 'upcoming')--}}
                             <td class="align-middle text-center">
                                 @if($game['endedAt'])
                                     Final
@@ -43,11 +42,7 @@
                                     Postponed
                                 @endif
                             </td>
-                            {{--@endif--}}
                         </tr>
-                        @if($loop->last)
-
-                        @endif
                     @endforeach
                     </tbody>
                 </table>
@@ -58,4 +53,10 @@
         </div>
     @endif
 </div>
+@endsection
+
+@section('modal')
+
+
+
 @endsection
