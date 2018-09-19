@@ -14,7 +14,7 @@
 // Normal Routes
 Route::get('/', 'PagesController@index');
 Route::get('/home', 'HomeController@index')->name('home');
-Route::get('/games/{date?}', 'GamesController@gamesByDate');
+Route::get('/games/{date?}', 'GamesController@gamesByDate')->name('games');
 
 Route::get('machine-learning', 'MachineLearningController@index');
 Route::get('tweet-log', 'AdminController@tweetLog');
