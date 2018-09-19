@@ -19,7 +19,7 @@
                     </thead>
                     <tbody>
                     @foreach($games as $key => $game)
-                        <tr class='clickable link-row {{ $key > 4 ? 'collapse multi-collapse' : '' }}' data-href="{{ url('game/'.$game['urlSegment']) }}">
+                        <tr class='clickable link-row' data-href="{{ url('game/'.$game['urlSegment']) }}">
                             <td>
                                 <img src="{{ $game['homeTeam']['thumbUrl'] }}" class="avatar">&nbsp;<span class="{{ $game['homeTeam']['isWinner'] ? 'font-weight-bold' : '' }}">{{ $game['homeTeam']['name'] }}</span><br>
                                 <img src="{{ $game['awayTeam']['thumbUrl'] }}" class="avatar">&nbsp;<span class="{{ $game['awayTeam']['isWinner'] ? 'font-weight-bold' : '' }}">{{ $game['awayTeam']['name'] }}</span>
@@ -51,10 +51,6 @@
                     @endforeach
                     </tbody>
                 </table>
-            @if(count($games) > 4)
-                {{-- TODO: Toggle the icon, show/hide. Right now show all only shows --}}
-                <button class="btn btn-primary btn-small" type="button" data-toggle="collapse" data-target=".multi-collapse">View all</button>
-            @endif
         @endforeach
     @else
         <div class="text-center">
