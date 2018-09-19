@@ -159,7 +159,7 @@ class Games extends Model
             ],
             'period' => $this->period ? ordinalNumber($this->period) : null,
             'status' => $this->statusName(),
-            'urlSegment'  => $this->urlSegment(),
+            'urlSegment'  => $this->url_segment,
             'location' => $this->homeTeam->location,
             'homeTeam'  => [
                 'id'    => $this->homeTeam->id,

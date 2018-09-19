@@ -1,10 +1,10 @@
 <tr>
-    <td class="border-left {{ $bet['isWinner'] ? 'border-success' : '' }} {{ $bet['isLoser'] ? 'border-danger' : '' }} link-row" data-href="game/{{ $bet['game']['urlSegment'] }}">${{ $bet['amount'] }}</td>
-    <td class="text-truncate align-middle link-row" data-href="game/{{ $bet['game']['urlSegment'] }}">
+    <td class="border-left {{ $bet['isWinner'] ? 'border-success' : '' }} {{ $bet['isLoser'] ? 'border-danger' : '' }} link-row" data-href="{{ url('game/'.$bet['game']['urlSegment'] ) }}">${{ $bet['amount'] }}</td>
+    <td class="text-truncate align-middle link-row" data-href="{{ url('game/'.$bet['game']['urlSegment'] ) }}">
         <img src="{{ $bet['game']['awayTeam']['thumbUrl'] }}" class="avatar">&nbsp;{{ $bet['game']['awayTeam']['name'] }} <small>@if(!$bet['isHome']){{ formatSpread($bet['spread']) }}@endif</small><br>
         <img src="{{ $bet['game']['homeTeam']['thumbUrl'] }}" class="avatar">&nbsp;{{ $bet['game']['homeTeam']['name'] }} <small>@if($bet['isHome']){{ formatSpread($bet['spread']) }}@endif</small>
     </td>
-    <td class="text-truncate align-middle  link-row" data-href="game/{{ $bet['game']['urlSegment'] }}">
+    <td class="text-truncate align-middle  link-row" data-href="{{ url('game/'.$bet['game']['urlSegment'] ) }}">
         {{-- Bet created with home Team --}}
         @if($bet['isHome'])
             <small class="font-italic font-weight-light mt-2">
