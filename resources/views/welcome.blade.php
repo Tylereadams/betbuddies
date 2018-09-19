@@ -46,8 +46,10 @@
                 text-align: center;
             }
 
-            .title {
+            .title > a {
+                color: #636b6f;
                 font-size: 84px;
+                text-decoration: none;
             }
 
             .links > a {
@@ -83,10 +85,16 @@
 
             <div class="content">
                 <div class="title m-b-md">
-                    <i class="fas fa-users"></i><br>
-                    Bet buddies
+                    <a href="{{ url('/games') }}">
+                        <i class="fas fa-users"></i><br>
+                        Bet buddies
+                    </a>
                 </div>
 
+                <div class="font-weight-light mb-0">
+                    A free and easy way to log bets with your buddies
+                </div>
+                <br>
                 <div class="links">
                     <a href="{{ url('/games') }}">Games</a>
                     <a href="{{ url('/user') }}">Profile</a>
