@@ -96,8 +96,9 @@
                 </div>
                 <br>
                 <div class="links">
-                    <a href="{{ url('/games') }}">Games</a>
-                    <a href="{{ url('/user') }}">Profile</a>
+                    <a href="{{ url('/games') }}">Search Games
+                        <i class="fa fa-arrow-right" aria-hidden="true"></i>
+                    </a>
                 </div>
             </div>
         </div>
