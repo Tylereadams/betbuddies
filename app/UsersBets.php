@@ -78,7 +78,8 @@ class UsersBets extends Model
                     'name' => $this->game->awayTeam->nickname,
                     'thumbUrl' => $this->game->awayTeam->logoUrl(),
                     'score' => $this->game->away_score
-                ]
+                ],
+                'urlSegment' => $this->game->url_segment
             ],
             'amount' => (int) $this->amount,
             'spread' => (float) $this->spread,
