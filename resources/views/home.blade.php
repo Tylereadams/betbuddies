@@ -17,7 +17,8 @@
                         <span class="fa fa-clock-o ion-clock float-right"></span>
                         Recent Activity
                     </h5>
-                    <table class="table table-condensed table-borderless table-hover">
+                    <table class="table table-condensed table-hover" id="bet-table">
+
                         <tbody>
                         @foreach($bets as $bet)
                             @include('partials.bet-row')

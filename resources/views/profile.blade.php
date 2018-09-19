@@ -2,9 +2,6 @@
 
 @section('content')
 <div class="container">
-    <div class="col-lg-4 order-lg-1 text-center">
-        <h3 class="mb-3 pt-2">{{ $user['name'] }}</h3>
-    </div>
     <div class="row my-2">
         <div class="col-lg-12 order-lg-2">
             {{--<ul class="nav nav-tabs">--}}
@@ -34,7 +31,7 @@
                             <p>{{ $betsLost }}</p>
                         </div>
                         <div class="col-md-12">
-                            <h5 class="mt-2"><span class="fa fa-clock-o ion-clock float-right"></span> Recent Activity</h5>
+                            <h6 class="mt-2"><span class="fa fa-clock-o ion-clock float-right"></span> Recent Activity</h6>
                             <table class="table table-condensed table-borderless table-hover">
                                 <tbody>
                                 @foreach($bets as $bet)
