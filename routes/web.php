@@ -14,6 +14,7 @@
 // Normal Routes
 Route::get('/', 'PagesController@index');
 Route::get('/home', 'HomeController@index')->name('home');
+Route::get('/fullstory', 'HomeController@fullstory');
 Route::get('/games/{date?}', 'GamesController@gamesByDate')->name('games');
 
 Route::get('machine-learning', 'MachineLearningController@index');
@@ -27,6 +28,9 @@ Route::post('login', 'Auth\LoginController@login');
 // Registration Routes...
 Route::get('register', 'Auth\RegisterController@showRegistrationForm')->name('register');
 Route::post('register', 'Auth\RegisterController@register');
+
+// Web hooks
+Route::get('github/webhooks/issues', 'WebhookController@getGithubIssues');
 
 /**
  * Auth Routes
