@@ -17,7 +17,7 @@
                             Matching FullStory sessions ({{ $issue['email'] }}):
                                 <ul>
                                     @foreach($issue['sessions'] as $session)
-                                        <a href="{{ $session->FsUrl }}">{{ date('m/d/Y h:i a', $session->CreatedTime) }}</a><br>
+                                        <a href="{{ $session->FsUrl }}" target="_blank">{{ date('m/d/Y h:i a', $session->CreatedTime) }}</a><br>
                                     @endforeach
                                 </ul>
                         @else
