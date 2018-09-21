@@ -20,6 +20,10 @@ class GithubProvider extends ServiceProvider
         ]);
     }
 
+    /**
+     * Find issues for this repo on github
+     * @return mixed
+     */
     public function getIssues()
     {
         $res = $this->client->request('GET', 'repos/tylereadams/betbuddies/issues');
@@ -27,11 +31,37 @@ class GithubProvider extends ServiceProvider
         return json_decode($res->getBody());
     }
 
+    /**
+     * Find user data from github
+     * @param $username
+     * @return mixed
+     */
     public function getUser($username)
     {
-        $res = $this->client->request('get', 'users/'.$username);
+        $res = $this->client->request('GET', 'users/'.$username);
 
         return json_decode($res->getBody());
+    }
+
+    /**
+     * Alternative way to find the email, github wasn't returning the email even though it's public on some accounts.
+     * This will find the email based on commits to public repo's.
+     * @param $username
+     * @return bool
+     */
+    public function searchForEmail($username)
+    {
+        $res = $this->client->request('GET', 'users/'.$username.'/events/public');
+
+        $events = json_decode($res->getBody());
+
+        foreach($events as $event){
+            if($event->type == 'PushEvent'){
+                return $event->payload->commits[0]->author->email;
+            }
+        }
+
+        return false;
     }
 
 }
