@@ -91,8 +91,8 @@
                     </a>
                 </div>
 
-                <div class="font-weight-light mb-0">
-                    A free and easy way to log bets with your buddies
+                <div class="mb-0">
+                    A free and easy way to create custom bets with your buddies
                 </div>
                 <br>
                 <div class="links">
