@@ -36,8 +36,16 @@ class CardCreator
         $this->game = $game;
     }
 
+    /**
+     * Returns image of the game card with score and background of stadium
+     * @return bool
+     */
     public function getGameCard()
     {
+        // Make sure there is a photo of the stadium to use
+        if(!$this->game->homeTeam->venue->transparentPhotoUrl()){
+            return false;
+        }
         // create a new empty image resource with red background
         $img = Image::canvas($this->imageWidth, $this->imageHeight, '#ffffff');
 

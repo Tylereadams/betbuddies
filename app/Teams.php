@@ -165,11 +165,11 @@ class Teams extends Model
             return false;
         }
 
-        if($game->venue){
-            // Draw the card with Final score
-            $cardCreator = new CardCreator($game);
-            $cardImage = $cardCreator->getGameCard();
+        // Draw the card with Final score
+        $cardCreator = new CardCreator($game);
+        $cardImage = $cardCreator->getGameCard();
 
+        if($cardImage){
             // Get media ID from twitter, required to post image.
             $media = Twitter::uploadMedia(['media' => $cardImage->stream()]);
         }
