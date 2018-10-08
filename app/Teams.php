@@ -169,6 +169,7 @@ class Teams extends Model
         $cardCreator = new CardCreator($game);
         $cardImage = $cardCreator->getGameCard();
 
+        $media = null;
         if($cardImage){
             // Get media ID from twitter, required to post image.
             $media = Twitter::uploadMedia(['media' => $cardImage->stream()]);
