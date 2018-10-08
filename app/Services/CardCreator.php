@@ -43,9 +43,10 @@ class CardCreator
     public function getGameCard()
     {
         // Make sure there is a photo of the stadium to use
-        if(!$this->game->homeTeam->venue->transparentPhotoUrl()){
+        if(!$this->game->homeTeam->venue){
             return false;
         }
+
         // create a new empty image resource with red background
         $img = Image::canvas($this->imageWidth, $this->imageHeight, '#ffffff');
 
