@@ -85,7 +85,7 @@ class Games extends Model
      * Creates URL safe string for game: 'homeTeam-awayTeam-date'
      * @return mixed
      */
-    public function urlSegment()
+    public function getUrlSegment()
     {
         // Create URL segment if we don't have one.
         if(!$this->url_segment){
@@ -159,7 +159,7 @@ class Games extends Model
             ],
             'period' => $this->period ? ordinalNumber($this->period) : null,
             'status' => $this->statusName(),
-            'urlSegment'  => $this->url_segment,
+            'urlSegment'  => $this->getUrlSegment(),
             'location' => $this->homeTeam->location,
             'homeTeam'  => [
                 'id'    => $this->homeTeam->id,
