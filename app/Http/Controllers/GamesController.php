@@ -98,6 +98,10 @@ class GamesController extends Controller
         return view('game', $data);
     }
 
+    /**
+     * Returns an image of the final score and stadium background
+     * @return mixed
+     */
     public function image()
     {
         $game = Games::find(\Request::get('id'));

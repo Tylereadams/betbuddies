@@ -4,9 +4,7 @@ namespace App;
 
 use App\Services\CardCreator;
 use Illuminate\Database\Eloquent\Model;
-use App\Games;
 use Thujohn\Twitter\Facades\Twitter;
-use App\TeamsTweets;
 use Carbon\Carbon;
 use Symfony\Component\Process\Process;
 use Symfony\Component\Process\Exception\ProcessFailedException;
@@ -167,17 +165,20 @@ class Teams extends Model
             return false;
         }
 
-        // Draw the card with Final score
-        $cardCreator = new CardCreator($game);
-        $cardImage = $cardCreator->getGameCard();
+        if($game->venue){
+            // Draw the card with Final score
+            $cardCreator = new CardCreator($game);
+            $cardImage = $cardCreator->getGameCard();
 
-        // Get media ID from twitter, required to post image.
-        $media = Twitter::uploadMedia(['media' => $cardImage->stream()]);
+            // Get media ID from twitter, required to post image.
+            $media = Twitter::uploadMedia(['media' => $cardImage->stream()]);
+        }
+
 
         // Post the tweet on production
         Twitter::postTweet([
             'status' => '#'.hashTagFormat($game->awayTeam->nickname).' '.$game->away_score.' #'.hashTagFormat($game->homeTeam->nickname).' '.$game->home_score.' - Final',
-            'media_ids' => $media->media_id
+            'media_ids' => $media ? $media->media_id : null
         ]);
     }
 
