@@ -2,6 +2,7 @@
 
 namespace App\Console\Commands;
 
+use App\Leagues;
 use Illuminate\Console\Command;
 use Carbon\Carbon;
 use App\Games;
@@ -46,6 +47,8 @@ class TweetGameCommand extends Command
         // Get games that have been played within 10 hours of the time given
         $games = Games::where('start_date', '>', $minDate)
             ->where('start_date', '<', $maxDate)
+            // TODO: Only MLB games for now, no data for the others.
+            ->where('league_id', Leagues::MLB_ID)
             ->get();
         $games->load(['homeTeam.tweets', 'awayTeam.tweets']);
 

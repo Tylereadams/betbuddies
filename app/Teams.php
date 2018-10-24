@@ -204,13 +204,12 @@ class Teams extends Model
         foreach($tweets as $tweet) {
             $tweetsDeleted[] = Twitter::destroyTweet($tweet->id);
         }
-
     }
 
     public function getTimeline($teamHandles = [])
     {
         foreach($teamHandles as $handle){
-            $timelines[] = Twitter::getUserTimeline(['screen_name' => $handle, 'count' => 60, 'include_entities' => 1]);
+            $timelines[] = Twitter::getUserTimeline(['screen_name' => $handle, 'count' => 10, 'include_entities' => 1]);
         }
 
         // Merge and sort collection by most recent
