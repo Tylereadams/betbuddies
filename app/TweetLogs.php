@@ -20,4 +20,9 @@ class TweetLogs extends Model
     {
         return $this->belongsTo(Teams::class, 'team_id');
     }
+
+    public function getTweetUrl()
+    {
+        return 'https://twitter.com/'.$this->team->twitter.'/status/'.$this->tweet_id;
+    }
 }

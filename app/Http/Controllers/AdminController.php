@@ -10,7 +10,7 @@ class AdminController extends Controller
 
     public function tweetLog()
     {
-        $tweetLog = TweetLogs::orderBy('created_at', 'DESC')->get();
+        $tweetLog = TweetLogs::orderBy('created_at', 'DESC')->take(100)->get();
         $tweetLog->load('team');
 
         foreach($tweetLog as $tweet){
@@ -21,6 +21,9 @@ class AdminController extends Controller
                   'twitter' => $tweet->team->twitter,
                   'leagueId' => $tweet->team->league_id
               ],
+                'imageUrl' => $tweet->media_url,
+                'text' => $tweet->text,
+                'tweetUrl' => $tweet->getTweetUrl()
             ];
         }
 
