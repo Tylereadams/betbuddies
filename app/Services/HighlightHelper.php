@@ -4,8 +4,8 @@ namespace App\Services;
 
 use Cache;
 use App\Leagues;
-use Symfony\Component\Process\Process;
-use Symfony\Component\Process\Exception\ProcessFailedException;
+use Google\Cloud\Vision\V1\ImageAnnotatorClient;
+
 
 class HighlightHelper
 {
@@ -22,26 +22,47 @@ class HighlightHelper
             return false;
         }
 
+        print "Checking vision...\n";
+
         // Google vision stuff
         $imageUrl = $tweet->extended_entities->media[0]->media_url;
 
-        // Remember the results of checked tweets for 12 hours
-        $output = Cache::remember('image-check-'.$tweet->id, 60 * 12, function () use ($imageUrl, $league) {
-            $process = new Process("python storage/machine_learning/image_script.py ".$imageUrl." ".$league->name);
-            $process->run();
+        // Remember the results of checked tweets for 1 hour
+        $output = Cache::remember('image-check-'.$tweet->id, 60, function () use ($imageUrl, $league) {
 
-            // executes after the command finishes
-            if (!$process->isSuccessful()) {
-                throw new ProcessFailedException($process);
+                # instantiates a client
+                $imageAnnotator = new ImageAnnotatorClient();
+
+                # prepare the image to be annotated
+                $image = file_get_contents($imageUrl);
+
+                # performs label detection on the image file
+                $response = $imageAnnotator->labelDetection($image);
+                $labels = $response->getLabelAnnotations();
+
+                if(!$labels){
+                    return false;
+                }
+
+                foreach($labels as $label){
+                    if(self::isLabelValid($label->getDescription(), round($label->getScore() * 100))){
+                        return true;
+                    }
+                }
 
                 return false;
-            }
-            $output = str_replace(array("\n", ""), '', $process->getOutput());
-
-            // output is a string: "[0]" or "[1]"
-            return (bool) $output[1];
         });
 
         return $output;
+    }
+
+    private static function isLabelValid($description, $score)
+    {
+        // Must have sports venue in the label with a confidence of 95 or greater
+        if($description != 'Sports Venue' && $score < 95){
+            return false;
+        }
+
+        return true;
     }
 }
