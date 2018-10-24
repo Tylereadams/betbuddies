@@ -8,6 +8,7 @@
         "php": ">=7.1.0",
         "fabpot/goutte": "^3.2",
         "fideloper/proxy": "~3.3",
+        "google/cloud-vision": "^0.17.2",
         "guzzlehttp/guzzle": "^6.3",
         "intervention/image": "^2.4",
         "intervention/imagecache": "^2.3",
