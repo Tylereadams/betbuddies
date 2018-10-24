@@ -245,22 +245,4 @@ class Teams extends Model
 
         return true;
     }
-
-    /**
-     * Returns true or false if the image is a highlight or not
-     * @param $tweet
-     * @param $leagueName
-     * @return bool|mixed
-     */
-//    public function checkImage($tweet, $leagueName)
-//    {
-//
-//        if(!isset($tweet->extended_entities->media[0]) || !in_array($leagueName, ['nba', 'mlb', 'nfl'])){
-//            return false;
-//        }
-//
-//        $path = $tweet->extended_entities->media[0]->media_url;
-//
-//
-//    }
 }
