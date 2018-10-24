@@ -17,7 +17,7 @@ class Teams extends Model
 
     protected $fillable = ['nickname', 'location', 'latitude', 'longitude', 'hashtag', 'league'];
 
-
+    const BUFFER_MINUTES = 20;
     /**
      * Relations
      */
@@ -67,23 +67,12 @@ class Teams extends Model
      */
     public function sendGameTweets(Games $game)
     {
-        if(getenv('TWITTER_CONSUMER_KEY'.$this->getKey()) === false){
-            echo "Skipping ".$this->nickname."\n";
-            return;
-        }
-
-        // Get the config for this team's twitter account
-        Twitter::reconfig([
-            'consumer_key' => env('TWITTER_CONSUMER_KEY'.$this->getKey()),
-            'consumer_secret' => env('TWITTER_CONSUMER_SECRET'.$this->getKey()),
-            'token' => env('TWITTER_ACCESS_TOKEN'.$this->getKey()),
-            'secret' => env('TWITTER_ACCESS_TOKEN_SECRET'.$this->getKey())
-        ]);
+        $this->reconfigTeamTwitter();
 
         echo 'Getting tweets from '.$this->twitter."\n";
 
         // Get only videos from this team, including both got the order off.
-        $timeline = $this->getTimeline([$game->homeTeam->twitter, $game->awayTeam->twitter]);
+        $timeline = $this->getTimeline([$this->twitter]);
 
         // Get the video's we've checked already
         $existingTweets = TweetLogs::where('team_id', $this->id)
@@ -120,7 +109,8 @@ class Teams extends Model
                 'team_id' => $this->id,
                 'game_id' => $game->id,
                 'tweet_id' => $tweet->id,
-                'media_url' => $mediaUrl
+                'media_url' => $mediaUrl,
+                'text' => $tweet->text
             ], [
                 'period' => $game->period ? $game->period : 1
             ]);
@@ -175,7 +165,6 @@ class Teams extends Model
             $media = Twitter::uploadMedia(['media' => $cardImage->stream()]);
         }
 
-
         // Post the tweet on production
         Twitter::postTweet([
             'status' => '#'.hashTagFormat($game->awayTeam->nickname).' '.$game->away_score.' #'.hashTagFormat($game->homeTeam->nickname).' '.$game->home_score.' - Final',
@@ -187,10 +176,15 @@ class Teams extends Model
      * Logs into team's twitter account, Todo: move this to the constructor or something.
      * @return bool
      */
-    private function reconfigTeamTwitter()
+    public function reconfigTeamTwitter()
     {
         if(getenv('TWITTER_CONSUMER_KEY'.$this->getKey()) === false){
-            return false;
+            return Twitter::reconfig([
+                'consumer_key' => env('TWITTER_CONSUMER_KEY_YANKEES_49'),
+                'consumer_secret' => env('TWITTER_CONSUMER_SECRET_YANKEES_49'),
+                'token' => env('TWITTER_ACCESS_TOKEN_YANKEES_49'),
+                'secret' => env('TWITTER_ACCESS_TOKEN_SECRET_YANKEES_49')
+            ]);
         }
 
         // Get the config for this team's twitter account
@@ -210,94 +204,45 @@ class Teams extends Model
         foreach($tweets as $tweet) {
             $tweetsDeleted[] = Twitter::destroyTweet($tweet->id);
         }
-
     }
 
-    private function getTimeline($teamHandles = [])
+    public function getTimeline($teamHandles = [])
     {
         foreach($teamHandles as $handle){
-            $timelines[] = Twitter::getUserTimeline(['screen_name' => $handle, 'count' => 15, 'include_entities' => 1]);
+            $timelines[] = Twitter::getUserTimeline(['screen_name' => $handle, 'count' => 10, 'include_entities' => 1]);
         }
 
         // Merge and sort collection by most recent
         return collect(array_flatten($timelines))->sortByDesc('created_at');
     }
 
-    private function isValidTweet($tweet, $game)
+    public function isValidTweet($tweet, $game)
     {
-        // Must have media attached and be a video
-        if(!isset($tweet->extended_entities->media[0]->media_url) || $tweet->extended_entities->media[0]->type != 'video') {
-            return false;
-        }
-
         $timeOfTweet = Carbon::parse($tweet->created_at);
         // Add 10 minute buffer to start time since vids will take at least that to be posted. Don't want intro videos.
         $gameStartDate = Carbon::parse($game->start_date);
         // Add 20 minute buffer to end time since vids will take at least that to be posted.
-        $gameEndDate = $game->ended_at ? Carbon::parse($game->ended_at)->addMinutes(20) : Carbon::parse('now');
+        $gameEndDate = $game->ended_at ? Carbon::parse($game->ended_at)->addMinutes(Self::BUFFER_MINUTES) : Carbon::parse('now');
 
-        switch(false){
-            case isset($tweet->extended_entities->media[0]->media_url) &&  $tweet->extended_entities->media[0]->type == 'video':
-                $statusId = TweetLogs::NOT_A_VIDEO;
-                break;
-            case $timeOfTweet > $gameStartDate && $timeOfTweet < $gameEndDate:
-                $statusId = TweetLogs::GAME_NOT_IN_PROGRESS;
-                break;
-            case $tweet->retweeted == false:
-                $statusId = TweetLogs::RETWEETED_ALREADY;
-                break;
-            case $this->checkImage($tweet, $game->league->name):
-                $statusId = TweetLogs::MACHINE_LEARNING_FAILED;
-                break;
-            default:
-                $statusId = 0;
+        $isAVideo = (isset($tweet->extended_entities->media[0]->media_url) &&  $tweet->extended_entities->media[0]->type == 'video');
+        $gameHasStarted = ($timeOfTweet > $gameStartDate && $timeOfTweet < $gameEndDate);
+
+        if(!$isAVideo || !$gameHasStarted || $tweet->retweeted) {
+            return false;
+        }
+
+        // Google Vision here.
+        if(!$this->checkImage($tweet, $game->league->name)) {
+            return false;
         }
 
         TweetLogs::updateOrCreate([
             'tweet_id' => $tweet->id,
             'media_url' => $tweet->extended_entities->media[0]->media_url,
-            'team_id' => $this->id
-        ],[
-            'is_invalid' => $statusId,
+            'team_id' => $this->id,
+            'text' => $tweet->text,
         ]);
 
-        if($statusId > 0) {
-            return false;
-        }
-
         return true;
-    }
-
-    /**
-     * Returns true or false if the image is a highlight or not
-     * @param $tweet
-     * @param $leagueName
-     * @return bool|mixed
-     */
-    private function checkImage($tweet, $leagueName)
-    {
-        if(!isset($tweet->extended_entities->media[0])){
-            return false;
-        }
-        $path = $tweet->extended_entities->media[0]->media_url;
-
-        // Remember the results of checked tweets for 12 hours
-        $output = Cache::remember('image-check-'.$tweet->id, 60 * 12, function () use ($path, $leagueName) {
-            $process = new Process("python storage/machine_learning/image_script.py ".$path." ".$leagueName);
-            $process->run();
-
-            // executes after the command finishes
-            if (!$process->isSuccessful()) {
-                throw new ProcessFailedException($process);
-
-                return false;
-            }
-            $output = str_replace(array("\n", ""), '', $process->getOutput());
-
-            // output is a string: "[0]" or "[1]"
-            return (bool) $output[1];
-        });
-
-        return $output;
     }
 }
