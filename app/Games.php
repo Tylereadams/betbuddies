@@ -40,11 +40,11 @@ class Games extends Model
                 $status = Games::ENDED;
 
                 // Remember if we sent the tweet for 24 hours
-                Cache::remember($game->id.'-sent-final-tweet', 60 * 24, function () use($game) {
-                    $game->homeTeam->sendEndTweet($game);
-                    $game->awayTeam->sendEndTweet($game);
-                    return true;
-                });
+//                Cache::remember($game->id.'-sent-final-tweet', 60 * 24, function () use($game) {
+//                    $game->homeTeam->sendEndTweet($game);
+//                    $game->awayTeam->sendEndTweet($game);
+//                    return true;
+//                });
 
             }
 
@@ -94,6 +94,14 @@ class Games extends Model
         }
 
         return $this->url_segment;
+    }
+
+    public function getPlayers()
+    {
+        $homePlayers = $this->homeTeam->players;
+        $awayPlayers = $this->awayTeam->players;
+
+        return $awayPlayers->merge($homePlayers);
     }
 
     public function statusName()

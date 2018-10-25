@@ -41,6 +41,11 @@ class Teams extends Model
         return $this->hasOne(Venues::class, 'team_id');
     }
 
+    public function players()
+    {
+        return $this->hasMany(Players::class, 'team_id');
+    }
+
 
     /**
      * Functions

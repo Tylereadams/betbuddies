@@ -64,14 +64,14 @@ class TweetStartEndCommand extends Command
             }
 
             // Send end tweet after game has ended
-            if(Carbon::parse($game->ended_at)->isPast()){
-                // Only send the ending tweet once, didn't want to save these tweets to DB so storing in cache for 10 hours if it got sent
-                Cache::remember('ending-tweet-'.$game->id, 60 * 10, function ()use($game) {
-                    $game->homeTeam->sendEndTweet($game);
-                    $game->awayTeam->sendEndTweet($game);
-                    return true;
-                });
-            }
+//            if(Carbon::parse($game->ended_at)->isPast()){
+//                // Only send the ending tweet once, didn't want to save these tweets to DB so storing in cache for 10 hours if it got sent
+//                Cache::remember('ending-tweet-'.$game->id, 60 * 10, function ()use($game) {
+//                    $game->homeTeam->sendEndTweet($game);
+//                    $game->awayTeam->sendEndTweet($game);
+//                    return true;
+//                });
+//            }
         }
     }
 }
