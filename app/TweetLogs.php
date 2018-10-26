@@ -15,12 +15,19 @@ class TweetLogs extends Model
 
     protected $softDelete = true;
 
-    //
+    // Relations
     public function team()
     {
         return $this->belongsTo(Teams::class, 'team_id');
     }
 
+    public function game()
+    {
+        return $this->belongsTo(Games::class, 'game_id');
+    }
+
+
+    // Functions
     public function getTweetUrl()
     {
         return 'https://twitter.com/'.$this->team->twitter.'/status/'.$this->tweet_id;
