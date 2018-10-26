@@ -2,6 +2,7 @@
 
 namespace App\Console\Commands;
 
+use Thujohn\Twitter\Facades\Twitter;
 use App\Services\TwitterHelper;
 use App\Services\HighlightHelper;
 use Illuminate\Console\Command;
@@ -48,6 +49,7 @@ class LogTeamTweetsCommand extends Command
 
         // Get games that have been played within 10 hours of the time given
         $games = Games::where('start_date', '>', $minDate)->where('start_date', '<', $maxDate)->get();
+//        $games = Games::where('id',5797)->get();
         $games->load(['homeTeam.tweets', 'awayTeam.tweets']);
 
         if(!$games){
@@ -86,6 +88,8 @@ class LogTeamTweetsCommand extends Command
                         continue;
                     }
 
+                    $mentionedPlayers = TwitterHelper::getMentionedPlayers($game, $tweet);
+
                     print "Saving tweet... \n";
 
                     TweetLogs::updateOrCreate([
@@ -95,6 +99,8 @@ class LogTeamTweetsCommand extends Command
                         'text' => $tweet->text,
                         'game_id' => $game->id
                     ]);
+
+                    // Check the mentions
 
                     // Save the new tweet
                     $existingTweets[] = $tweet->id;
