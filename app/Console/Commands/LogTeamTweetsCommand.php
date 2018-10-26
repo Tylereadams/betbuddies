@@ -87,8 +87,6 @@ class LogTeamTweetsCommand extends Command
                         continue;
                     }
 
-                    $mentionedPlayers = TwitterHelper::getMentionedPlayers($game, $tweet);
-
                     print "Saving tweet... \n";
 
                     TweetLogs::updateOrCreate([
