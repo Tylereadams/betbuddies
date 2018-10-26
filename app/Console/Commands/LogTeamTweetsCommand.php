@@ -76,6 +76,11 @@ class LogTeamTweetsCommand extends Command
                 // Loop through tweets
                 foreach($tweets as $key=> $tweet){
 
+                    // If it's a retweet, check the original instead.
+                    if(isset($tweet->retweeted_status) && $tweet->retweeted_status){
+                        $tweet = Twitter::getTweet($tweet->retweeted_status->id, ['include_entities' => 1, 'trim_user' => 1]);
+                    }
+
                     // If we've already logged it OR tweet not during a game OR tweet is not a valid highlight
                     if(in_array($tweet->id, $existingTweets) || !TwitterHelper::isGameTweet($game, $tweet) || !HighlightHelper::isHighlight($tweet, $game->league)) {
                         continue;

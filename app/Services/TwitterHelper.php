@@ -24,7 +24,7 @@ class TwitterHelper
 
         $gameHasStarted = ($timeOfTweet > $gameStartDate && $timeOfTweet < $gameEndDate);
 
-        if(!$gameHasStarted || $tweet->retweeted) {
+        if(!$gameHasStarted) {
             return false;
         }
 
