@@ -26,6 +26,11 @@ class TweetLogs extends Model
         return $this->belongsTo(Games::class, 'game_id');
     }
 
+    public function players()
+    {
+        return $this->hasManyThrough(Players::class, PlayersTweets::class, 'tweet_logs_id', 'id', 'id', 'player_id');
+    }
+
 
     // Functions
     public function getTweetUrl()
