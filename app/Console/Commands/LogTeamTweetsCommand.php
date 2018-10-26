@@ -44,12 +44,11 @@ class LogTeamTweetsCommand extends Command
     public function handle()
     {
         // Get games within 10 hour range of date given
-        $minDate = Carbon::parse($this->argument('date'))->subHours(3)->format('Y-m-d H:i:s');
-        $maxDate = Carbon::parse($this->argument('date'))->addHours(3)->format('Y-m-d H:i:s');
+        $minDate = Carbon::parse($this->argument('date'))->subHours(4)->format('Y-m-d H:i:s');
+        $maxDate = Carbon::parse($this->argument('date'))->addHours(4)->format('Y-m-d H:i:s');
 
         // Get games that have been played within 10 hours of the time given
         $games = Games::where('start_date', '>', $minDate)->where('start_date', '<', $maxDate)->get();
-//        $games = Games::where('id',5797)->get();
         $games->load(['homeTeam.tweets', 'awayTeam.tweets']);
 
         if(!$games){
