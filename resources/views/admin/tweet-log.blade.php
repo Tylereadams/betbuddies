@@ -18,9 +18,13 @@
                     <div class="row justify-content-center">
                         @foreach($chunk as $tweet)
                             <div class="col-lg-4">
-                                <blockquote class="twitter-video" data-lang="en" data-conversation="none">
-                                    <a href="https://twitter.com/{{ $tweet['team']['twitter'] }}/status/{{ $tweet['id'] }}"></a>
-                                </blockquote>
+                                <small>{{ $tweet['game']['date'] }} vs {{ $tweet['game']['opponent'] }}</small>
+                                <video width="352" height="198" controls>
+                                    <source src="{{ $tweet['videoUrl'] }}"  type="video/mp4">
+                                </video>
+                                {{--<blockquote class="twitter-video" data-lang="en" data-conversation="none">--}}
+                                    {{--<a href="https://twitter.com/{{ $tweet['team']['twitter'] }}/status/{{ $tweet['id'] }}"></a>--}}
+                                {{--</blockquote>--}}
                             </div>
                         @endforeach
                     </div>
@@ -64,5 +68,11 @@
         $('.basicAutoComplete').on('autocomplete.select', function (evt, item) {
             window.location.href = '?q=' + item.first_name + ' ' + item.last_name;
         });
+        //
+        // $('.basicAutoComplete').on('keydown', function (evt, item) {
+        //     if(evt.which === 13) {
+        //         window.location.href = '?q=';
+        //     }
+        // });
     </script>
 @endsection

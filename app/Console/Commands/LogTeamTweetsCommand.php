@@ -89,15 +89,23 @@ class LogTeamTweetsCommand extends Command
 
                     print "Saving tweet... \n";
 
+                    $videoUrl = NULL;
+                    // Find best video url
+                    foreach($tweet->extended_entities->media[0]->video_info->variants as $variant){
+                        if($variant->content_type == 'video/mp4' && $variant->bitrate > 1000000){
+                            $videoUrl = $variant->url;
+                        }
+                    }
+
                     TweetLogs::updateOrCreate([
                         'tweet_id' => $tweet->id,
+                    ],[
+                        'video_url' => $videoUrl,
                         'media_url' => $tweet->extended_entities->media[0]->media_url,
                         'team_id' => $team->id,
                         'text' => $tweet->text,
                         'game_id' => $game->id
                     ]);
-
-                    // Check the mentions
 
                     // Save the new tweet
                     $existingTweets[] = $tweet->id;

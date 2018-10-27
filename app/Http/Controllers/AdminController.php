@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\TeamsTweets;
 use App\TweetLogs;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -26,7 +27,7 @@ class AdminController extends Controller
         $tweetLog = $tweetLogQuery->orderBy('created_at', 'DESC')
             ->take(54)
             ->get();
-        $tweetLog->load(['team', 'players']);
+        $tweetLog->load(['team', 'players', 'game.awayTeam',  'game.homeTeam']);
 
         $tweets = [];
         foreach($tweetLog as $tweet){
@@ -37,7 +38,11 @@ class AdminController extends Controller
                   'twitter' => $tweet->team->twitter,
                   'leagueId' => $tweet->team->league_id
                 ],
-                'imageUrl' => $tweet->media_url,
+                'game' => [
+                    'opponent' => $tweet->team->id == $tweet->game->awayTeam->id ? $tweet->game->homeTeam->nickname : $tweet->game->awayTeam->nickname,
+                    'date' => Carbon::parse($tweet->game->start_date)->format('m/d')
+                ],
+                'videoUrl' => $tweet->video_url,
                 'text' => $tweet->text,
                 'tweetUrl' => $tweet->getTweetUrl(),
                 'mentions' => $tweet->players->map(function($player){
