@@ -3,7 +3,12 @@
 @section('content')
     <div class="container">
 
-        <select class="form-control basicAutoComplete" data-noresults-text="Nothing to see here." type="text" autocomplete="on" data-default-value="3" data-default-text="{{ $searchTerm }}"></select>
+        <div class="input-group">
+            <div class="input-group-prepend">
+                <div class="input-group-text"><i class="fas fa-search"></i></div>
+            </div>
+            <select class="form-control basicAutoComplete" data-noresults-text="Nothing to see here." type="text" autocomplete="on" data-default-value="3" placeholder="{{ $searchTerm ?: 'Search by name' }}"></select>
+        </div>
 
         @if($tweets)
             <div class="align-middle">

@@ -14,17 +14,24 @@ class PlayersController extends Controller
     {
         $q = Request::get('q');
 
-        $players = Players::select('first_name', 'last_name', 'twitter')
-            ->where(DB::raw("CONCAT(first_name,' ',last_name,' ',twitter)"), 'LIKE', '%'.$q.'%')
-            ->get();
+        $playerQuery = Players::select('first_name', 'last_name', 'twitter', 'team_id')
+            ->where(DB::raw("CONCAT(first_name,' ',last_name,' ',twitter)"), 'LIKE', '%'.$q.'%');
 
+        if($q){
+            $playerQuery->whereHas('tweets');
+        }
+        $players = $playerQuery->get();
+
+        $players->load(['team.league', 'tweets']);
+
+        // TODO: FIGURE OUT WHY CAMERON PAYNE ISN"T SHOWING UP
         $data = [];
         foreach($players as $player){
             $data[] = [
               'first_name' => $player->first_name,
               'last_name' => $player->last_name,
               'twitter' => $player->twitter,
-              'html' => '<i class="fas fa-football-ball"></i> '.$player->first_name.' '.$player->last_name.' <small>('.$player->twitter.')</small>'
+              'html' => '<i class="fas fa-'.$player->team->league->long_name.'-ball"></i> '.$player->first_name.' '.$player->last_name.' <small>('.$player->twitter.')</small>'
             ];
         }
 
