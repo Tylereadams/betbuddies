@@ -42,6 +42,7 @@ class AdminController extends Controller
                     'opponent' => $tweet->team->id == $tweet->game->awayTeam->id ? $tweet->game->homeTeam->nickname : $tweet->game->awayTeam->nickname,
                     'date' => Carbon::parse($tweet->game->start_date)->format('m/d')
                 ],
+                'imageUrl' => $tweet->media_url,
                 'videoUrl' => $tweet->video_url,
                 'text' => $tweet->text,
                 'tweetUrl' => $tweet->getTweetUrl(),
