@@ -19,12 +19,16 @@
                         @foreach($chunk as $tweet)
                             <div class="col-lg-4">
                                 <small>{{ $tweet['game']['date'] }} vs {{ $tweet['game']['opponent'] }}</small>
-                                <video width="352" height="198" controls>
-                                    <source src="{{ $tweet['videoUrl'] }}"  type="video/mp4">
-                                </video>
-                                {{--<blockquote class="twitter-video" data-lang="en" data-conversation="none">--}}
-                                    {{--<a href="https://twitter.com/{{ $tweet['team']['twitter'] }}/status/{{ $tweet['id'] }}"></a>--}}
-                                {{--</blockquote>--}}
+
+                                @if($tweet['videoUrl'])
+                                    <video width="352" height="198" controls poster="{{ $tweet['imageUrl'] }}">
+                                        <source src="{{ $tweet['videoUrl'] }}"  type="video/mp4">
+                                    </video>
+                                @else
+                                    <blockquote class="twitter-video" data-lang="en" data-conversation="none">
+                                        <a href="https://twitter.com/{{ $tweet['team']['twitter'] }}/status/{{ $tweet['id'] }}"></a>
+                                    </blockquote>
+                                @endif
                             </div>
                         @endforeach
                     </div>
