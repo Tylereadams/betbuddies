@@ -201,20 +201,30 @@ class Teams extends Model
         ]);
     }
 
-    private function clearTweets()
-    {
-        $tweets = Twitter::getUserTimeline(['count' => 200]);
+//    private function clearTweets()
+//    {
+//        $tweets = Twitter::getUserTimeline(['count' => 200]);
+//
+//        $tweetsDeleted = [];
+//        foreach($tweets as $tweet) {
+//            $tweetsDeleted[] = Twitter::destroyTweet($tweet->id);
+//        }
+//    }
 
-        $tweetsDeleted = [];
-        foreach($tweets as $tweet) {
-            $tweetsDeleted[] = Twitter::destroyTweet($tweet->id);
-        }
-    }
-
+    /**
+     * Gets the timeline of given twitter handles (no preceding @ is needed for the handles)
+     * @param array $teamHandles
+     * @return static
+     */
     public function getTimeline($teamHandles = [])
     {
         foreach($teamHandles as $handle){
-            $timelines[] = Twitter::getUserTimeline(['screen_name' => $handle, 'count' => 30, 'include_entities' => 1]);
+
+            // Cache the twitter timeline for 3 minutes so we don't hit a rate limit
+            $timelines[] = Cache::remember($handle.'-twitter-timeline', 3, function () use($handle) {
+                    return Twitter::getUserTimeline(['screen_name' => $handle, 'count' => 30, 'include_entities' => 1]);
+                });
+
         }
 
         // Merge and sort collection by most recent

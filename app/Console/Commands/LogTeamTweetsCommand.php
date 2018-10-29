@@ -72,7 +72,7 @@ class LogTeamTweetsCommand extends Command
                 print $team->nickname."\n";
 
                 // Get the off twitter team tweets
-                $tweets = $team->getTimeline([$team->twitter]);
+                $tweets = $team->getTimeline([$team->twitter, $team->league->name]);
 
                 // Loop through tweets
                 foreach($tweets as $key=> $tweet){
