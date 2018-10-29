@@ -30,17 +30,13 @@ class AdminController extends Controller
         $tweetLog->load(['team', 'players', 'game.awayTeam',  'game.homeTeam']);
 
         $tweets = [];
-        foreach($tweetLog as $tweet){
-            $tweets[] = [
+        foreach($tweetLog as $key => $tweet){
+            $tweets[$key] = [
                 'id' => $tweet->tweet_id,
                 'isInvalid' => $tweet->is_invalid,
                 'team' => [
                   'twitter' => $tweet->team->twitter,
                   'leagueId' => $tweet->team->league_id
-                ],
-                'game' => [
-                    'opponent' => $tweet->team->id == $tweet->game->awayTeam->id ? $tweet->game->homeTeam->nickname : $tweet->game->awayTeam->nickname,
-                    'date' => Carbon::parse($tweet->game->start_date)->format('m/d')
                 ],
                 'imageUrl' => $tweet->media_url,
                 'videoUrl' => $tweet->video_url,
@@ -53,6 +49,13 @@ class AdminController extends Controller
                     ];
                 })->toArray()
             ];
+
+            if(isset($tweet->game)){
+                $tweets[$key]['game'] = [
+                    'opponent' => $tweet->team->id == $tweet->game->awayTeam->id ? $tweet->game->homeTeam->nickname : $tweet->game->awayTeam->nickname,
+                    'date' => Carbon::parse($tweet->game->start_date)->format('m/d')
+                ];
+            }
         }
 
         return view('admin.tweet-log', ['tweets' => $tweets, 'searchTerm' => $q]);
