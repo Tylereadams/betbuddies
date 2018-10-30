@@ -20,7 +20,7 @@ class AdminController extends Controller
         // Search for player's highlight tweets
         if(Request::has('q')){
             $tweetLogQuery->whereHas('players', function($query) use ($q){
-                $query->where(DB::raw("CONCAT(first_name,' ',last_name,' ',twitter)"), 'LIKE', '%'.$q.'%');
+                $query->where(DB::raw("CONCAT(first_name,' ',last_name)"), 'LIKE', '%'.$q.'%');
             });
         }
 

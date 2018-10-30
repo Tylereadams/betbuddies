@@ -27,8 +27,15 @@
                                     <a href="https://twitter.com/{{ $tweet['team']['twitter'] }}/status/{{ $tweet['id'] }}"></a>
                                 </blockquote>
 
-                                @if(isset($tweet['game']))
-                                    <small>{{ $tweet['game']['date'] }}</small>
+                                @if(isset($tweet['mentions']) && count($tweet['mentions']))
+                                    <small>
+                                        @foreach($tweet['mentions'] as $mention)
+                                            <a href="{{ url("tweet-log?q=".$mention['name']) }}">
+                                                {{ $mention['name'] }}@if(!$loop->last), @endif
+                                            </a>
+                                        @endforeach
+
+                                    </small>
                                 @endif
                             </div>
                         @endforeach

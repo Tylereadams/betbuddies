@@ -56,45 +56,46 @@ class ImportPlayersCommand extends Command
 
             // Insert players
             foreach($playerData as $key => $player){
+
                 if($key == 0 || !$player[0] || $player[3] == 'DST'){
                     continue;
                 }
 
-                $playerData = $this->mapPlayerData($player, $league);
+                $mappedPlayer = $this->mapPlayerData($player, $league);
 
                 // Get team id
-                $teamId = $teams->where('slug', $league->name.'-'.strtolower($playerData['teamName']))->pluck('id');
+                $teamId = $teams->where('slug', $league->name.'-'.strtolower($mappedPlayer['teamName']))->pluck('id');
 
                 // Get player name
-                $name = explode(' ', $playerData['name']);
+                $name = explode(' ', $mappedPlayer['name']);
 
                 Players::updateOrCreate([
                     'first_name' => isset($name[0]) ? $name[0] : NULL,
                     'last_name' => isset($name[1]) ? $name[1] : NULL,
                 ], [
                     'team_id' => $teamId->first(),
-                    'position' => $playerData['position'],
+                    'position' => $mappedPlayer['position'],
                 ]);
             }
 
             // Pull players
-            $players = Players::whereNotNull('team_id')->whereNull('twitter')->get();
+//            $players = Players::whereNotNull('team_id')->whereNull('twitter')->get();
 
             // Lookup their twitter handle via Twitter API
-            foreach($players as $updatedPlayer){
-                $results = Twitter::getUsersSearch([
-                    'q' => $updatedPlayer->first_name.' '.$updatedPlayer->last_name,
-                    'count' => 3
-                ]);
-
-                if(empty($results) || !$results[0]->verified){
-                    continue;
-                }
-
-                $updatedPlayer->twitter = $results[0]->screen_name;
-                $updatedPlayer->updated_at = Carbon::now()->format('Y-m-d H:i:s');
-                $updatedPlayer->save();
-            }
+//            foreach($players as $updatedPlayer){
+//                $results = Twitter::getUsersSearch([
+//                    'q' => $updatedPlayer->first_name.' '.$updatedPlayer->last_name,
+//                    'count' => 3
+//                ]);
+//
+//                if(empty($results) || !$results[0]->verified){
+//                    continue;
+//                }
+//
+//                $updatedPlayer->twitter = $results[0]->screen_name;
+//                $updatedPlayer->updated_at = Carbon::now()->format('Y-m-d H:i:s');
+//                $updatedPlayer->save();
+//            }
         }
     }
 
@@ -123,9 +124,9 @@ class ImportPlayersCommand extends Command
         switch($league->name) {
             case 'nba':
                 $playerData = [
-                    'name' => $player[0],
-                    'teamName' => $player[1],
-                    'position' => $player[2],
+                    'name' => $player[1],
+                    'teamName' => $player[2],
+                    'position' => $player[3],
                 ];
                 break;
             case 'nfl':
