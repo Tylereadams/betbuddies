@@ -13,17 +13,19 @@ class HighlightHelper
         'sport venue',
         'hockey',
         'ice hockey',
-        'basketball moves'
+        'basketball moves',
+        'player'
 
     ];
 
     const BLACKLIST = [
         'structure',
         'crowd',
-        'audience'
+        'audience',
+        'fan'
     ];
 
-    const THRESHOLD = 92;
+    const THRESHOLD = 90;
 
     public function __construct()
     {

@@ -10,7 +10,7 @@
             <select class="form-control basicAutoComplete" data-noresults-text="Nothing to see here." type="text" autocomplete="on" data-default-value="3" placeholder="{{ $searchTerm ?: 'Search by name' }}"></select>
         </div>
 
-        <div class="m-4">
+        <div class="m-4 pagination-sm">
             {{ $paginator->links() }}
         </div>
 
@@ -23,15 +23,9 @@
                     <div class="row justify-content-center">
                         @foreach($chunk as $tweet)
                             <div class="col-lg-4">
-                                @if($tweet['videoUrl'])
-                                    <video width="352" height="198" controls poster="{{ $tweet['imageUrl'] }}">
-                                        <source src="{{ $tweet['videoUrl'] }}"  type="video/mp4">
-                                    </video>
-                                @else
-                                    <blockquote class="twitter-video" data-lang="en" data-conversation="none">
-                                        <a href="https://twitter.com/{{ $tweet['team']['twitter'] }}/status/{{ $tweet['id'] }}"></a>
-                                    </blockquote>
-                                @endif
+                                <blockquote class="twitter-video" data-lang="en" data-conversation="none">
+                                    <a href="https://twitter.com/{{ $tweet['team']['twitter'] }}/status/{{ $tweet['id'] }}"></a>
+                                </blockquote>
 
                                 @if(isset($tweet['game']))
                                     <small>{{ $tweet['game']['date'] }}</small>
