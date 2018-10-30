@@ -25,7 +25,7 @@ class AdminController extends Controller
         }
 
         $tweetPaginator = $tweetLogQuery->orderBy('created_at', 'DESC')
-            ->paginate(9);
+            ->paginate(15);
         $tweetPaginator->load(['team', 'players', 'game.awayTeam',  'game.homeTeam']);
 
         $tweets = [];
