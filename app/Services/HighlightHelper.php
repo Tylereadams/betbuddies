@@ -11,11 +11,19 @@ class HighlightHelper
 {
     const WHITELIST = [
         'sport venue',
+        'hockey',
+        'ice hockey',
+        'basketball moves'
+
     ];
 
     const BLACKLIST = [
-        'structure'
+        'structure',
+        'crowd',
+        'audience'
     ];
+
+    const THRESHOLD = 92;
 
     public function __construct()
     {
@@ -23,7 +31,7 @@ class HighlightHelper
 
     public static function isHighlight($tweet, Leagues $league)
     {
-        $isAVideo = (isset($tweet->extended_entities->media[0]->media_url) &&  $tweet->extended_entities->media[0]->type == 'video');
+        $isAVideo = (isset($tweet->extended_entities->media[0]->media_url) &&  str_contains($tweet->extended_entities->media[0]->expanded_url, 'video'));
 
         if(!$isAVideo){
             return false;
@@ -54,7 +62,7 @@ class HighlightHelper
                     $description = strtolower($label->getDescription());
                     $score = (int) round($label->getScore() * 100, 2);
 
-                    if(($score < 95) || !in_array($description, Self::WHITELIST) || in_array($description, Self::BLACKLIST)){
+                    if(($score < Self::THRESHOLD) || !in_array($description, Self::WHITELIST) || in_array($description, Self::BLACKLIST)){
                         print "failed: ".$description." ".$score."\n\n";
                         continue;
                     }

@@ -62,7 +62,7 @@ class LogTeamTweetsCommand extends Command
 
         foreach($games as $game) {
 
-            $teams = [$game->homeTeam, $game->awayTeam];
+            $teams = [$game->awayTeam, $game->homeTeam];
 
             // Loop through both teams in game
             foreach($teams as $team) {
@@ -71,7 +71,7 @@ class LogTeamTweetsCommand extends Command
 
                 print $team->nickname."\n";
 
-                // Get the off twitter team tweets
+                // Get teams tweets and official league twitter account
                 $tweets = $team->getTimeline([$team->twitter, $team->league->name]);
 
                 // Loop through tweets
@@ -91,9 +91,11 @@ class LogTeamTweetsCommand extends Command
 
                     $videoUrl = NULL;
                     // Find best video url
-                    foreach($tweet->extended_entities->media[0]->video_info->variants as $variant){
-                        if($variant->content_type == 'video/mp4' && $variant->bitrate > 1000000){
-                            $videoUrl = $variant->url;
+                    if(isset($tweet->extended_entities->media[0]->video_info)) {
+                        foreach($tweet->extended_entities->media[0]->video_info->variants as $variant){
+                            if($variant->content_type == 'video/mp4' && $variant->bitrate > 1000000){
+                                $videoUrl = $variant->url;
+                            }
                         }
                     }
 

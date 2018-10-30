@@ -222,7 +222,7 @@ class Teams extends Model
 
             // Cache the twitter timeline for 3 minutes so we don't hit a rate limit
             $timelines[] = Cache::remember($handle.'-twitter-timeline', 3, function () use($handle) {
-                    return Twitter::getUserTimeline(['screen_name' => $handle, 'count' => 30, 'include_entities' => 1]);
+                    return Twitter::getUserTimeline(['screen_name' => $handle, 'count' => 50, 'include_entities' => 1]);
                 });
 
         }
