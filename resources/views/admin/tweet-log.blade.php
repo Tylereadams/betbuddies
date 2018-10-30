@@ -42,6 +42,10 @@
                     </div>
                 @endforeach
             </div>
+
+            <div class="m-4 pagination-sm">
+                {{ $paginator->links() }}
+            </div>
         @else
             <div class="row justify-content-center pt-5">
                 <p>No tweets to see for {{ $searchTerm }}.</p>
