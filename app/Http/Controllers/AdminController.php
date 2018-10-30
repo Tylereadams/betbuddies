@@ -24,13 +24,12 @@ class AdminController extends Controller
             });
         }
 
-        $tweetLog = $tweetLogQuery->orderBy('created_at', 'DESC')
-            ->take(54)
-            ->get();
-        $tweetLog->load(['team', 'players', 'game.awayTeam',  'game.homeTeam']);
+        $tweetPaginator = $tweetLogQuery->orderBy('created_at', 'DESC')
+            ->paginate(9);
+        $tweetPaginator->load(['team', 'players', 'game.awayTeam',  'game.homeTeam']);
 
         $tweets = [];
-        foreach($tweetLog as $key => $tweet){
+        foreach($tweetPaginator as $key => $tweet){
             $tweets[$key] = [
                 'id' => $tweet->tweet_id,
                 'isInvalid' => $tweet->is_invalid,
@@ -58,6 +57,6 @@ class AdminController extends Controller
             }
         }
 
-        return view('admin.tweet-log', ['tweets' => $tweets, 'searchTerm' => $q]);
+        return view('admin.tweet-log', ['paginator' => $tweetPaginator, 'tweets' => $tweets, 'searchTerm' => $q]);
     }
 }

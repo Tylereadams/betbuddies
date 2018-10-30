@@ -3,15 +3,20 @@
 @section('content')
     <div class="container">
 
-        <div class="input-group">
+        <div class="row input-group">
             <div class="input-group-prepend">
                 <div class="input-group-text"><i class="fas fa-search"></i></div>
             </div>
             <select class="form-control basicAutoComplete" data-noresults-text="Nothing to see here." type="text" autocomplete="on" data-default-value="3" placeholder="{{ $searchTerm ?: 'Search by name' }}"></select>
         </div>
 
+        <div class="m-4">
+            {{ $paginator->links() }}
+        </div>
+
+
         @if($tweets)
-            <div class="align-middle">
+            <div class="row align-middle">
                 <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
 
                 @foreach(array_chunk($tweets, 3) as $chunk)
