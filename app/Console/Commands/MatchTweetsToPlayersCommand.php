@@ -52,7 +52,7 @@ class MatchTweetsToPlayersCommand extends Command
                 // Create a string of searchable names to explode. Some twitter handles are missing so this will remove them from the array
                 $searchableNameString = $player->first_name.','.$player->last_name.','.$player->twitter;
 
-                if(str_contains($tweet->text, explode(',', $searchableNameString))){
+                if(str_contains(strtolower($tweet->text), explode(',', strtolower($searchableNameString)))){
                     // Insert into players tweets table
                     PlayersTweets::updateOrCreate([
                         'player_id' => $player->id,
