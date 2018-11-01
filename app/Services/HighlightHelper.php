@@ -64,14 +64,14 @@ class HighlightHelper
                     $description = strtolower($label->getDescription());
                     $score = (int) round($label->getScore() * 100, 2);
 
-                    if(($score < Self::THRESHOLD) || !in_array($description, Self::WHITELIST) || in_array($description, Self::BLACKLIST)){
-                        print "failed: ".$description." ".$score."\n\n";
-                        continue;
+                    if(($score > Self::THRESHOLD) && in_array($description, Self::WHITELIST) && !in_array($description, Self::BLACKLIST)){
+                        print "passed: ".$description." ".$score."\n\n";
+
+                        return true;
                     }
 
-                    print "passed: ".$description." ".$score."\n\n";
-
-                    return true;
+                    print "failed: ".$description." ".$score."\n";
+                    continue;
                 }
 
                 return false;
