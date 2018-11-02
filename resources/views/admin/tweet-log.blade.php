@@ -16,14 +16,14 @@
 
 
         @if($tweets)
-            <div class="row align-middle">
+            <div class="row align-middle p-3">
                 <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
 
                 @foreach(array_chunk($tweets, 3) as $chunk)
                     <div class="row justify-content-center">
                         @foreach($chunk as $tweet)
                             <div class="col-lg-4">
-                                <blockquote class="twitter-video" data-lang="en" data-conversation="none">
+                                <blockquote class="twitter-video" data-lang="en" data-conversation="none" data-width="350">
                                     <a href="https://twitter.com/{{ $tweet['team']['twitter'] }}/status/{{ $tweet['id'] }}"></a>
                                 </blockquote>
 
