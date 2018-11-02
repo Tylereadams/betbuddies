@@ -3,7 +3,7 @@
 @section('content')
     <div class="container">
 
-        <div class="row input-group">
+        <div class="input-group">
             <div class="input-group-prepend">
                 <div class="input-group-text"><i class="fas fa-search"></i></div>
             </div>

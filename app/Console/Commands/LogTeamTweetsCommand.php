@@ -56,7 +56,8 @@ class LogTeamTweetsCommand extends Command
         }
 
         // Get the video's we've checked already
-        $existingTweets = TweetLogs::where('created_at', '>', Carbon::now()->subHours(24))
+        $existingTweets = TweetLogs::withTrashed()
+            ->where('created_at', '>', Carbon::now()->subHours(24))
             ->pluck('tweet_id')
             ->toArray();
 

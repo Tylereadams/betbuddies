@@ -3,6 +3,7 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class TweetLogs extends Model
 {
@@ -12,8 +13,9 @@ class TweetLogs extends Model
     const NOT_A_VIDEO = 4;
 
     protected $guarded = ['id'];
+    protected $dates = ['deleted_at'];
 
-    protected $softDelete = true;
+    use SoftDeletes;
 
     // Relations
     public function team()
