@@ -19,4 +19,19 @@ class Leagues extends Model
     public function games(){
         return $this->hasMany(Games::class, 'league_id');
     }
+
+
+    /**
+     * Creates the icon name for this league
+     * @return string
+     */
+    public function getIconName()
+    {
+        $iconSuffix = 'ball';
+
+        if($this->long_name == 'hockey'){
+            $iconSuffix = 'puck';
+        }
+        return 'fa-'.$this->long_name.'-'.$iconSuffix;
+    }
 }
