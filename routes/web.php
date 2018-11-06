@@ -31,6 +31,8 @@ Route::post('register', 'Auth\RegisterController@register');
 
 Route::get('playersearch', 'PlayersController@jsonSearch');
 
+// Game routes
+Route::get('/game/{urlSegment}', 'GamesController@game')->name('game');
 Route::get('/games/{date?}', 'GamesController@gamesByDate')->name('games');
 
 /**
@@ -38,16 +40,16 @@ Route::get('/games/{date?}', 'GamesController@gamesByDate')->name('games');
  */
 Route::group(['middleware' => ['auth']], function () {
 
+    Route::get('logout', 'Auth\LoginController@logout')->name('logout');
     Route::get('user/{urlSegment?}', 'UserController@profile');
 
+    // Bets
     Route::delete('bets/{usersBets}', 'BetsController@delete')->name('bets.delete');
     Route::post('bets/{usersBets}/accept', 'BetsController@accept')->name('bets.accept');
 
-    Route::get('/game/{urlSegment}', 'GamesController@game')->name('game');
     Route::post('/game/{urlSegment}', 'BetsController@store');
 
-    Route::get('logout', 'Auth\LoginController@logout')->name('logout');
-// Password Reset Routes...
+    // Password Reset Routes...
     Route::get('password/reset', 'Auth\ForgotPasswordController@showLinkRequestForm')->name('password.request');
     Route::post('password/email', 'Auth\ForgotPasswordController@sendResetLinkEmail');
     Route::get('password/reset/{token}', 'Auth\ResetPasswordController@showResetForm');

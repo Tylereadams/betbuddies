@@ -51,6 +51,7 @@
                 @endforeach
             </div>
         @endif
+        @if(count($bets) || $game['isBettable'])
         <div class="row">
             <div class="col">
                 <div class="table-responsive">
@@ -84,6 +85,7 @@
                 </div>
             </div>
         </div>
+        @endif
     </div>
 
 @endsection
