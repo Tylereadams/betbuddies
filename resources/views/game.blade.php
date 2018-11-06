@@ -8,24 +8,21 @@
             <div class="col">
                 <img src="{{ $game['homeTeam']['thumbUrl'] }}" class="avatar-lg"><br>
                 {{ $game['homeTeam']['name'] }}
-                <p>{{ $game['homeTeam']['score'] }}</p>
+                <h3>{{ $game['homeTeam']['score'] }}</h3>
             </div>
             <div class="col">
                 <img src="{{ $game['awayTeam']['thumbUrl'] }}" class="avatar-lg"><br>
                 {{ $game['awayTeam']['name'] }}
-                <p>{{ $game['awayTeam']['score'] }}</p>
+                <h3>{{ $game['awayTeam']['score'] }}</h3>
             </div>
         </div>
 
         <div class="row pb-4">
-            <div class="col">
-                @if($game['status'] == 'upcoming')
-                    <i class="far fa-calendar-alt"></i> {{ $game['startDate'] }} {{ $game['startTime'] }}<br>
-                    @if($game['broadcast'])
-                        <i class="fas fa-tv"></i> {{ $game['broadcast'] }}<br>
-                    @endif
-                @elseif($game['status'] == 'in progress' && $game['period'])
-                    {{ $game['period'] }} {{ $game['league']['periodLabel'] }}
+            <div class="col-sm-12">
+                @if($game['status'] == 'in progress' && $game['period'])
+                    <div class="text-center">
+                        <h4>{{ $game['period'] }} {{ $game['league']['periodLabel'] }}</h4>
+                    </div>
                 @elseif($game['status'] == 'postponed')
                     <div class="text-center">
                         <strong>Postponed</strong>
@@ -36,6 +33,12 @@
                     </div>
                 @endif
             </div>
+            <div class="col-sm-12">
+                <i class="far fa-calendar-alt"></i> {{ $game['startDate'] }} {{ $game['startTime'] }}<br>
+                @if($game['broadcast'])
+                    <i class="fas fa-tv"></i> {{ $game['broadcast'] }}
+                @endif
+            </div>
         </div>
 
         @if($game['isBettable'])
@@ -44,6 +47,7 @@
             <div class="scrolling-wrapper">
                 <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
                 @foreach($tweetsToEmbed as $tweet)
+
                     @include('partials.embeddedTweet', $tweet)
 
                 @endforeach
@@ -76,7 +80,12 @@
                     @if(!count($bets) && $game['isBettable'])
                         <div class="jumbotron jumbotron-fluid">
                             <div class="text-center">
-                                <button class="btn btn-primary btn-large " data-toggle="modal" data-target="#createBetModal">Add a bet!</button>
+                                @guest
+                                    <a href="{{ url('login') }}" class="btn btn-light btn-large" disabled>Login to Bet</a>
+                                @endguest
+                                @auth
+                                    <button class="btn btn-primary btn-large " data-toggle="modal" data-target="#createBetModal">Add a bet</button>
+                                @endauth
                             </div>
                         </div>
                     @endif
