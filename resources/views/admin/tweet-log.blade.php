@@ -33,9 +33,8 @@
                     <div class="row justify-content-center">
                         @foreach($chunk as $tweet)
                             <div class="col-lg-4">
-                                <blockquote class="twitter-video" data-lang="en" data-conversation="none" data-width="350">
-                                    <a href="https://twitter.com/{{ $tweet['team']['twitter'] }}/status/{{ $tweet['id'] }}"></a>
-                                </blockquote>
+
+                                @include('partials.embeddedTweet', ['twitter' => $tweet['team']['twitter'], 'id' => $tweet['id']])
 
                                 @if(isset($tweet['mentions']) && count($tweet['mentions']))
                                     <small>

@@ -44,10 +44,8 @@
             <div class="scrolling-wrapper">
                 <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
                 @foreach($tweetsToEmbed as $tweet)
-                    <div class="card">
-                        {!! $tweet['html'] !!}
-                        <span class="pl-2">{{ ordinalNumber($tweet['period']) }} {{ $game['league']['periodLabel'] }}</span>
-                    </div>
+                    @include('partials.embeddedTweet', $tweet)
+
                 @endforeach
             </div>
         @endif

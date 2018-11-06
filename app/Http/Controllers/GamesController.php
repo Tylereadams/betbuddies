@@ -4,13 +4,13 @@ namespace App\Http\Controllers;
 
 use App\Games;
 use App\Services\CardCreator;
-use App\TeamsTweets;
+use App\TweetLogs;
 use Carbon\Carbon;
-use Intervention\Image\ImageManager;
-use Thujohn\Twitter\Facades\Twitter;
-use Illuminate\Support\Facades\Cache;
-use Intervention\Image\Facades\Image;
-use Illuminate\Support\Facades\File;
+//use Intervention\Image\ImageManager;
+//use Thujohn\Twitter\Facades\Twitter;
+//use Illuminate\Support\Facades\Cache;
+//use Intervention\Image\Facades\Image;
+//use Illuminate\Support\Facades\File;
 
 class GamesController extends Controller
 {
@@ -75,23 +75,16 @@ class GamesController extends Controller
             $data['bets'][] = $bet->getCardData();
         }
 
-        $tweets = TeamsTweets::where('game_id', $game->id)
+        $tweets = TweetLogs::where('game_id', $game->id)
             ->orderBy('created_at', 'DESC')
             ->get();
         $tweets->load('team');
 
         $data['tweetsToEmbed'] = [];
         foreach($tweets as $tweet){
-            $tweetData = Cache::remember('embedded-tweets-'.$tweet->id, 10, function () use($tweet, $game) {
-                return Twitter::getOembed([
-                    'url' => 'https://twitter.com/'.$tweet->team->twitter.'/status/'.$tweet->tweet_id,
-                    'widget_type' => 'video'
-                ]);
-            });
-
             $data['tweetsToEmbed'][] = [
-                'html' => $tweetData->html,
-                'period' => $tweet->period
+                'twitter' => $tweet->team->twitter,
+                'id' => $tweet->tweet_id
             ];
         }
 
@@ -102,18 +95,18 @@ class GamesController extends Controller
      * Returns an image of the final score and stadium background
      * @return mixed
      */
-    public function image()
-    {
-        $game = Games::find(\Request::get('id'));
-
-        if(!$game){
-            $game = Games::latest()->first();
-        }
-
-        $cardCreator = new CardCreator($game);
-
-        $img = $cardCreator->getGameCard();
-
-        return $img->response('png');
-    }
+//    public function image()
+//    {
+//        $game = Games::find(\Request::get('id'));
+//
+//        if(!$game){
+//            $game = Games::latest()->first();
+//        }
+//
+//        $cardCreator = new CardCreator($game);
+//
+//        $img = $cardCreator->getGameCard();
+//
+//        return $img->response('png');
+//    }
 }
