@@ -8,12 +8,11 @@ use Illuminate\Support\Facades\DB;
 
 class PlayersController extends Controller
 {
-    //
 
     public function jsonSearch()
     {
         $q = Request::get('q');
-
+        
         if(!$q){
             return;
         }
@@ -37,7 +36,6 @@ class PlayersController extends Controller
               'last_name' => $player->last_name,
               'twitter' => $player->twitter,
               'tweet_count' => $player->tweets_count,
-                // Auto complete HTML
               'html' => $html
             ];
         }

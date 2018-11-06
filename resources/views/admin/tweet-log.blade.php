@@ -7,16 +7,26 @@
             <div class="input-group-prepend">
                 <div class="input-group-text"><i class="fas fa-search"></i></div>
             </div>
-            <select class="form-control basicAutoComplete" data-noresults-text="Nothing to see here." type="text" autocomplete="on" data-default-value="3" placeholder="{{ $searchTerm ?: 'Search by name' }}"></select>
+            <select class="form-control basicAutoComplete" data-noresults-text="Nothing to see here." type="text" autocomplete="on" data-default-value="3" placeholder="{{ $searchTerm ?: 'Search player name' }}"></select>
+            <a href="?q=" class="input-group-append">
+                    <div class="input-group-text"><i class="fas fa-times"></i></div>
+            </a>
         </div>
 
-        <div class="m-4 pagination-sm">
+        <ul class="nav justify-content-center p-2">
+            @foreach($topRelatedPlayers as $player)
+                <li class="nav-item pr-1">
+                    <a href="?q={{ $player['name'] }}" class="badge badge-light">{{ $player['name'] }} ({{ $player['tweetCount'] }})</a>
+                </li>
+            @endforeach
+        </ul>
+
+        <div class="pt-2 pagination-sm">
             {{ $paginator->links() }}
         </div>
 
-
         @if($tweets)
-            <div class="row align-middle p-3">
+            <div class="row align-middle p-2">
                 <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
 
                 @foreach(array_chunk($tweets, 3) as $chunk)

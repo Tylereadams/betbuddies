@@ -1,19 +1,15 @@
 <nav class="navbar navbar-light bg-light mb-2">
-
-    {{--<!-- Collapse button -->--}}
-    {{--<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navMenu" aria-controls="navMenu"--}}
-            {{--aria-expanded="false" aria-label=""><span class="dark-blue-text"><i class="fa fa-bars fa-1x"></i></span></button>--}}
-    <div class="dropdown">
-        <button class="btn btn-secondary" type="button" id="dropdownMenu2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-            <i class="fa fa-bars fa-1x"></i>
-        </button>
-        <div class="dropdown-menu" aria-labelledby="dropdownMenu2">
-            <button class="dropdown-item" type="button">Action</button>
-            <button class="dropdown-item" type="button">Another action</button>
-            <button class="dropdown-item" type="button">Something else here</button>
-        </div>
-    </div>
-
+    <a class="navbar-brand" href="{{ url('/tweet-log') }}">
+        <i class="fas fa-search text-secondary"></i>
+    </a>
+    <a class="navbar-brand" href="{{ url('/games') }}">
+        <i class="fas fa-calendar-alt text-secondary"></i>
+    </a>
+    @auth
+    <a class="navbar-brand" href="{{ url('/user') }}">
+        <i class="far fa-user text-secondary"></i>
+    </a>
+    @endauth
     <!-- Authentication Links -->
     @guest
         <ul class="nav">
@@ -21,27 +17,25 @@
             <li class="nav-item"><a class="nav-link" href="{{ route('register') }}">Register</a></li>
         </ul>
     @else
-        <a class="navbar-brand" href="{{ url('/user') }}">
-            <i class="far fa-user text-secondary"></i>
-        </a>
+        <small>Hello, {{ Auth::user()->name }}</small>
+
+        <!-- Collapse button -->
+        <button class="navbar-toggler toggler-example" type="button" data-toggle="collapse" data-target="#navbarSupportedContent1" aria-controls="navbarSupportedContent1"
+                aria-expanded="false" aria-label="Toggle navigation"><span class="dark-blue-text"><i class="fa fa-bars fa-1x"></i></span></button>
+
+        <!-- Collapsible content -->
+        <div class="collapse navbar-collapse" id="navbarSupportedContent1">
+
+            <!-- Links -->
+            <ul class="nav justify-content-end">
+                <li class="nav-item active">
+                    <a class="nav-link" href="{{ route('logout') }}">Logout</a>
+                </li>
+            </ul>
+            <!-- Links -->
+
+        </div>
+        <!-- Collapsible content -->
 
     @endguest
 </nav>
-
-
-{{--<!-- Collapsible content -->--}}
-{{--<div class="collapse navbar-collapse" id="navMenu">--}}
-
-    {{--<div class="dropdown-menu navMenu" aria-labelledby="navMenu">--}}
-        {{--<a class="navbar-brand dropdown-item" href="{{ url('/home') }}">--}}
-            {{--<i class="fas fa-home text-secondary"></i>--}}
-        {{--</a>--}}
-        {{--<a class="navbar-brand dropdown-item" href="{{ url('/games') }}">--}}
-            {{--<i class="fas fa-calendar-alt text-secondary"></i>--}}
-        {{--</a>--}}
-        {{--<a class="nav-link" href="{{ route('logout') }}">Logout</a>--}}
-    {{--</div>--}}
-
-{{--</div>--}}
-
-{{--<!-- Collapsible content -->--}}
