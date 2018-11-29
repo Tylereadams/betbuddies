@@ -35,6 +35,8 @@ Route::get('playersearch', 'PlayersController@jsonSearch');
 Route::get('/game/{urlSegment}', 'GamesController@game')->name('game');
 Route::get('/games/{date?}', 'GamesController@gamesByDate')->name('games');
 
+Route::get('json/search', 'ImportController@findHighlights');
+
 /**
  * Auth Routes
  */
