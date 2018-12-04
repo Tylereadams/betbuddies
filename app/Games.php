@@ -31,12 +31,11 @@ class Games extends Model
         static::updating(function ($game) {
             $status = Games::UPCOMING;
 
-            if(($game->home_score >= 0 && $game->away_score >= 0) && !$game->isDirty(['ended_at'])){
+            if($game->home_score >= 0 || $game->away_score >= 0){
                 $status = Games::IN_PROGRESS;
             }
 
-            // Send end of game tweets
-            if($game->isDirty(['ended_at'])){
+            if($game->ended_at){
                 $status = Games::ENDED;
 
                 // Remember if we sent the tweet for 24 hours
