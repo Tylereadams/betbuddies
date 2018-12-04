@@ -21,37 +21,15 @@ class GamesController extends Controller
      */
     public function gamesByDate($date = 'now')
     {
-        // Default date to today
-        if(!$date){
-            $date = \Request::get('date', 'today');
-        }
-
+        $leagueName = \Request::get('league');
         $date = Carbon::parse($date)->format('Y-m-d');
 
+        $data['urlDate'] = $date;
         $data['date'] = Carbon::parse($date)->format('M j, Y');
         $data['tomorrow'] = Carbon::parse($date)->addDay()->format('Y-m-d');
         $data['yesterday'] = Carbon::parse($date)->subDay()->format('Y-m-d');
-
-        $games = Games::where('start_date', 'LIKE', $date.'%')
-            ->orderBy('league_id')
-            ->orderBy('status')
-            ->orderBy('period')
-            ->orderBy('start_date')
-            ->get();
-
-        $games->load(['homeTeam', 'awayTeam', 'league']);
-
-        if($games->isEmpty()){
-            return view('games', $data);
-        }
-
-        $data['gamesByLeague'] = [];
-        // Add games to data
-        foreach($games as $game) {
-            $data['gamesByLeague'][$game->league->name][] = $game->getCardData();
-        }
-
-        $data['selectedLeague'] = \Request::get('league') ? \Request::get('league') : array_keys($data['gamesByLeague'])[0];
+        $data['gamesByLeague'] = $this->getGamesData($date);
+        $data['selectedLeague'] = $leagueName;
 
         return view('games', $data);
     }
@@ -89,6 +67,49 @@ class GamesController extends Controller
         }
 
         return view('game', $data);
+    }
+
+    public function gamesJson($date = 'now')
+    {
+        // Default date to today
+        if(!$date){
+            $date = \Request::get('date', 'today');
+        }
+
+        $date = Carbon::parse($date)->format('Y-m-d');
+
+        $games = Games::where('start_date', 'LIKE', $date.'%')
+            ->orderBy('league_id')
+            ->orderBy('status')
+            ->orderBy('period')
+            ->orderBy('start_date')
+            ->get();
+        $games->load(['homeTeam', 'awayTeam', 'league']);
+
+        $data['gamesByLeague'] = $this->getGamesData($date);
+
+        return response()->json($data);
+    }
+
+    private function getGamesData($date = 'now')
+    {
+        $date = Carbon::parse($date)->format('Y-m-d');
+
+        $games = Games::where('start_date', 'LIKE', $date.'%')
+            ->orderBy('league_id')
+            ->orderBy('status')
+            ->orderBy('period')
+            ->orderBy('start_date')
+            ->get();
+        $games->load(['homeTeam', 'awayTeam', 'league']);
+
+        $data = [];
+        // Add games to data
+        foreach($games as $game) {
+            $data[$game->league->name][] = $game->getCardData();
+        }
+
+        return $data;
     }
 
     /**

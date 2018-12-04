@@ -27,7 +27,6 @@
 
         @if($tweets)
             <div class="row align-middle p-2">
-                <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
 
                 @foreach(array_chunk($tweets, 3) as $chunk)
                     <div class="row justify-content-center">
@@ -100,4 +99,6 @@
         //     }
         // });
     </script>
+
+    <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
 @endsection
