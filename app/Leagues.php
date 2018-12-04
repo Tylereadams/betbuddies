@@ -34,4 +34,15 @@ class Leagues extends Model
         }
         return 'fa-'.$this->long_name.'-'.$iconSuffix;
     }
+
+    public function getPeriodLabel($period)
+    {
+        if(($this->id == Self::NBA_ID || $this->id == Self::NFL_ID) && $period > 5){
+            return 'OT';
+        } elseif($this->id == Self::NHL_ID  && $period > 3){
+            return 'OT';
+        } else {
+            return $this->period_label;
+        }
+    }
 }

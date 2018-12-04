@@ -31,8 +31,8 @@ class Games extends Model
         static::updating(function ($game) {
             $status = Games::UPCOMING;
 
-            if($game->isDirty(['home_score', 'away_score'])){
-                    $status = Games::IN_PROGRESS;
+            if(($game->home_score >= 0 && $game->away_score >= 0) && !$game->isDirty(['ended_at'])){
+                $status = Games::IN_PROGRESS;
             }
 
             // Send end of game tweets
@@ -163,7 +163,7 @@ class Games extends Model
             'id'    => $this->id,
             'league'    => [
                 'name' => $this->league->name,
-                'periodLabel' => $this->league->period_label
+                'periodLabel' => $this->league->getPeriodLabel($this->period)
             ],
             'period' => $this->period ? ordinalNumber($this->period) : null,
             'status' => $this->statusName(),
