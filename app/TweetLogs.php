@@ -4,6 +4,7 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use App\Services\StreamableService;
 
 class TweetLogs extends Model
 {
@@ -17,7 +18,20 @@ class TweetLogs extends Model
 
     use SoftDeletes;
 
-    // Relations
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::created(function($model){
+            $streamable_code = $model->uploadToStreamable();
+            $model->streamable_code = $streamable_code;
+            $model->save();
+        });
+    }
+
+    /***
+     * Relations
+     ***/
     public function team()
     {
         return $this->belongsTo(Teams::class, 'team_id');
@@ -34,9 +48,33 @@ class TweetLogs extends Model
     }
 
 
-    // Functions
+    /***
+     * Functions
+     ***/
+
+    /**
+     * Returns Twitter url for tweet
+     * @return string
+     */
     public function getTweetUrl()
     {
         return 'https://twitter.com/'.$this->team->twitter.'/status/'.$this->tweet_id;
+    }
+
+    /**
+     * Uploads tweet video to Streamable and returns the streamable shortcode
+     * @return mixed
+     */
+    public function uploadToStreamable()
+    {
+        $streamableService = new StreamableService($this->getTweetUrl());
+
+        $response = json_decode($streamableService->uploadVideo());
+
+        if(!isset($response->shortcode)){
+            return;
+        }
+
+        return $response->shortcode;
     }
 }
