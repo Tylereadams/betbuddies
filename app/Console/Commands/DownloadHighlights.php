@@ -41,18 +41,25 @@ class DownloadHighlights extends Command
     {
         // Find tweets that have not been downloaded
         $tweets = TweetLogs::whereNotNull('video_url')
+            ->whereNull('downloaded')
             ->orderBy('created_at', 'DESC')
             ->get();
         $tweets->load(['game.league', 'game.homeTeam', 'game.awayTeam', 'team']);
 
         foreach($tweets as $tweet){
-            if(!$tweet->video_url){
-                continue;
-            }
+
+            // create curl resource
+            $ch = curl_init();
+            curl_setopt($ch, CURLOPT_URL, $tweet->video_url);
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+            curl_setopt($ch,CURLOPT_USERAGENT,'Mozilla/5.0 (Windows; U; Windows NT 5.1; en-US; rv:1.8.1.13) Gecko/20080311 Firefox/2.0.0.13');
+            $output = curl_exec($ch);
+            // close curl resource to free up system resources
+            curl_close($ch);
 
             // Save to path on Digital Ocean
             $filePath = $tweet->getVideoPath();
-            $response = Storage::disk('ocean')->put($filePath, file_get_contents($tweet->video_url), 'public');
+            $response = Storage::disk('ocean')->put($filePath, $output, 'public');
 
             // Mark as downloaded
             $tweet->downloaded = $response;

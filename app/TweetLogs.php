@@ -18,19 +18,6 @@ class TweetLogs extends Model
 
     use SoftDeletes;
 
-    protected static function boot()
-    {
-        parent::boot();
-
-        static::created(function($model){
-            // Upload tweet to streamable, it auto grabs the video
-            $streamable_code = $model->uploadToStreamable();
-            $model->streamable_code = $streamable_code;
-
-            $model->save();
-        });
-    }
-
     /***
      * Relations
      ***/
@@ -50,9 +37,9 @@ class TweetLogs extends Model
     }
 
 
-    /***
+    /******************
      * Functions
-     ***/
+     ******************/
 
     /**
      * Returns Twitter url for tweet
@@ -63,9 +50,19 @@ class TweetLogs extends Model
         return 'https://twitter.com/'.$this->team->twitter.'/status/'.$this->tweet_id;
     }
 
+    /**
+     * Returns path of highlight video within Digital Ocean
+     * @return string
+     */
     public function getVideoPath()
     {
-        $path = 'highlights/'.$this->game->league->name.'/'.$this->game->start_date->format('Y-m-d').'/'.str_replace(" ", "-", $this->game->homeTeam->nickname.' '.$this->game->awayTeam->nickname.' '.$this->game->start_date->format('Hi')).'/'.str_replace(" ", "-", $this->team->nickname.' '.$this->id).'.mp4';
+        $leagueName = $this->game->league->name;
+        $startDate = $this->game->start_date->format('Y-m-d');
+        $teamsHourSlug = str_slug($this->game->homeTeam->nickname.' '.$this->game->awayTeam->nickname.' '.$this->game->start_date->format('Hi'));
+        $fileName = str_slug($this->team->nickname.' '.$this->id);
+        $extension = '.mp4';
+
+        $path = 'highlights/'.$leagueName.'/'.$startDate.'/'.$teamsHourSlug.'/'.$fileName.'.'.$extension;
 
         return $path;
     }
