@@ -35,4 +35,9 @@ return [
         'secret' => env('STRIPE_SECRET'),
     ],
 
+    'streamable' => [
+        'email' => env('STREAMABLE_EMAIL'),
+        'password' => env('STREAMABLE_PASSWORD'),
+    ]
+
 ];
