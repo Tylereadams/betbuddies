@@ -18,6 +18,33 @@ class TweetLogs extends Model
 
     use SoftDeletes;
 
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::created(function($model){
+            // Download the video from the tweet if there's a url
+            if($model->video_url){
+                // create curl resource
+                $ch = curl_init();
+                curl_setopt($ch, CURLOPT_URL, $model->video_url);
+                curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+                curl_setopt($ch,CURLOPT_USERAGENT,'Mozilla/5.0 (Windows; U; Windows NT 5.1; en-US; rv:1.8.1.13) Gecko/20080311 Firefox/2.0.0.13');
+                $output = curl_exec($ch);
+                // close curl resource to free up system resources
+                curl_close($ch);
+
+                // Save to path on Digital Ocean
+                $filePath = $model->getVideoPath();
+                $response = Storage::disk('ocean')->put($filePath, $output, 'public');
+
+                // Mark as downloaded
+                $model->downloaded = $response;
+                $model->save();
+            }
+        });
+    }
+
     /***
      * Relations
      ***/
@@ -58,29 +85,12 @@ class TweetLogs extends Model
     {
         $leagueName = $this->game->league->name;
         $startDate = $this->game->start_date->format('Y-m-d');
-        $teamsHourSlug = str_slug($this->game->homeTeam->nickname.' '.$this->game->awayTeam->nickname.' '.$this->game->start_date->format('Hi'));
-        $fileName = str_slug($this->team->nickname.' '.$this->id);
+        $teamsHourSlug = str_slug($this->game->homeTeam->nickname . ' ' . $this->game->awayTeam->nickname . ' ' . $this->game->start_date->format('Hi'));
+        $fileName = str_slug($this->team->nickname . ' ' . $this->id);
         $extension = '.mp4';
 
-        $path = 'highlights/'.$leagueName.'/'.$startDate.'/'.$teamsHourSlug.'/'.$fileName.'.'.$extension;
+        $path = 'highlights/' . $leagueName . '/' . $startDate . '/' . $teamsHourSlug . '/' . $fileName . '.' . $extension;
 
         return $path;
     }
-
-    /**
-     * Uploads tweet video to Streamable and returns the streamable shortcode
-     * @return mixed
-     */
-//    public function uploadToStreamable()
-//    {
-//        $streamableService = new StreamableService($this->getTweetUrl());
-//
-//        $response = json_decode($streamableService->uploadVideo());
-//
-//        if(!isset($response->shortcode)){
-//            return;
-//        }
-//
-//        return $response->shortcode;
-//    }
 }
