@@ -71,16 +71,16 @@ class TweetLogs extends Model
      * Uploads tweet video to Streamable and returns the streamable shortcode
      * @return mixed
      */
-    public function uploadToStreamable()
-    {
-        $streamableService = new StreamableService($this->getTweetUrl());
-
-        $response = json_decode($streamableService->uploadVideo());
-
-        if(!isset($response->shortcode)){
-            return;
-        }
-
-        return $response->shortcode;
-    }
+//    public function uploadToStreamable()
+//    {
+//        $streamableService = new StreamableService($this->getTweetUrl());
+//
+//        $response = json_decode($streamableService->uploadVideo());
+//
+//        if(!isset($response->shortcode)){
+//            return;
+//        }
+//
+//        return $response->shortcode;
+//    }
 }
