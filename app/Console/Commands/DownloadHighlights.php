@@ -40,6 +40,7 @@ class DownloadHighlights extends Command
     public function handle()
     {
         $tweets = TweetLogs::where('downloaded', 1)->get();
+        $tweets->load(['game.league', 'game.homeTeam', 'game.awayTeam', 'team']);
 
         foreach($tweets as $tweet){
             $oldPath = $tweet->getVideoPath();
