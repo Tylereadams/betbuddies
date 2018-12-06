@@ -62,11 +62,13 @@ class DownloadHighlights extends Command
 
             // Save to path on Digital Ocean
             $filePath = $tweet->getVideoPath();
+            echo $filePath."...";
             $response = Storage::disk('ocean')->put($filePath, $output, 'public');
 
             // Mark as downloaded
             $tweet->downloaded = $response;
             $tweet->save();
+            echo "done.\n";
         }
     }
 }
