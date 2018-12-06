@@ -39,6 +39,26 @@ class DownloadHighlights extends Command
      */
     public function handle()
     {
+        $tweets = TweetLogs::where('downloaded', 1)->get();
+
+        foreach($tweets as $tweet){
+            $oldPath = $tweet->getVideoPath();
+
+            $leagueName = $tweet->game->league->name;
+            $startDate = $tweet->game->start_date->format('Y-m-d');
+            $teamSlug = str_slug($tweet->game->homeTeam->nickname . ' ' . $tweet->game->awayTeam->nickname . ' ' . $tweet->game->id);
+            $fileName = str_slug($tweet->team->nickname . ' ' . $tweet->id);
+            $extension = 'mp4';
+
+            $newPath = 'highlights/' .$leagueName . '/' . $startDate . '/' . $teamSlug . '/' . $fileName . '.' . $extension;
+            echo $newPath." \n";
+
+            $moved[] = Storage::disk('ocean')->move($oldPath, $newPath);
+        }
+
+        dd($moved);
+
+
         // Find tweets that have not been downloaded
         $tweets = TweetLogs::whereNotNull('video_url')
             ->whereNull('downloaded')
