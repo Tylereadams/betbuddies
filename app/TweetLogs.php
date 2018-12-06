@@ -85,11 +85,11 @@ class TweetLogs extends Model
     {
         $leagueName = $this->game->league->name;
         $startDate = $this->game->start_date->format('Y-m-d');
-        $teamsHourSlug = str_slug($this->game->homeTeam->nickname . ' ' . $this->game->awayTeam->nickname . ' ' . $this->game->start_date->format('Hi'));
+        $gameSlug = str_slug($this->game->homeTeam->nickname . ' ' . $this->game->awayTeam->nickname . ' ' . $this->game->id);
         $fileName = str_slug($this->team->nickname . ' ' . $this->id);
-        $extension = '.mp4';
+        $extension = 'mp4';
 
-        $path = 'highlights/' . $leagueName . '/' . $startDate . '/' . $teamsHourSlug . '/' . $fileName . '.' . $extension;
+        $path = 'highlights/' .$leagueName . '/' . $startDate . '/' . $gameSlug . '/' . $fileName . '.' . $extension;
 
         return $path;
     }
