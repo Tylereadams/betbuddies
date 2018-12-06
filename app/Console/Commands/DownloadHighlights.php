@@ -43,7 +43,6 @@ class DownloadHighlights extends Command
         $tweets->load(['game.league', 'game.homeTeam', 'game.awayTeam', 'team']);
 
         foreach($tweets as $tweet){
-            $oldPath = $tweet->getVideoPath();
 
             $leagueName = $tweet->game->league->name;
             $startDate = $tweet->game->start_date->format('Y-m-d');
@@ -52,9 +51,14 @@ class DownloadHighlights extends Command
             $extension = 'mp4';
 
             $newPath = 'highlights/' .$leagueName . '/' . $startDate . '/' . $teamSlug . '/' . $fileName . '.' . $extension;
-            echo $newPath." \n";
 
-            $moved[] = Storage::disk('ocean')->move($oldPath, $newPath);
+            $oldPath = $tweet->getVideoPath();
+
+            if(Storage::disk('ocean')->exists($oldPath)){
+                echo $newPath." \n";
+
+                $moved[] = Storage::disk('ocean')->move($oldPath, $newPath);
+            }
         }
 
         dd($moved);
