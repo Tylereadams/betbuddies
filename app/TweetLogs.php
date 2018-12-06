@@ -23,8 +23,10 @@ class TweetLogs extends Model
         parent::boot();
 
         static::created(function($model){
+            // Upload tweet to streamable, it auto grabs the video
             $streamable_code = $model->uploadToStreamable();
             $model->streamable_code = $streamable_code;
+
             $model->save();
         });
     }
@@ -59,6 +61,13 @@ class TweetLogs extends Model
     public function getTweetUrl()
     {
         return 'https://twitter.com/'.$this->team->twitter.'/status/'.$this->tweet_id;
+    }
+
+    public function getVideoPath()
+    {
+        $path = 'highlights/'.$this->game->league->name.'/'.$this->game->start_date->format('Y-m-d').'/'.str_replace(" ", "-", $this->game->homeTeam->nickname.' '.$this->game->awayTeam->nickname.' '.$this->game->start_date->format('Hi')).'/'.str_replace(" ", "-", $this->team->nickname.' '.$this->id).'.mp4';
+
+        return $path;
     }
 
     /**
