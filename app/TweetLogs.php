@@ -4,7 +4,7 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use App\Services\StreamableService;
+use Illuminate\Support\Facades\Storage;
 
 class TweetLogs extends Model
 {
