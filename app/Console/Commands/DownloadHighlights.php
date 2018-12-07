@@ -39,13 +39,11 @@ class DownloadHighlights extends Command
      */
     public function handle()
     {
-        $tweets = TweetLogs::where('downloaded', 1)->get();
-        $tweets->load(['game.league', 'game.homeTeam', 'game.awayTeam', 'team']);
-
         // Find tweets that have not been downloaded
         $tweets = TweetLogs::whereNotNull('video_url')
             ->whereNull('downloaded')
-            ->orderBy('created_at', 'DESC')
+            // updated_at asc to give time for uploading to streamable
+            ->orderBy('updated_at', 'ASC')
             ->get();
         $tweets->load(['game.league', 'game.homeTeam', 'game.awayTeam', 'team']);
 
@@ -62,13 +60,11 @@ class DownloadHighlights extends Command
 
             // Save to path on Digital Ocean
             $filePath = $tweet->getVideoPath();
-            echo $filePath."...";
             $response = Storage::disk('ocean')->put($filePath, $output, 'public');
 
             // Mark as downloaded
             $tweet->downloaded = $response;
             $tweet->save();
-            echo "done.\n";
         }
     }
 }
