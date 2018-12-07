@@ -87,7 +87,7 @@ class TweetLogs extends Model
         return $path;
     }
 
-    private function downloadVideo()
+    public function downloadVideo()
     {
         // create curl resource
         $ch = curl_init();
