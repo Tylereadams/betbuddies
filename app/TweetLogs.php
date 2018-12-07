@@ -25,21 +25,13 @@ class TweetLogs extends Model
         static::created(function($model){
             // Download the video from the tweet if there's a url
             if($model->video_url){
-                // create curl resource
-                $ch = curl_init();
-                curl_setopt($ch, CURLOPT_URL, $model->video_url);
-                curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-                curl_setopt($ch,CURLOPT_USERAGENT,'Mozilla/5.0 (Windows; U; Windows NT 5.1; en-US; rv:1.8.1.13) Gecko/20080311 Firefox/2.0.0.13');
-                $output = curl_exec($ch);
-                // close curl resource to free up system resources
-                curl_close($ch);
+                $model->downloadVideo();
+            } else { // No video url to download, get the streamable code to download from later
+                $streamable = new StreamableService($model->getTweetUrl());
+                $streamableCode = $streamable->uploadVideo();
+                $response = json_decode($streamableCode);
 
-                // Save to path on Digital Ocean
-                $filePath = $model->getVideoPath();
-                $response = Storage::disk('ocean')->put($filePath, $output, 'public');
-
-                // Mark as downloaded
-                $model->downloaded = $response;
+                $model->streamable_code = $response->shortcode;
                 $model->save();
             }
         });
@@ -92,5 +84,25 @@ class TweetLogs extends Model
         $path = 'highlights/' .$leagueName . '/' . $startDate . '/' . $gameSlug . '/' . $fileName . '.' . $extension;
 
         return $path;
+    }
+
+    private function downloadVideo()
+    {
+        // create curl resource
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, $this->video_url);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($ch,CURLOPT_USERAGENT,'Mozilla/5.0 (Windows; U; Windows NT 5.1; en-US; rv:1.8.1.13) Gecko/20080311 Firefox/2.0.0.13');
+        $output = curl_exec($ch);
+        // close curl resource to free up system resources
+        curl_close($ch);
+
+        // Save to path on Digital Ocean
+        $filePath = $this->getVideoPath();
+        $response = Storage::disk('ocean')->put($filePath, $output, 'public');
+
+        // Mark as downloaded
+        $this->downloaded = $response;
+        $this->save();
     }
 }
