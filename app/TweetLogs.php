@@ -28,12 +28,7 @@ class TweetLogs extends Model
             if($model->video_url){
                 $model->downloadVideo();
             } else { // No video url to download, get the streamable code to download from later
-                $streamable = new StreamableService($model->getTweetUrl());
-                $streamableCode = $streamable->uploadVideo();
-                $response = json_decode($streamableCode);
-
-                $model->streamable_code = $response->shortcode;
-                $model->save();
+                $model->uploadVideo();
             }
         });
     }
@@ -104,6 +99,19 @@ class TweetLogs extends Model
 
         // Mark as downloaded
         $this->downloaded = $response;
+        $this->save();
+    }
+
+    /**
+     * Uploads video to streamable service
+     */
+    public function uploadVideo()
+    {
+        $streamable = new StreamableService($this->getTweetUrl());
+        $streamableCode = $streamable->uploadVideo();
+        $response = json_decode($streamableCode);
+
+        $this->streamable_code = $response->shortcode;
         $this->save();
     }
 }
