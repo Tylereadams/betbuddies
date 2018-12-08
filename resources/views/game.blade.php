@@ -44,7 +44,7 @@
         @if($game['isBettable'])
             @include('partials.createBetModal')
         @else
-            <div class="scrolling-wrapper">
+            <div>
                 @foreach($tweets as $tweet)
                     @include('partials.highlight', $tweet)
                 @endforeach
