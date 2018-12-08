@@ -46,10 +46,11 @@ class ImportStreamableCodes extends Command
             ->get();
 
         foreach($tweets as $tweet){
+            echo $tweet->getTweetUrl().'...';
+
             $streamable = new StreamableService($tweet);
             $response = json_decode($streamable->uploadVideo());
 
-            echo $tweet->getTweetUrl().'...';
             if(!isset($response->shortcode)){
                 echo $tweet->getTweetUrl()."...---------NOT FOUND-------.\n";
                 continue;
