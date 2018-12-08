@@ -76,15 +76,20 @@ class GamesController extends Controller
         }
 
         $tweets = TweetLogs::where('game_id', $game->id)
-            ->orderBy('created_at', 'DESC')
+            ->orderBy('created_at', 'ASC')
             ->get();
         $tweets->load('team');
 
         $data['tweetsToEmbed'] = [];
         foreach($tweets as $tweet){
-            $data['tweetsToEmbed'][] = [
+            $data['tweetsByPeriod'][] = [
                 'imageUrl' => $tweet->media_url,
-                'highlightUrl' => $tweet->highlightUrl()
+                'highlightUrl' => $tweet->highlightUrl(),
+                'players' => $tweet->players->map(function($player){
+                    return [
+                        'name' => $player->first_name.' '.$player->last_name
+                    ];
+                })
             ];
         }
 

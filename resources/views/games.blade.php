@@ -21,8 +21,8 @@
                     @foreach($games as $key => $game)
                         <tr class='clickable link-row' data-href="{{ url('game/'.$game['urlSegment']) }}">
                             <td>
-                                <img src="{{ $game['homeTeam']['thumbUrl'] }}" class="avatar">&nbsp;<span class="{{ $game['homeTeam']['isWinner'] ? 'font-weight-bold' : '' }}">{{ $game['homeTeam']['name'] }}</span>@if($game['homeTeam']['betCount']) ({{ $game['homeTeam']['betCount'] }})@endif<br>
-                                <img src="{{ $game['awayTeam']['thumbUrl'] }}" class="avatar">&nbsp;<span class="{{ $game['awayTeam']['isWinner'] ? 'font-weight-bold' : '' }}">{{ $game['awayTeam']['name'] }}</span>@if($game['awayTeam']['betCount']) ({{ $game['awayTeam']['betCount'] }})@endif
+                                <img src="{{ $game['homeTeam']['thumbUrl'] }}" class="avatar">&nbsp;<span class="{{ $game['homeTeam']['isWinner'] ? 'font-weight-bold' : '' }}">{{ $game['homeTeam']['name'] }}</span> @if($game['homeTeam']['isWinner'])<i class="fas fa-caret-left"></i>@endif @if($game['homeTeam']['betCount']) ({{ $game['homeTeam']['betCount'] }})@endif<br>
+                                <img src="{{ $game['awayTeam']['thumbUrl'] }}" class="avatar">&nbsp;<span class="{{ $game['awayTeam']['isWinner'] ? 'font-weight-bold' : '' }}">{{ $game['awayTeam']['name'] }}</span> @if($game['awayTeam']['isWinner'])<i class="fas fa-caret-left"></i>@endif @if($game['awayTeam']['betCount']) ({{ $game['awayTeam']['betCount'] }})@endif
                             </td>
                             <td class="align-middle text-center">
                                 @if($game['status'] == 'upcoming')

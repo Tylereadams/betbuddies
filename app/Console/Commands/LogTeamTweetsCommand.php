@@ -107,7 +107,8 @@ class LogTeamTweetsCommand extends Command
                         'media_url' => $tweet->extended_entities->media[0]->media_url,
                         'team_id' => $team->id,
                         'text' => $tweet->text,
-                        'game_id' => $game->id
+                        'game_id' => $game->id,
+                        'period' => $game->period
                     ]);
 
                     // Save the new tweet
