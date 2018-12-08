@@ -48,6 +48,10 @@ class ImportStreamableCodes extends Command
         foreach($tweets as $tweet){
             $streamable = new StreamableService($tweet);
             $response = json_decode($streamable->uploadVideo());
+
+            if(!isset($response->shortcode)){
+                continue;
+            }
             $streamableCode = $response->shortcode;
 
             $tweet->streamable_code = $streamableCode;
