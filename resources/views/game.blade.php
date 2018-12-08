@@ -45,7 +45,7 @@
             @include('partials.createBetModal')
         @else
             <div class="scrolling-wrapper">
-                @foreach($tweetsToEmbed as $tweet)
+                @foreach($tweets as $tweet)
                     @include('partials.highlight', $tweet)
                 @endforeach
             </div>

@@ -80,9 +80,9 @@ class GamesController extends Controller
             ->get();
         $tweets->load('team');
 
-        $data['tweetsToEmbed'] = [];
+        $data['tweets'] = [];
         foreach($tweets as $tweet){
-            $data['tweetsByPeriod'][] = [
+            $data['tweets'][] = [
                 'imageUrl' => $tweet->media_url,
                 'highlightUrl' => $tweet->highlightUrl(),
                 'players' => $tweet->players->map(function($player){

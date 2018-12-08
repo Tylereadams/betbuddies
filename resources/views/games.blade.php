@@ -24,22 +24,21 @@
                                 <img src="{{ $game['homeTeam']['thumbUrl'] }}" class="avatar">&nbsp;<span class="{{ $game['homeTeam']['isWinner'] ? 'font-weight-bold' : '' }}">{{ $game['homeTeam']['name'] }}</span> @if($game['homeTeam']['isWinner'])<i class="fas fa-caret-left"></i>@endif @if($game['homeTeam']['betCount']) ({{ $game['homeTeam']['betCount'] }})@endif<br>
                                 <img src="{{ $game['awayTeam']['thumbUrl'] }}" class="avatar">&nbsp;<span class="{{ $game['awayTeam']['isWinner'] ? 'font-weight-bold' : '' }}">{{ $game['awayTeam']['name'] }}</span> @if($game['awayTeam']['isWinner'])<i class="fas fa-caret-left"></i>@endif @if($game['awayTeam']['betCount']) ({{ $game['awayTeam']['betCount'] }})@endif
                             </td>
-                            <td class="align-middle text-center">
-                                @if($game['status'] == 'upcoming')
-                                    {{ $game['startTime'] }}
-                                @endif
+                            <td class="align-middle text-right">
                                 @if($game['status'] == 'in progress' || $game['status'] == 'ended')
                                         <span class="{{ $game['homeTeam']['isWinner'] ? 'font-weight-bold' : '' }}">{{ $game['homeTeam']['score'] }}</span><br>
                                         <span class="{{ $game['awayTeam']['isWinner'] ? 'font-weight-bold' : '' }}">{{ $game['awayTeam']['score'] }}</span>
                                 @endif
                             </td>
-                            <td class="align-middle text-center">
-                                @if($game['endedAt'])
-                                    Final
-                                @elseif($game['status'] == 'in progress' && $game['period'])
+                            <td class="align-middle text-right">
+                                @if($game['status'] == 'in progress' && $game['period'])
                                     {{ $game['period'] }}
+                                @elseif($game['endedAt'])
+                                    <strong>F</strong>
                                 @elseif($game['status'] == 'postponed')
                                     Postponed
+                                @else
+                                    {{ $game['startTime'] }}
                                 @endif
                             </td>
                         </tr>
