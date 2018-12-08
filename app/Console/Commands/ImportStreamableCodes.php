@@ -49,13 +49,16 @@ class ImportStreamableCodes extends Command
             $streamable = new StreamableService($tweet);
             $response = json_decode($streamable->uploadVideo());
 
+            echo $tweet->getTweetUrl().'...';
             if(!isset($response->shortcode)){
+                echo $tweet->getTweetUrl()."...---------NOT FOUND-------.\n";
                 continue;
             }
             $streamableCode = $response->shortcode;
 
             $tweet->streamable_code = $streamableCode;
             $tweet->save();
+            echo "done.\n";
         }
     }
 }
