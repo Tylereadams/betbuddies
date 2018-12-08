@@ -42,6 +42,7 @@ class ImportStreamableCodes extends Command
         // All tweets that don't have a video url or streamable_code
         $tweets = TweetLogs::whereNull('streamable_code')
             ->whereNull('video_url')
+            ->orderBy('created_at', 'DESC')
             ->get();
 
         foreach($tweets as $tweet){
