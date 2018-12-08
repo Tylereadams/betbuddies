@@ -14,7 +14,7 @@ class AdminController extends Controller
     public function tweetLog()
     {
         $q = Request::get('q');
-        $tweetLogQuery = TweetLogs::whereNotNull('text');
+        $tweetLogQuery = TweetLogs::whereNotNull('downloaded');
 
         // Search for player's highlight tweets
         if(Request::has('q')){
@@ -38,9 +38,8 @@ class AdminController extends Controller
                   'leagueId' => $tweet->team->league_id
                 ],
                 'imageUrl' => $tweet->media_url,
-                'videoUrl' => $tweet->video_url,
                 'text' => $tweet->text,
-                'tweetUrl' => $tweet->getTweetUrl(),
+                'highlightUrl' => $tweet->highlightUrl(),
                 'mentions' => $tweet->players->map(function($player){
                     return [
                         'id' => $player->id,

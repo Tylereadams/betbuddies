@@ -45,11 +45,8 @@
             @include('partials.createBetModal')
         @else
             <div class="scrolling-wrapper">
-                <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
                 @foreach($tweetsToEmbed as $tweet)
-
-                    @include('partials.embeddedTweet', $tweet)
-
+                    @include('partials.highlight', $tweet)
                 @endforeach
             </div>
         @endif

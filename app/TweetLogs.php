@@ -82,6 +82,15 @@ class TweetLogs extends Model
         return $path;
     }
 
+    /**
+     * Returns highlight mp4 string
+     * @return mixed
+     */
+    public function highlightUrl()
+    {
+        return Storage::disk('ocean')->url($this->getVideoPath());
+    }
+
     public function downloadVideo()
     {
         // create curl resource

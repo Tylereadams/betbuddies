@@ -83,8 +83,8 @@ class GamesController extends Controller
         $data['tweetsToEmbed'] = [];
         foreach($tweets as $tweet){
             $data['tweetsToEmbed'][] = [
-                'twitter' => $tweet->team->twitter,
-                'id' => $tweet->tweet_id
+                'imageUrl' => $tweet->media_url,
+                'highlightUrl' => $tweet->highlightUrl()
             ];
         }
 
