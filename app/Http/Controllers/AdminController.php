@@ -19,7 +19,7 @@ class AdminController extends Controller
         // Search for player's highlight tweets
         if(Request::has('q')){
             $tweetLogQuery->whereHas('players', function($query) use ($q){
-                $query->where(DB::raw("CONCAT(first_name,' ',last_name)"), 'LIKE', '%'.$q.'%');
+                $query->where(DB::raw("CONCAT(first_name,' ',last_name)"), 'LIKE', $q.'%');
             });
         }
 
@@ -40,14 +40,11 @@ class AdminController extends Controller
                 'imageUrl' => $tweet->media_url,
                 'text' => $tweet->text,
                 'highlightUrl' => $tweet->highlightUrl(),
-                'mentions' => $tweet->players->map(function($player){
+                'players' => $tweet->players->map(function($player){
                     return [
-                        'id' => $player->id,
-                        'name' => $player->first_name.' '.$player->last_name,
-                        'twitter' => $player->twitter,
-                        'tweetCount' => $player->tweets->count()
+                        'name' => $player->first_name.' '.$player->last_name
                     ];
-                })->toArray()
+                })
             ];
 
             if(isset($tweets[$key]['mentions'][0])){
@@ -62,9 +59,9 @@ class AdminController extends Controller
             }
         }
 
-        $topRelatedPlayers = collect($topRelatedPlayers)->unique()->sortByDesc(function($player){
+        $topRelatedPlayers = collect($topRelatedPlayers)->unique()->take(5)->sortByDesc(function($player){
             return $player['tweetCount'];
-        })->take(5);
+        });
 
         return view('admin.tweet-log', [
             'paginator' => $tweetPaginator,
