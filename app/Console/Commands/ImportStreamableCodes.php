@@ -2,25 +2,25 @@
 
 namespace App\Console\Commands;
 
+use App\TweetLogs;
 use Illuminate\Console\Command;
 use App\Services\StreamableService;
-use App\TweetLogs;
 
-class ImportVideoUrls extends Command
+class ImportStreamableCodes extends Command
 {
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    protected $signature = 'betbuddies:import-video-urls';
+    protected $signature = 'betbuddies:import-streamable-codes';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Gets video urls for highlights with streamable code, but no video url';
+    protected $description = 'Uploads tweet to streamable and records the code';
 
     /**
      * Create a new command instance.
@@ -39,21 +39,17 @@ class ImportVideoUrls extends Command
      */
     public function handle()
     {
-        // Get tweets missing the video url, but have a streamable code
-        $tweets = TweetLogs::whereNotNull('streamable_code')
+        // All tweets that don't have a video url or streamable_code
+        $tweets = TweetLogs::whereNull('streamable_code')
             ->whereNull('video_url')
             ->get();
 
         foreach($tweets as $tweet){
             $streamable = new StreamableService($tweet);
-            $streamableUrl = $streamable->getVideoUrl($tweet->streamable_code);
+            $response = json_decode($streamable->uploadVideo());
+            $streamableCode = $response->shortcode;
 
-            if(!$streamableUrl){
-                continue;
-            }
-
-            // Save video_url
-            $tweet->video_url = 'https:'.$streamableUrl;
+            $tweet->streamable_code = $streamableCode;
             $tweet->save();
         }
     }

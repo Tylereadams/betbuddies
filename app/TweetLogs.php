@@ -107,7 +107,7 @@ class TweetLogs extends Model
      */
     public function uploadVideo()
     {
-        $streamable = new StreamableService($this->getTweetUrl());
+        $streamable = new StreamableService($this);
         $streamableCode = $streamable->uploadVideo();
         $response = json_decode($streamableCode);
 

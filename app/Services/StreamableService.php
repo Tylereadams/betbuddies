@@ -2,9 +2,11 @@
 
 namespace App\Services;
 
+use App\TweetLogs;
+
 class StreamableService
 {
-    public function __construct($videoUrl = '')
+    public function __construct(TweetLogs $tweet)
     {
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
@@ -13,7 +15,7 @@ class StreamableService
 
         $this->curl = $ch;
         $this->baseUrl = 'https://api.streamable.com';
-        $this->videoUrl = $videoUrl;
+        $this->videoUrl = $tweet->video_url ? $tweet->video_url : $tweet->getTweetUrl();
     }
 
     /**
