@@ -42,6 +42,7 @@ class DownloadHighlights extends Command
         // Find tweets that have not been downloaded
         $tweets = TweetLogs::whereNotNull('video_url')
             ->whereNull('downloaded')
+            ->whereNotNull('game_id')
             // updated_at asc to give time for uploading to streamable
             ->orderBy('updated_at', 'ASC')
             ->get();
