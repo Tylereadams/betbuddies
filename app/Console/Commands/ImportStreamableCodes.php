@@ -52,7 +52,7 @@ class ImportStreamableCodes extends Command
             $response = json_decode($streamable->uploadVideo());
 
             if(!isset($response->shortcode)){
-                echo $tweet->getTweetUrl()."...---------NOT FOUND-------.\n";
+                echo "---------NOT FOUND-------.\n";
                 continue;
             }
             $streamableCode = $response->shortcode;

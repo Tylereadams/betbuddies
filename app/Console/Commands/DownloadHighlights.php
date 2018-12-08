@@ -48,14 +48,13 @@ class DownloadHighlights extends Command
         $tweets->load(['game.league', 'game.homeTeam', 'game.awayTeam', 'team']);
 
         foreach($tweets as $tweet){
-
+            echo $tweet->video_url.'...';
             // create curl resource
             $ch = curl_init();
             curl_setopt($ch, CURLOPT_URL, $tweet->video_url);
             curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
             curl_setopt($ch,CURLOPT_USERAGENT,'Mozilla/5.0 (Windows; U; Windows NT 5.1; en-US; rv:1.8.1.13) Gecko/20080311 Firefox/2.0.0.13');
             $output = curl_exec($ch);
-            // close curl resource to free up system resources
             curl_close($ch);
 
             // Save to path on Digital Ocean
@@ -65,6 +64,8 @@ class DownloadHighlights extends Command
             // Mark as downloaded
             $tweet->downloaded = $response;
             $tweet->save();
+
+            echo "done.\n";
         }
     }
 }
