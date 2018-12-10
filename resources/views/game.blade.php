@@ -2,18 +2,35 @@
 
 @section('content')
 
-    <div class="container">
+    @if($venue['photoUrl'])
+    <div class="jumbotron" style="
+    background-image: url('{{ $venue['photoUrl'] }}');
+    background-size: 100% 190px;
+    background-repeat: no-repeat;
+    min-height: 190px !important;
+            position: relative;
+    ">
+        <div class="text-white col-6" style="float:left; position: absolute; bottom: -1px; left: 0;">
+            <i class="far fa-calendar-alt"></i> {{ $game['startDate'] }} {{ $game['startTime'] }}<br>
+            @if($game['broadcast'])
+                <i class="fas fa-tv"></i> {{ $game['broadcast'] }}
+            @endif
+        </div>
+    </div>
+    @endif
 
+    <div class="container">
         <div class="row text-center game-teams__header">
-            <div class="col">
-                <img src="{{ $game['homeTeam']['thumbUrl'] }}" class="avatar-lg"><br>
-                {{ $game['homeTeam']['name'] }}
-                <h3>{{ $game['homeTeam']['score'] }}</h3>
-            </div>
             <div class="col">
                 <img src="{{ $game['awayTeam']['thumbUrl'] }}" class="avatar-lg"><br>
                 {{ $game['awayTeam']['name'] }}
                 <h3>{{ $game['awayTeam']['score'] }}</h3>
+            </div>
+
+            <div class="col">
+                <img src="{{ $game['homeTeam']['thumbUrl'] }}" class="avatar-lg"><br>
+                {{ $game['homeTeam']['name'] }}
+                <h3>{{ $game['homeTeam']['score'] }}</h3>
             </div>
         </div>
 
@@ -31,12 +48,6 @@
                     <div class="text-center">
                         <strong>Final</strong>
                     </div>
-                @endif
-            </div>
-            <div class="col-sm-12">
-                <i class="far fa-calendar-alt"></i> {{ $game['startDate'] }} {{ $game['startTime'] }}<br>
-                @if($game['broadcast'])
-                    <i class="fas fa-tv"></i> {{ $game['broadcast'] }}
                 @endif
             </div>
         </div>

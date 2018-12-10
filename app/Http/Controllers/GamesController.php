@@ -93,6 +93,8 @@ class GamesController extends Controller
             ];
         }
 
+        $data['venue']['photoUrl'] = $game->homeTeam->venue ? $game->homeTeam->venue->photoUrl() : '';
+
         return view('game', $data);
     }
 
