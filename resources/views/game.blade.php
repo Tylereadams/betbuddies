@@ -3,19 +3,13 @@
 @section('content')
 
     @if($venue['photoUrl'])
-    <div class="jumbotron" style="
+    <div class="jumbotron d-lg-none d-md-none d-xl-none mb-2" style="
     background-image: url('{{ $venue['photoUrl'] }}');
     background-size: 100% 190px;
     background-repeat: no-repeat;
     min-height: 190px !important;
             position: relative;
     ">
-        <div class="text-white col-6" style="float:left; position: absolute; bottom: -1px; left: 0;">
-            <i class="far fa-calendar-alt"></i> {{ $game['startDate'] }} {{ $game['startTime'] }}<br>
-            @if($game['broadcast'])
-                <i class="fas fa-tv"></i> {{ $game['broadcast'] }}
-            @endif
-        </div>
     </div>
     @endif
 
@@ -32,6 +26,13 @@
                 {{ $game['homeTeam']['name'] }}
                 <h3>{{ $game['homeTeam']['score'] }}</h3>
             </div>
+        </div>
+
+        <div>
+            <i class="far fa-calendar-alt"></i> {{ $game['startDate'] }} {{ $game['startTime'] }}<br>
+            @if($game['broadcast'])
+                <i class="fas fa-tv"></i> {{ $game['broadcast'] }}
+            @endif
         </div>
 
         <div class="row pb-4">
