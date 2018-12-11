@@ -29,24 +29,17 @@ class Games extends Model
     {
         parent::boot();
 
-        // Update the status of the game if ended_at or the score changed
+        // Update the status of the game whenever it changes
         static::updating(function ($game) {
-            $status = Games::UPCOMING;
 
-            if($game->home_score >= 0 || $game->away_score >= 0){
+            $pastStartDate = Carbon::now() > $game->start_date;
+
+            if($pastStartDate && !$game->ended_at){ // Game started - current time greater than start time
                 $status = Games::IN_PROGRESS;
-            }
-
-            if($game->ended_at){
+            } elseif ($pastStartDate && $game->ended_at){ // Game ended
                 $status = Games::ENDED;
-
-                // Remember if we sent the tweet for 24 hours
-//                Cache::remember($game->id.'-sent-final-tweet', 60 * 24, function () use($game) {
-//                    $game->homeTeam->sendEndTweet($game);
-//                    $game->awayTeam->sendEndTweet($game);
-//                    return true;
-//                });
-
+            } else { // Game upcoming
+                $status = Games::UPCOMING;
             }
 
             $game->status = $status;

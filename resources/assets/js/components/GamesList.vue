@@ -1,5 +1,5 @@
 <template>
-    <b-container>
+    <b-container class="p-">
         <span v-if="isLoading">Loading</span>
             <b-tabs no-fade>
                 <div v-for="(leagueGames, key) in gamesList">
@@ -8,19 +8,20 @@
                             {{ key.toUpperCase() }}
                         </template>
 
-                        <div class='row pt-3' data-href="/game/jaguars-steelers-2018-11-18-1300" v-on:click="goToGame(game.urlSegment)" v-for="(game, key) in leagueGames">
+                        <div class='row pt-3' v-on:click="goToGame(game.urlSegment)" v-for="(game, key) in leagueGames">
                             <div class="col-xs-6">
-                                <img :src="game.homeTeam.thumbUrl" class="avatar">&nbsp;<span :class="game.homeTeam.isWinner ? 'font-weight-bold' : ''">{{ game.homeTeam.name }}</span><span v-if="game.homeTeam.betCount"> ({{ game.homeTeam.betCount }})</span><br>
-                                <img :src="game.awayTeam.thumbUrl" class="avatar">&nbsp;<span :class="game.awayTeam.isWinner ? 'font-weight-bold' : ''">{{ game.awayTeam.name }}</span><span v-if="game.awayTeam.betCount">({{ game.awayTeam.betCount }})</span>
+                                <img :src="game.awayTeam.thumbUrl" class="avatar">&nbsp;<span :class="game.awayTeam.isWinner ? 'font-weight-bold' : ''">{{ game.awayTeam.name }}</span> <span v-if="game.awayTeam.isWinner"><i class="fas fa-caret-left"></i></span><span v-if="game.awayTeam.betCount">({{ game.awayTeam.betCount }})</span><br>
+                                <img :src="game.homeTeam.thumbUrl" class="avatar">&nbsp;<span :class="game.homeTeam.isWinner ? 'font-weight-bold' : ''">{{ game.homeTeam.name }}</span> <span v-if="game.homeTeam.isWinner"><i class="fas fa-caret-left"></i></span><span v-if="game.homeTeam.betCount"> ({{ game.homeTeam.betCount }})</span>
                             </div>
                             <div class="col-xs-3">
-                                <span v-if="game.status == 'upcoming'">{{ game.startTime }}</span>
-                                <span v-else-if="game.status == 'in progress' || game.status == 'ended'">
-                                    <span :class="game.homeTeam.isWinner ? 'font-weight-bold' : ''">{{ game.homeTeam.score }}</span><br>
-                                    <span :class="game.awayTeam.isWinner ? 'font-weight-bold' : ''">{{ game.awayTeam.score }}</span>
+                                <!-- In progress games-->
+                                <span v-if="game.status == 'in progress' || game.status == 'ended'">
+                                    <span :class="game.awayTeam.isWinner ? 'font-weight-bold' : ''">{{ game.awayTeam.score }}</span><br>
+                                    <span :class="game.homeTeam.isWinner ? 'font-weight-bold' : ''">{{ game.homeTeam.score }}</span>
                                 </span>
                             </div>
                             <div class="col-xs-3">
+                                <span v-if="game.status == 'upcoming'">{{ game.startTime }}</span>
                                 <span v-if="game.endedAt"><strong>Final</strong></span>
                                 <span v-if="game.status == 'in progress' && game.period">{{ game.period }}</span>
                                 <span v-if="game.status == 'postponed'">Postponed</span>

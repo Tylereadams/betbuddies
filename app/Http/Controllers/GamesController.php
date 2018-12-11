@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Games;
+use App\Leagues;
 use App\Services\CardCreator;
 use App\TweetLogs;
 use Carbon\Carbon;
@@ -85,14 +86,6 @@ class GamesController extends Controller
 
         $date = Carbon::parse($date)->format('Y-m-d');
 
-        $games = Games::where('start_date', 'LIKE', $date.'%')
-            ->orderBy('league_id')
-            ->orderBy('status')
-            ->orderBy('period')
-            ->orderBy('start_date')
-            ->get();
-        $games->load(['homeTeam', 'awayTeam', 'league']);
-
         $data['gamesByLeague'] = $this->getGamesData($date);
 
         return response()->json($data);
@@ -103,9 +96,8 @@ class GamesController extends Controller
         $date = Carbon::parse($date)->format('Y-m-d');
 
         $games = Games::where('start_date', 'LIKE', $date.'%')
-            ->orderBy('league_id')
-            ->orderBy('status')
-            ->orderBy('period')
+            ->orderByRaw('FIELD(league_id,'.Leagues::NFL_ID.','.Leagues::NBA_ID.','.Leagues::MLB_ID.','.Leagues::NHL_ID.')')
+            ->orderByRaw('FIELD(status,'.Games::IN_PROGRESS.','.Games::ENDED.','.Games::UPCOMING.','.Games::POSTPONED.')')
             ->orderBy('start_date')
             ->get();
         $games->load(['homeTeam', 'awayTeam', 'league']);

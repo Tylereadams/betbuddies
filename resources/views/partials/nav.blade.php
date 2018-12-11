@@ -1,4 +1,4 @@
-<nav class="navbar navbar-light bg-light">
+<b-navbar type="light" variant="light" class="mb-0 pb-0">
     <a class="navbar-brand" href="{{ url('/tweet-log') }}">
         <i class="fas fa-search text-secondary"></i>
     </a>
@@ -38,4 +38,4 @@
         <!-- Collapsible content -->
 
     @endguest
-</nav>
+</b-navbar>
