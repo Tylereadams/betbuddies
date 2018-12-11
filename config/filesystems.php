@@ -63,6 +63,16 @@ return [
             'bucket' => env('AWS_BUCKET'),
         ],
 
+        'ocean' => [
+            'driver' => 's3',
+            'key' => env('DIGITAL_OCEAN_KEY'),
+            'secret' => env('DIGITAL_OCEAN_SECRET'),
+            'region' => 'nyc3',
+            'bucket' => 'betbuddies',
+            'endpoint' => 'https://nyc3.digitaloceanspaces.com',
+            'url' => 'https://betbuddies.nyc3.cdn.digitaloceanspaces.com'
+        ],
+
     ],
 
 ];

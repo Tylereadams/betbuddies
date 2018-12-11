@@ -23,18 +23,15 @@ class ImportTeams extends Command
      *
      * @var string
      */
-    protected $description = 'Imports teams or updates them if already present.';
+    protected $description = 'Imports teams twitter data or updates them if already present.';
 
     /**
      * Create a new command instance.
      *
      * @return void
      */
-    public function __construct(StattleShipProvider $statProvider)
+    public function __construct()
     {
-
-        $this->statProvider = $statProvider;
-
         parent::__construct();
     }
 
@@ -48,7 +45,6 @@ class ImportTeams extends Command
         $leagues = Leagues::all();
 
         foreach($leagues as $league){
-            //$teams = $this->statProvider->getTeams($league);
             $teams = Teams::where('league_id', $league->id)->where('nickname', '!=', 'yankees')->get();
 
             foreach($teams as $team) {

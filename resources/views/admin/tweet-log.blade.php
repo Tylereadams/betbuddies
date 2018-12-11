@@ -27,14 +27,14 @@
 
         @if($tweets)
             <div class="row align-middle p-2">
-
                 @foreach(array_chunk($tweets, 3) as $chunk)
                     <div class="row justify-content-center">
                         @foreach($chunk as $tweet)
                             <div class="col-lg-4">
 
-                                @include('partials.embeddedTweet', ['twitter' => $tweet['team']['twitter'], 'id' => $tweet['id']])
+                                @include('partials.highlight', $tweet)
 
+                                {{--Player mentions--}}
                                 @if(isset($tweet['mentions']) && count($tweet['mentions']))
                                     <small>
                                         @foreach($tweet['mentions'] as $mention)
@@ -42,7 +42,6 @@
                                                 {{ $mention['name'] }}@if(!$loop->last), @endif
                                             </a>
                                         @endforeach
-
                                     </small>
                                 @endif
                             </div>
@@ -99,6 +98,4 @@
         //     }
         // });
     </script>
-
-    <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
 @endsection

@@ -13,6 +13,8 @@ class Games extends Model
 
     protected $primaryKey = 'id';
 
+    protected $dates = ['start_date'];
+
     const UPCOMING = 1;
     const IN_PROGRESS = 2;
     const ENDED = 3;

@@ -45,6 +45,10 @@ class Kernel extends ConsoleKernel
         $schedule->command('betbuddies:log-tweets')
             ->everyFiveMinutes();
 
+        $schedule->command('betbuddies:import-video-urls')->then(function() {
+            $this->call('betbuddies:download-highlights');
+        })->everyFiveMinutes();
+
         // Match players to tweets
         $schedule->command('betbuddies:match-tweets-to-players')
             ->everyFiveMinutes();

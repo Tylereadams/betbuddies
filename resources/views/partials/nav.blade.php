@@ -1,4 +1,4 @@
-<nav class="navbar navbar-light bg-light mb-2">
+<nav class="navbar navbar-light bg-light">
     <a class="navbar-brand" href="{{ url('/tweet-log') }}">
         <i class="fas fa-search text-secondary"></i>
     </a>

@@ -13,3 +13,9 @@
 
 </div>
 @endsection
+
+@section('modal')
+@endsection
+
+@section('scripts')
+@endsection
