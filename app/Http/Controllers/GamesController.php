@@ -7,6 +7,7 @@ use App\Leagues;
 use App\Services\CardCreator;
 use App\TweetLogs;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Cache;
 //use Intervention\Image\ImageManager;
 //use Thujohn\Twitter\Facades\Twitter;
 //use Illuminate\Support\Facades\Cache;
@@ -86,6 +87,7 @@ class GamesController extends Controller
 
         $date = Carbon::parse($date)->format('Y-m-d');
 
+
         $data['gamesByLeague'] = $this->getGamesData($date);
 
         return response()->json($data);
@@ -95,6 +97,7 @@ class GamesController extends Controller
     {
         $date = Carbon::parse($date)->format('Y-m-d');
 
+        // TODO: Cache these for like 2 minutes
         $games = Games::where('start_date', 'LIKE', $date.'%')
             ->orderByRaw('FIELD(league_id,'.Leagues::NFL_ID.','.Leagues::NBA_ID.','.Leagues::MLB_ID.','.Leagues::NHL_ID.')')
             ->orderByRaw('FIELD(status,'.Games::IN_PROGRESS.','.Games::ENDED.','.Games::UPCOMING.','.Games::POSTPONED.')')

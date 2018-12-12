@@ -65,6 +65,11 @@ class Games extends Model
         return $this->belongsTo(Leagues::class);
     }
 
+    public function tweets()
+    {
+        return $this->hasMany(TweetLogs::class,  'game_id');
+    }
+
     public function bets()
     {
         return $this->hasMany(UsersBets::class, 'game_id');
@@ -190,6 +195,7 @@ class Games extends Model
             'bets' => $this->bets->map(function($bet){
                 return $bet->getCardData();
             }),
+            'highlightsCount' => $this->tweets->count(),
             'isBettable' => $this->isBettable(),
             'broadcast' => $this->broadcast,
             'startDate' => $startDate->format('D M j'),

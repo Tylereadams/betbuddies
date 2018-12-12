@@ -62978,6 +62978,24 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
     props: ['gamesByLeague'],
@@ -63064,70 +63082,87 @@ var render = function() {
                           key: "teams",
                           fn: function(data) {
                             return [
-                              _c("img", {
-                                staticClass: "avatar",
-                                attrs: { src: data.item.awayTeam.thumbUrl }
-                              }),
-                              _vm._v(" "),
                               _c(
-                                "span",
+                                "div",
                                 {
-                                  class: data.item.awayTeam.isWinner
-                                    ? "font-weight-bold"
-                                    : ""
+                                  on: {
+                                    click: function($event) {
+                                      $event.stopPropagation()
+                                      return data.toggleDetails($event)
+                                    }
+                                  }
                                 },
-                                [_vm._v(_vm._s(data.item.awayTeam.name))]
-                              ),
-                              _vm._v(" "),
-                              data.item.awayTeam.isWinner
-                                ? _c("span", [
-                                    _c("i", {
-                                      staticClass: "fas fa-caret-left"
-                                    })
-                                  ])
-                                : _vm._e(),
-                              data.item.awayTeam.betCount
-                                ? _c("span", [
-                                    _vm._v(
-                                      "(" +
-                                        _vm._s(data.item.awayTeam.betCount) +
-                                        ")"
-                                    )
-                                  ])
-                                : _vm._e(),
-                              _c("br"),
-                              _vm._v(" "),
-                              _c("img", {
-                                staticClass: "avatar",
-                                attrs: { src: data.item.homeTeam.thumbUrl }
-                              }),
-                              _vm._v(" "),
-                              _c(
-                                "span",
-                                {
-                                  class: data.item.homeTeam.isWinner
-                                    ? "font-weight-bold"
-                                    : ""
-                                },
-                                [_vm._v(_vm._s(data.item.homeTeam.name))]
-                              ),
-                              _vm._v(" "),
-                              data.item.homeTeam.isWinner
-                                ? _c("span", [
-                                    _c("i", {
-                                      staticClass: "fas fa-caret-left"
-                                    })
-                                  ])
-                                : _vm._e(),
-                              data.item.homeTeam.betCount
-                                ? _c("span", [
-                                    _vm._v(
-                                      " (" +
-                                        _vm._s(data.item.homeTeam.betCount) +
-                                        ")"
-                                    )
-                                  ])
-                                : _vm._e()
+                                [
+                                  _c("img", {
+                                    staticClass: "avatar",
+                                    attrs: { src: data.item.awayTeam.thumbUrl }
+                                  }),
+                                  _vm._v(" "),
+                                  _c(
+                                    "span",
+                                    {
+                                      class: data.item.awayTeam.isWinner
+                                        ? "font-weight-bold"
+                                        : ""
+                                    },
+                                    [_vm._v(_vm._s(data.item.awayTeam.name))]
+                                  ),
+                                  _vm._v(" "),
+                                  data.item.awayTeam.isWinner
+                                    ? _c("span", [
+                                        _c("i", {
+                                          staticClass: "fas fa-caret-left"
+                                        })
+                                      ])
+                                    : _vm._e(),
+                                  data.item.awayTeam.betCount
+                                    ? _c("span", [
+                                        _vm._v(
+                                          "(" +
+                                            _vm._s(
+                                              data.item.awayTeam.betCount
+                                            ) +
+                                            ")"
+                                        )
+                                      ])
+                                    : _vm._e(),
+                                  _c("br"),
+                                  _vm._v(" "),
+                                  _c("img", {
+                                    staticClass: "avatar",
+                                    attrs: { src: data.item.homeTeam.thumbUrl }
+                                  }),
+                                  _vm._v(" "),
+                                  _c(
+                                    "span",
+                                    {
+                                      class: data.item.homeTeam.isWinner
+                                        ? "font-weight-bold"
+                                        : ""
+                                    },
+                                    [_vm._v(_vm._s(data.item.homeTeam.name))]
+                                  ),
+                                  _vm._v(" "),
+                                  data.item.homeTeam.isWinner
+                                    ? _c("span", [
+                                        _c("i", {
+                                          staticClass: "fas fa-caret-left"
+                                        })
+                                      ])
+                                    : _vm._e(),
+                                  data.item.homeTeam.betCount
+                                    ? _c("span", [
+                                        _vm._v(
+                                          " (" +
+                                            _vm._s(
+                                              data.item.homeTeam.betCount
+                                            ) +
+                                            ")"
+                                        )
+                                      ])
+                                    : _vm._e()
+                                ]
+                              )
                             ]
                           }
                         },
@@ -63135,31 +63170,52 @@ var render = function() {
                           key: "score",
                           fn: function(data) {
                             return [
-                              data.item.status == "in progress" ||
-                              data.item.status == "ended"
-                                ? _c("span", [
-                                    _c(
-                                      "span",
-                                      {
-                                        class: data.item.awayTeam.isWinner
-                                          ? "font-weight-bold"
-                                          : ""
-                                      },
-                                      [_vm._v(_vm._s(data.item.awayTeam.score))]
-                                    ),
-                                    _c("br"),
-                                    _vm._v(" "),
-                                    _c(
-                                      "span",
-                                      {
-                                        class: data.item.homeTeam.isWinner
-                                          ? "font-weight-bold"
-                                          : ""
-                                      },
-                                      [_vm._v(_vm._s(data.item.homeTeam.score))]
-                                    )
-                                  ])
-                                : _vm._e()
+                              _c(
+                                "div",
+                                {
+                                  on: {
+                                    click: function($event) {
+                                      $event.stopPropagation()
+                                      return data.toggleDetails($event)
+                                    }
+                                  }
+                                },
+                                [
+                                  data.item.status == "in progress" ||
+                                  data.item.status == "ended"
+                                    ? _c("div", [
+                                        _c(
+                                          "span",
+                                          {
+                                            class: data.item.awayTeam.isWinner
+                                              ? "font-weight-bold"
+                                              : ""
+                                          },
+                                          [
+                                            _vm._v(
+                                              _vm._s(data.item.awayTeam.score)
+                                            )
+                                          ]
+                                        ),
+                                        _c("br"),
+                                        _vm._v(" "),
+                                        _c(
+                                          "span",
+                                          {
+                                            class: data.item.homeTeam.isWinner
+                                              ? "font-weight-bold"
+                                              : ""
+                                          },
+                                          [
+                                            _vm._v(
+                                              _vm._s(data.item.homeTeam.score)
+                                            )
+                                          ]
+                                        )
+                                      ])
+                                    : _vm._e()
+                                ]
+                              )
                             ]
                           }
                         },
@@ -63167,24 +63223,113 @@ var render = function() {
                           key: "status",
                           fn: function(data) {
                             return [
-                              data.item.status == "upcoming"
-                                ? _c("span", [
-                                    _vm._v(_vm._s(data.item.startTime))
-                                  ])
-                                : _vm._e(),
-                              _vm._v(" "),
-                              data.item.endedAt
-                                ? _c("span", [_c("strong", [_vm._v("Final")])])
-                                : _vm._e(),
-                              _vm._v(" "),
-                              data.item.status == "in progress" &&
-                              data.item.period
-                                ? _c("span", [_vm._v(_vm._s(data.item.period))])
-                                : _vm._e(),
-                              _vm._v(" "),
-                              data.item.status == "postponed"
-                                ? _c("span", [_vm._v("Postponed")])
-                                : _vm._e()
+                              _c(
+                                "div",
+                                {
+                                  on: {
+                                    click: function($event) {
+                                      $event.stopPropagation()
+                                      return data.toggleDetails($event)
+                                    }
+                                  }
+                                },
+                                [
+                                  data.item.status == "upcoming"
+                                    ? _c("span", [
+                                        _vm._v(_vm._s(data.item.startTime))
+                                      ])
+                                    : _vm._e(),
+                                  _vm._v(" "),
+                                  data.item.endedAt
+                                    ? _c("span", [
+                                        _c("strong", [_vm._v("Final")])
+                                      ])
+                                    : _vm._e(),
+                                  _vm._v(" "),
+                                  data.item.status == "in progress" &&
+                                  data.item.period
+                                    ? _c("span", [
+                                        _vm._v(_vm._s(data.item.period))
+                                      ])
+                                    : _vm._e(),
+                                  _vm._v(" "),
+                                  data.item.status == "postponed"
+                                    ? _c("span", [_vm._v("Postponed")])
+                                    : _vm._e()
+                                ]
+                              )
+                            ]
+                          }
+                        },
+                        {
+                          key: "row-details",
+                          fn: function(data) {
+                            return [
+                              _c(
+                                "b-card",
+                                { staticClass: "border-0" },
+                                [
+                                  _c(
+                                    "b-row",
+                                    {
+                                      staticClass: "mb-2 text-center",
+                                      attrs: { "align-v": "center" }
+                                    },
+                                    [
+                                      _c("b-col", [
+                                        _c("b", [
+                                          _c("i", {
+                                            staticClass:
+                                              "fas fa-file-invoice-dollar text-secondary"
+                                          }),
+                                          _vm._v(
+                                            " " + _vm._s(data.item.bets.length)
+                                          )
+                                        ])
+                                      ]),
+                                      _vm._v(" "),
+                                      _c("b-col", [
+                                        _c("b", [
+                                          _c("i", {
+                                            staticClass:
+                                              "fas fa-video text-secondary"
+                                          }),
+                                          _vm._v(
+                                            " " +
+                                              _vm._s(data.item.highlightsCount)
+                                          )
+                                        ])
+                                      ]),
+                                      _vm._v(" "),
+                                      _c(
+                                        "b-col",
+                                        [
+                                          _c(
+                                            "b-button",
+                                            {
+                                              staticClass: "text-white",
+                                              attrs: {
+                                                href: "#",
+                                                variant: "primary"
+                                              }
+                                            },
+                                            [
+                                              _vm._v("View game "),
+                                              _c("i", {
+                                                staticClass:
+                                                  "fas fa-caret-right"
+                                              })
+                                            ]
+                                          )
+                                        ],
+                                        1
+                                      )
+                                    ],
+                                    1
+                                  )
+                                ],
+                                1
+                              )
                             ]
                           }
                         }
