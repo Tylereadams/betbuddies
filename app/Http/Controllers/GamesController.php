@@ -97,12 +97,13 @@ class GamesController extends Controller
     {
         $date = Carbon::parse($date)->format('Y-m-d');
 
-        // TODO: Cache these for like 2 minutes
-        $games = Games::where('start_date', 'LIKE', $date.'%')
-            ->orderByRaw('FIELD(league_id,'.Leagues::NFL_ID.','.Leagues::NBA_ID.','.Leagues::MLB_ID.','.Leagues::NHL_ID.')')
-            ->orderByRaw('FIELD(status,'.Games::IN_PROGRESS.','.Games::ENDED.','.Games::UPCOMING.','.Games::POSTPONED.')')
-            ->orderBy('start_date')
-            ->get();
+        $games = Cache::remember('games-data-'.$date, 2, function () use($date) {
+            return Games::where('start_date', 'LIKE', $date.'%')
+                ->orderByRaw('FIELD(league_id,'.Leagues::NFL_ID.','.Leagues::NBA_ID.','.Leagues::MLB_ID.','.Leagues::NHL_ID.')')
+                ->orderByRaw('FIELD(status,'.Games::IN_PROGRESS.','.Games::ENDED.','.Games::UPCOMING.','.Games::POSTPONED.')')
+                ->orderBy('start_date')
+                ->get();
+        });
         $games->load(['homeTeam', 'awayTeam', 'league']);
 
         $data = [];
