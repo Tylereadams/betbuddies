@@ -62967,13 +62967,24 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
     props: ['gamesByLeague'],
     data: function data() {
         return {
-            gamesList: this.gamesByLeague
-            // isLoading: false
+            gamesList: this.gamesByLeague,
+            fields: ['teams', 'score', 'status']
         };
     },
     watch: {
@@ -63014,8 +63025,7 @@ var render = function() {
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
   return _c(
-    "b-container",
-    { staticClass: "p-2" },
+    "div",
     [
       _c(
         "b-tabs",
@@ -63032,133 +63042,155 @@ var render = function() {
                     [
                       _c("b-nav-item", [
                         _vm._v(
-                          "\n                            " +
+                          "\n                        " +
                             _vm._s(key.toUpperCase()) +
-                            "\n                        "
+                            "\n                    "
                         )
                       ])
                     ],
                     1
                   ),
                   _vm._v(" "),
-                  _vm._l(leagueGames, function(game, key) {
-                    return _c(
-                      "div",
-                      {
-                        staticClass: "row pt-3",
-                        on: {
-                          click: function($event) {
-                            _vm.goToGame(game.urlSegment)
+                  [
+                    _c("b-table", {
+                      attrs: {
+                        hover: "",
+                        items: leagueGames,
+                        fields: _vm.fields,
+                        "thead-class": "d-none border-0"
+                      },
+                      scopedSlots: _vm._u([
+                        {
+                          key: "teams",
+                          fn: function(data) {
+                            return [
+                              _c("img", {
+                                staticClass: "avatar",
+                                attrs: { src: data.item.awayTeam.thumbUrl }
+                              }),
+                              _vm._v(" "),
+                              _c(
+                                "span",
+                                {
+                                  class: data.item.awayTeam.isWinner
+                                    ? "font-weight-bold"
+                                    : ""
+                                },
+                                [_vm._v(_vm._s(data.item.awayTeam.name))]
+                              ),
+                              _vm._v(" "),
+                              data.item.awayTeam.isWinner
+                                ? _c("span", [
+                                    _c("i", {
+                                      staticClass: "fas fa-caret-left"
+                                    })
+                                  ])
+                                : _vm._e(),
+                              data.item.awayTeam.betCount
+                                ? _c("span", [
+                                    _vm._v(
+                                      "(" +
+                                        _vm._s(data.item.awayTeam.betCount) +
+                                        ")"
+                                    )
+                                  ])
+                                : _vm._e(),
+                              _c("br"),
+                              _vm._v(" "),
+                              _c("img", {
+                                staticClass: "avatar",
+                                attrs: { src: data.item.homeTeam.thumbUrl }
+                              }),
+                              _vm._v(" "),
+                              _c(
+                                "span",
+                                {
+                                  class: data.item.homeTeam.isWinner
+                                    ? "font-weight-bold"
+                                    : ""
+                                },
+                                [_vm._v(_vm._s(data.item.homeTeam.name))]
+                              ),
+                              _vm._v(" "),
+                              data.item.homeTeam.isWinner
+                                ? _c("span", [
+                                    _c("i", {
+                                      staticClass: "fas fa-caret-left"
+                                    })
+                                  ])
+                                : _vm._e(),
+                              data.item.homeTeam.betCount
+                                ? _c("span", [
+                                    _vm._v(
+                                      " (" +
+                                        _vm._s(data.item.homeTeam.betCount) +
+                                        ")"
+                                    )
+                                  ])
+                                : _vm._e()
+                            ]
+                          }
+                        },
+                        {
+                          key: "score",
+                          fn: function(data) {
+                            return [
+                              data.item.status == "in progress" ||
+                              data.item.status == "ended"
+                                ? _c("span", [
+                                    _c(
+                                      "span",
+                                      {
+                                        class: data.item.awayTeam.isWinner
+                                          ? "font-weight-bold"
+                                          : ""
+                                      },
+                                      [_vm._v(_vm._s(data.item.awayTeam.score))]
+                                    ),
+                                    _c("br"),
+                                    _vm._v(" "),
+                                    _c(
+                                      "span",
+                                      {
+                                        class: data.item.homeTeam.isWinner
+                                          ? "font-weight-bold"
+                                          : ""
+                                      },
+                                      [_vm._v(_vm._s(data.item.homeTeam.score))]
+                                    )
+                                  ])
+                                : _vm._e()
+                            ]
+                          }
+                        },
+                        {
+                          key: "status",
+                          fn: function(data) {
+                            return [
+                              data.item.status == "upcoming"
+                                ? _c("span", [
+                                    _vm._v(_vm._s(data.item.startTime))
+                                  ])
+                                : _vm._e(),
+                              _vm._v(" "),
+                              data.item.endedAt
+                                ? _c("span", [_c("strong", [_vm._v("Final")])])
+                                : _vm._e(),
+                              _vm._v(" "),
+                              data.item.status == "in progress" &&
+                              data.item.period
+                                ? _c("span", [_vm._v(_vm._s(data.item.period))])
+                                : _vm._e(),
+                              _vm._v(" "),
+                              data.item.status == "postponed"
+                                ? _c("span", [_vm._v("Postponed")])
+                                : _vm._e()
+                            ]
                           }
                         }
-                      },
-                      [
-                        _c("div", { staticClass: "col-xs-6" }, [
-                          _c("img", {
-                            staticClass: "avatar",
-                            attrs: { src: game.awayTeam.thumbUrl }
-                          }),
-                          _vm._v(" "),
-                          _c(
-                            "span",
-                            {
-                              class: game.awayTeam.isWinner
-                                ? "font-weight-bold"
-                                : ""
-                            },
-                            [_vm._v(_vm._s(game.awayTeam.name))]
-                          ),
-                          _vm._v(" "),
-                          game.awayTeam.isWinner
-                            ? _c("span", [
-                                _c("i", { staticClass: "fas fa-caret-left" })
-                              ])
-                            : _vm._e(),
-                          game.awayTeam.betCount
-                            ? _c("span", [
-                                _vm._v(
-                                  "(" + _vm._s(game.awayTeam.betCount) + ")"
-                                )
-                              ])
-                            : _vm._e(),
-                          _c("br"),
-                          _vm._v(" "),
-                          _c("img", {
-                            staticClass: "avatar",
-                            attrs: { src: game.homeTeam.thumbUrl }
-                          }),
-                          _vm._v(" "),
-                          _c(
-                            "span",
-                            {
-                              class: game.homeTeam.isWinner
-                                ? "font-weight-bold"
-                                : ""
-                            },
-                            [_vm._v(_vm._s(game.homeTeam.name))]
-                          ),
-                          _vm._v(" "),
-                          game.homeTeam.isWinner
-                            ? _c("span", [
-                                _c("i", { staticClass: "fas fa-caret-left" })
-                              ])
-                            : _vm._e(),
-                          game.homeTeam.betCount
-                            ? _c("span", [
-                                _vm._v(
-                                  " (" + _vm._s(game.homeTeam.betCount) + ")"
-                                )
-                              ])
-                            : _vm._e()
-                        ]),
-                        _vm._v(" "),
-                        _c("div", { staticClass: "col-xs-3" }, [
-                          game.status == "in progress" || game.status == "ended"
-                            ? _c("span", [
-                                _c(
-                                  "span",
-                                  {
-                                    class: game.awayTeam.isWinner
-                                      ? "font-weight-bold"
-                                      : ""
-                                  },
-                                  [_vm._v(_vm._s(game.awayTeam.score))]
-                                ),
-                                _c("br"),
-                                _vm._v(" "),
-                                _c(
-                                  "span",
-                                  {
-                                    class: game.homeTeam.isWinner
-                                      ? "font-weight-bold"
-                                      : ""
-                                  },
-                                  [_vm._v(_vm._s(game.homeTeam.score))]
-                                )
-                              ])
-                            : _vm._e()
-                        ]),
-                        _vm._v(" "),
-                        _c("div", { staticClass: "col-xs-3" }, [
-                          game.status == "upcoming"
-                            ? _c("span", [_vm._v(_vm._s(game.startTime))])
-                            : _vm._e(),
-                          _vm._v(" "),
-                          game.endedAt
-                            ? _c("span", [_c("strong", [_vm._v("Final")])])
-                            : _vm._e(),
-                          _vm._v(" "),
-                          game.status == "in progress" && game.period
-                            ? _c("span", [_vm._v(_vm._s(game.period))])
-                            : _vm._e(),
-                          _vm._v(" "),
-                          game.status == "postponed"
-                            ? _c("span", [_vm._v("Postponed")])
-                            : _vm._e()
-                        ])
-                      ]
-                    )
-                  })
+                      ])
+                    })
+                  ]
                 ],
                 2
               )
@@ -63549,6 +63581,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     mounted: function mounted() {
         var self = this;
 
+        console.log(self.date);
         this.refreshGames(self.date);
 
         setInterval(function () {
@@ -63575,6 +63608,7 @@ var render = function() {
   var _c = _vm._self._c || _h
   return _c(
     "b-container",
+    { staticClass: "p-2" },
     [
       _c("div", { staticClass: "text-center h5" }, [
         _c(

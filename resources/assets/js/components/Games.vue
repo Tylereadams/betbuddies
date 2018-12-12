@@ -1,5 +1,5 @@
 <template>
-    <b-container>
+    <b-container class="p-2">
         <div class="text-center h5">
             <a class="text-secondary " v-on:click="changeDate(-1)"><i class="fas fa-arrow-left"></i></a>
             <span class="text-muted">{{ getFormattedDate() }}</span>
@@ -29,7 +29,6 @@
                     self.gamesList = response.data.gamesByLeague;
                     self.isLoading = false;
                 });
-
             },
             goToGame: function(urlSegment){
                 window.location.href = '/game/' + urlSegment;
@@ -52,6 +51,7 @@
         mounted: function () {
             var self = this;
 
+            console.log(self.date)
             this.refreshGames(self.date);
 
             setInterval(function () {
