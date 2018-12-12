@@ -22,6 +22,7 @@ Vue.use(BootstrapVue);
 
 Vue.component('games-list', require('./components/GamesList.vue'));
 Vue.component('bets-list', require('./components/BetsList.vue'));
+Vue.component('games', require('./components/Games.vue'));
 
 const app = new Vue({
     el: '#app'

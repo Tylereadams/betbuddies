@@ -9885,6 +9885,7 @@ Vue.use(__WEBPACK_IMPORTED_MODULE_0_bootstrap_vue__["a" /* default */]);
 
 Vue.component('games-list', __webpack_require__(220));
 Vue.component('bets-list', __webpack_require__(223));
+Vue.component('games', __webpack_require__(236));
 
 var app = new Vue({
   el: '#app'
@@ -62968,32 +62969,39 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 
 /* harmony default export */ __webpack_exports__["default"] = ({
-    props: ['gamesByLeague', 'date'],
+    props: ['gamesByLeague'],
     data: function data() {
         return {
-            gamesList: this.gamesByLeague,
-            isLoading: false
+            gamesList: this.gamesByLeague
+            // isLoading: false
         };
     },
-    methods: {
-        refreshGames: function refreshGames(date) {
+    watch: {
+        gamesByLeague: function gamesByLeague(games) {
+            // watch it
             var self = this;
-
-            self.isLoading = true;
-
-            axios.get('/api/games/' + self.date).then(function (response) {
-                self.gamesList = response.data.gamesByLeague;
-                self.isLoading = false;
-            });
-        },
-        goToGame: function goToGame(urlSegment) {
-            window.location.href = '/game/' + urlSegment;
+            self.gamesList = games;
         }
     },
-    mounted: function mounted() {
-        setInterval(function () {
-            this.refreshGames(self.date);
-        }.bind(this), 5 * 60000); // every 5 minutes update the scores
+    methods: {
+        //     refreshGames: function(date){
+        //         var self = this;
+        //
+        //         self.isLoading = true;
+        //
+        //         axios.get('/api/games/' + self.date).then(response => {
+        //             self.gamesList = response.data.gamesByLeague;
+        //             self.isLoading = false;
+        //         });
+        //     },
+        //     goToGame: function(urlSegment){
+        //         window.location.href = '/game/' + urlSegment;
+        //     }
+        // },
+        // mounted: function () {
+        //     setInterval(function () {
+        //         this.refreshGames(self.date);
+        //     }.bind(this), 5 * 60000); // every 5 minutes update the scores
     }
 });
 
@@ -63007,13 +63015,10 @@ var render = function() {
   var _c = _vm._self._c || _h
   return _c(
     "b-container",
-    { staticClass: "p-" },
+    { staticClass: "p-2" },
     [
-      _vm.isLoading ? _c("span", [_vm._v("Loading")]) : _vm._e(),
-      _vm._v(" "),
       _c(
         "b-tabs",
-        { attrs: { "no-fade": "" } },
         _vm._l(_vm.gamesList, function(leagueGames, key) {
           return _c(
             "div",
@@ -63021,13 +63026,20 @@ var render = function() {
               _c(
                 "b-tab",
                 [
-                  _c("template", { slot: "title" }, [
-                    _vm._v(
-                      "\n                        " +
-                        _vm._s(key.toUpperCase()) +
-                        "\n                    "
-                    )
-                  ]),
+                  _c(
+                    "template",
+                    { slot: "title" },
+                    [
+                      _c("b-nav-item", [
+                        _vm._v(
+                          "\n                            " +
+                            _vm._s(key.toUpperCase()) +
+                            "\n                        "
+                        )
+                      ])
+                    ],
+                    1
+                  ),
                   _vm._v(" "),
                   _vm._l(leagueGames, function(game, key) {
                     return _c(
@@ -63314,7 +63326,7 @@ var render = function() {
   var _c = _vm._self._c || _h
   return _c("b-container", [
     _vm._v(
-      "\n\n    @if($game['isBettable'])\n    @include('partials.createBetModal')\n    @else\n    "
+      "\n\n    @if($game['isBettable'])\n        @include('partials.createBetModal')\n    @else\n    "
     ),
     _c("div", { staticClass: "scrolling-wrapper" }, [
       _vm._v(
@@ -63421,6 +63433,198 @@ if (false) {
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin
+
+/***/ }),
+/* 227 */,
+/* 228 */,
+/* 229 */,
+/* 230 */,
+/* 231 */,
+/* 232 */,
+/* 233 */,
+/* 234 */,
+/* 235 */,
+/* 236 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var disposed = false
+var normalizeComponent = __webpack_require__(72)
+/* script */
+var __vue_script__ = __webpack_require__(237)
+/* template */
+var __vue_template__ = __webpack_require__(238)
+/* template functional */
+var __vue_template_functional__ = false
+/* styles */
+var __vue_styles__ = null
+/* scopeId */
+var __vue_scopeId__ = null
+/* moduleIdentifier (server only) */
+var __vue_module_identifier__ = null
+var Component = normalizeComponent(
+  __vue_script__,
+  __vue_template__,
+  __vue_template_functional__,
+  __vue_styles__,
+  __vue_scopeId__,
+  __vue_module_identifier__
+)
+Component.options.__file = "resources/assets/js/components/Games.vue"
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-f7c71acc", Component.options)
+  } else {
+    hotAPI.reload("data-v-f7c71acc", Component.options)
+  }
+  module.hot.dispose(function (data) {
+    disposed = true
+  })
+})()}
+
+module.exports = Component.exports
+
+
+/***/ }),
+/* 237 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+    data: function data() {
+        return {
+            gamesList: [],
+            isLoading: false,
+            date: new Date()
+        };
+    },
+    methods: {
+        refreshGames: function refreshGames(date) {
+            var self = this;
+
+            self.isLoading = true;
+
+            axios.get('/api/games/' + this.getFormattedDate()).then(function (response) {
+                self.gamesList = response.data.gamesByLeague;
+                self.isLoading = false;
+            });
+        },
+        goToGame: function goToGame(urlSegment) {
+            window.location.href = '/game/' + urlSegment;
+        },
+        changeDate: function changeDate(daysToAdd) {
+            var self = this;
+
+            var newDate = new Date(self.date);
+
+            self.date.setDate(newDate.getDate() + daysToAdd);
+
+            this.refreshGames(this.getFormattedDate());
+        },
+        getFormattedDate: function getFormattedDate() {
+            var self = this;
+
+            return self.date.toISOString().split('T')[0];
+        }
+    },
+    mounted: function mounted() {
+        var self = this;
+
+        this.refreshGames(self.date);
+
+        setInterval(function () {
+            this.refreshGames(self.date);
+        }.bind(this), 5 * 60000); // every 5 minutes update the scores
+    },
+    computed: {
+        // a computed getter
+        formattedDate: function formattedDate() {
+            var self = this;
+
+            return this.date.toISOString().split('T')[0];
+        }
+    }
+});
+
+/***/ }),
+/* 238 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c(
+    "b-container",
+    [
+      _c("div", { staticClass: "text-center h5" }, [
+        _c(
+          "a",
+          {
+            staticClass: "text-secondary ",
+            on: {
+              click: function($event) {
+                _vm.changeDate(-1)
+              }
+            }
+          },
+          [_c("i", { staticClass: "fas fa-arrow-left" })]
+        ),
+        _vm._v(" "),
+        _c("span", { staticClass: "text-muted" }, [
+          _vm._v(_vm._s(_vm.getFormattedDate()))
+        ]),
+        _vm._v(" "),
+        _c(
+          "a",
+          {
+            staticClass: "text-secondary",
+            on: {
+              click: function($event) {
+                _vm.changeDate(+1)
+              }
+            }
+          },
+          [_c("i", { staticClass: "fas fa-arrow-right" })]
+        )
+      ]),
+      _vm._v(" "),
+      _c("games-list", {
+        class: this.isLoading ? "fade" : "show",
+        attrs: { "games-by-league": _vm.gamesList }
+      })
+    ],
+    1
+  )
+}
+var staticRenderFns = []
+render._withStripped = true
+module.exports = { render: render, staticRenderFns: staticRenderFns }
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+    require("vue-hot-reload-api")      .rerender("data-v-f7c71acc", module.exports)
+  }
+}
 
 /***/ })
 /******/ ]);
