@@ -172,7 +172,7 @@ class Games extends Model
                 'id'    => $this->homeTeam->id,
                 'name'  => $this->homeTeam->nickname,
                 'score'  => $this->home_score,
-                'thumbUrl' => $this->homeTeam->logoUrlLarge(),
+                'thumbUrl' => $this->homeTeam->logoUrl(),
                 'spread' => (int) $this->getTeamSpread('home'),
                 'isWinner' => $this->home_score > $this->away_score && ($this->ended_at) ? true : false,
                 'betCount' => $this->bets()->where(function($q){
@@ -184,7 +184,7 @@ class Games extends Model
                 'id'    => $this->awayTeam->id,
                 'name'  => $this->awayTeam->nickname,
                 'score'  => $this->away_score,
-                'thumbUrl' => $this->awayTeam->logoUrlLarge(),
+                'thumbUrl' => $this->awayTeam->logoUrl(),
                 'spread' => (int) $this->getTeamSpread('away'),
                 'isWinner' => $this->away_score > $this->home_score && ($this->ended_at) ? true : false,
                 'betCount' => $this->bets()->where(function($q){

@@ -42,14 +42,13 @@
                                 </template>
 
                                 <template slot="row-details" slot-scope="data">
-                                    <b-card class="border-0">
-                                        <b-row class="mb-2 text-center" align-v="center">
-                                            <b-col><b><i class="fas fa-file-invoice-dollar text-secondary"></i> {{ data.item.bets.length }}</b></b-col>
-                                            <b-col><b><i class="fas fa-video text-secondary"></i> {{ data.item.highlightsCount }}</b></b-col>
-                                            <b-col><b-button href="#" class="text-white" variant="primary">View game <i class="fas fa-caret-right"></i></b-button></b-col>
-                                        </b-row>
-
-                                    </b-card>
+                                    <b-row class="mb-2 text-center" align-v="center">
+                                        <b-col>
+                                            <b><i class="fas fa-file-invoice-dollar text-secondary"></i> {{ data.item.bets.length }}</b><br>
+                                            <b><i class="fas fa-video text-secondary"></i> {{ data.item.highlightsCount }}</b>
+                                        </b-col>
+                                        <b-col><b-button href="#" class="text-white" variant="primary">View game <i class="fas fa-caret-right"></i></b-button></b-col>
+                                    </b-row>
                                 </template>
 
                         </b-table>
