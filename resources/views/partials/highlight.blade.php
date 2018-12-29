@@ -15,5 +15,4 @@
             </b-row>
         </b-card-footer>
     @endif
-
 </b-card>
