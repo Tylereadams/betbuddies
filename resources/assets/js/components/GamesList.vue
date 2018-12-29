@@ -1,18 +1,11 @@
 <template>
     <div>
         <b-tabs>
-            <div v-for="(leagueGames, key) in gamesList">
-                <b-tab>
-                    <!--Tab Titles-->
-                    <template slot="title">
-                        <b-nav-item>
-                            {{ key.toUpperCase() }}
-                        </b-nav-item>
-                    </template>
-
+            <div v-for="(leagueGames, leagueName) in gamesList" :key="leagueName">
+                <b-tab :title="leagueName.toUpperCase()">
                      <!--Games list-->
                     <div v-for="game of leagueGames" class="mt-2" v-on:click="goToGame(game.urlSegment)">
-                        <b-card>
+                        <b-card footer-class="pt-1 pb-1 text-secondary">
                             <b-row>
                                 <!-- Team Names -->
                                 <b-col cols="6">
@@ -37,12 +30,12 @@
                             </b-row>
 
                             <template slot="footer" v-if="game.bets.length || game.highlightsCount">
-                                <b-row class="text-center">
+                                <b-row>
                                     <b-col>
-                                        <i class="fas fa-video"></i>&nbsp;{{ game.highlightsCount }}
+                                        <i class="fas fa-money-bill-alt"></i>&nbsp;${{ game.betAmount }} ({{ game.bets.length }})
                                     </b-col>
                                     <b-col>
-                                        <i class="fas fa-money-bill-alt"></i>&nbsp;{{ game.bets.length }}
+                                        <i class="fas fa-video"></i>&nbsp;{{ game.highlightsCount }}
                                     </b-col>
                                 </b-row>
                             </template>
@@ -62,16 +55,11 @@
         ],
         data: function () {
             return {
-                gamesList: this.gamesByLeague,
-                fields: [
-                    'teams',
-                    'score',
-                    'status'
-                ]
+                gamesList: this.gamesByLeague
             }
         },
         watch: {
-            gamesByLeague: function(games) { // watch it
+            gamesByLeague: function(games) {
                 var self = this;
                 self.gamesList = games;
             }
@@ -95,6 +83,12 @@
         //     setInterval(function () {
         //         this.refreshGames(self.date);
         //     }.bind(this), 5 * 60000); // every 5 minutes update the scores
+        },
+        computed: {
+            leagueTitles: function() {
+                var self = this;
+                console.log(this.gamesList)
+            }
         }
     }
 </script>

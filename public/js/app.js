@@ -62980,25 +62980,16 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
-//
-//
-//
-//
-//
-//
-//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
     props: ['gamesByLeague'],
     data: function data() {
         return {
-            gamesList: this.gamesByLeague,
-            fields: ['teams', 'score', 'status']
+            gamesList: this.gamesByLeague
         };
     },
     watch: {
         gamesByLeague: function gamesByLeague(games) {
-            // watch it
             var self = this;
             self.gamesList = games;
         }
@@ -63022,6 +63013,12 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         //     setInterval(function () {
         //         this.refreshGames(self.date);
         //     }.bind(this), 5 * 60000); // every 5 minutes update the scores
+    },
+    computed: {
+        leagueTitles: function leagueTitles() {
+            var self = this;
+            console.log(this.gamesList);
+        }
     }
 });
 
@@ -63038,210 +63035,196 @@ var render = function() {
     [
       _c(
         "b-tabs",
-        _vm._l(_vm.gamesList, function(leagueGames, key) {
+        _vm._l(_vm.gamesList, function(leagueGames, leagueName) {
           return _c(
             "div",
+            { key: leagueName },
             [
               _c(
                 "b-tab",
-                [
-                  _c(
-                    "template",
-                    { slot: "title" },
-                    [
-                      _c("b-nav-item", [
-                        _vm._v(
-                          "\n                        " +
-                            _vm._s(key.toUpperCase()) +
-                            "\n                    "
-                        )
-                      ])
-                    ],
-                    1
-                  ),
-                  _vm._v(" "),
-                  _vm._l(leagueGames, function(game) {
-                    return _c(
-                      "div",
-                      {
-                        staticClass: "mt-2",
-                        on: {
-                          click: function($event) {
-                            _vm.goToGame(game.urlSegment)
-                          }
+                { attrs: { title: leagueName.toUpperCase() } },
+                _vm._l(leagueGames, function(game) {
+                  return _c(
+                    "div",
+                    {
+                      staticClass: "mt-2",
+                      on: {
+                        click: function($event) {
+                          _vm.goToGame(game.urlSegment)
                         }
-                      },
-                      [
-                        _c(
-                          "b-card",
-                          [
-                            _c(
-                              "b-row",
-                              [
-                                _c("b-col", { attrs: { cols: "6" } }, [
-                                  _c("img", {
-                                    staticClass: "avatar",
-                                    attrs: { src: game.awayTeam.thumbUrl }
-                                  }),
-                                  _vm._v(" "),
-                                  _c(
-                                    "span",
-                                    {
-                                      class: game.awayTeam.isWinner
-                                        ? "font-weight-bold"
-                                        : ""
-                                    },
-                                    [_vm._v(_vm._s(game.awayTeam.name))]
-                                  ),
-                                  _vm._v(" "),
-                                  game.awayTeam.isWinner
-                                    ? _c("span", [
-                                        _c("i", {
-                                          staticClass: "fas fa-caret-left"
-                                        })
-                                      ])
-                                    : _vm._e(),
-                                  game.awayTeam.betCount
-                                    ? _c("span", [
-                                        _vm._v(
-                                          "(" +
-                                            _vm._s(game.awayTeam.betCount) +
-                                            ")"
-                                        )
-                                      ])
-                                    : _vm._e(),
-                                  _c("br"),
-                                  _vm._v(" "),
-                                  _c("img", {
-                                    staticClass: "avatar",
-                                    attrs: { src: game.homeTeam.thumbUrl }
-                                  }),
-                                  _vm._v(" "),
-                                  _c(
-                                    "span",
-                                    {
-                                      class: game.homeTeam.isWinner
-                                        ? "font-weight-bold"
-                                        : ""
-                                    },
-                                    [_vm._v(_vm._s(game.homeTeam.name))]
-                                  ),
-                                  _vm._v(" "),
-                                  game.homeTeam.isWinner
-                                    ? _c("span", [
-                                        _c("i", {
-                                          staticClass: "fas fa-caret-left"
-                                        })
-                                      ])
-                                    : _vm._e(),
-                                  game.homeTeam.betCount
-                                    ? _c("span", [
-                                        _vm._v(
-                                          " (" +
-                                            _vm._s(game.homeTeam.betCount) +
-                                            ")"
-                                        )
-                                      ])
-                                    : _vm._e()
-                                ]),
+                      }
+                    },
+                    [
+                      _c(
+                        "b-card",
+                        {
+                          attrs: { "footer-class": "pt-1 pb-1 text-secondary" }
+                        },
+                        [
+                          _c(
+                            "b-row",
+                            [
+                              _c("b-col", { attrs: { cols: "6" } }, [
+                                _c("img", {
+                                  staticClass: "avatar",
+                                  attrs: { src: game.awayTeam.thumbUrl }
+                                }),
+                                _vm._v(" "),
+                                _c(
+                                  "span",
+                                  {
+                                    class: game.awayTeam.isWinner
+                                      ? "font-weight-bold"
+                                      : ""
+                                  },
+                                  [_vm._v(_vm._s(game.awayTeam.name))]
+                                ),
                                 _vm._v(" "),
-                                game.status == "in progress" ||
-                                game.status == "ended"
-                                  ? _c("b-col", [
-                                      _c(
-                                        "span",
-                                        {
-                                          class: game.awayTeam.isWinner
-                                            ? "font-weight-bold"
-                                            : ""
-                                        },
-                                        [_vm._v(_vm._s(game.awayTeam.score))]
-                                      ),
-                                      _c("br"),
-                                      _vm._v(" "),
-                                      _c(
-                                        "span",
-                                        {
-                                          class: game.homeTeam.isWinner
-                                            ? "font-weight-bold"
-                                            : ""
-                                        },
-                                        [_vm._v(_vm._s(game.homeTeam.score))]
+                                game.awayTeam.isWinner
+                                  ? _c("span", [
+                                      _c("i", {
+                                        staticClass: "fas fa-caret-left"
+                                      })
+                                    ])
+                                  : _vm._e(),
+                                game.awayTeam.betCount
+                                  ? _c("span", [
+                                      _vm._v(
+                                        "(" +
+                                          _vm._s(game.awayTeam.betCount) +
+                                          ")"
                                       )
                                     ])
                                   : _vm._e(),
+                                _c("br"),
                                 _vm._v(" "),
-                                _c("b-col", { staticClass: "text-center" }, [
-                                  game.status == "upcoming"
-                                    ? _c("span", [
-                                        _vm._v(_vm._s(game.startTime))
-                                      ])
-                                    : _vm._e(),
-                                  _vm._v(" "),
-                                  game.endedAt
-                                    ? _c("span", [
-                                        _c("strong", [_vm._v("Final")])
-                                      ])
-                                    : _vm._e(),
-                                  _vm._v(" "),
-                                  game.status == "in progress" && game.period
-                                    ? _c("span", [_vm._v(_vm._s(game.period))])
-                                    : _vm._e(),
-                                  _vm._v(" "),
-                                  game.status == "postponed"
-                                    ? _c("span", [_vm._v("Postponed")])
-                                    : _vm._e()
-                                ])
-                              ],
-                              1
-                            ),
-                            _vm._v(" "),
-                            game.bets.length || game.highlightsCount
-                              ? _c(
-                                  "template",
-                                  { slot: "footer" },
-                                  [
+                                _c("img", {
+                                  staticClass: "avatar",
+                                  attrs: { src: game.homeTeam.thumbUrl }
+                                }),
+                                _vm._v(" "),
+                                _c(
+                                  "span",
+                                  {
+                                    class: game.homeTeam.isWinner
+                                      ? "font-weight-bold"
+                                      : ""
+                                  },
+                                  [_vm._v(_vm._s(game.homeTeam.name))]
+                                ),
+                                _vm._v(" "),
+                                game.homeTeam.isWinner
+                                  ? _c("span", [
+                                      _c("i", {
+                                        staticClass: "fas fa-caret-left"
+                                      })
+                                    ])
+                                  : _vm._e(),
+                                game.homeTeam.betCount
+                                  ? _c("span", [
+                                      _vm._v(
+                                        " (" +
+                                          _vm._s(game.homeTeam.betCount) +
+                                          ")"
+                                      )
+                                    ])
+                                  : _vm._e()
+                              ]),
+                              _vm._v(" "),
+                              game.status == "in progress" ||
+                              game.status == "ended"
+                                ? _c("b-col", [
                                     _c(
-                                      "b-row",
-                                      { staticClass: "text-center" },
-                                      [
-                                        _c("b-col", [
-                                          _c("i", {
-                                            staticClass: "fas fa-video"
-                                          }),
-                                          _vm._v(
-                                            " " +
-                                              _vm._s(game.highlightsCount) +
-                                              "\n                                "
-                                          )
-                                        ]),
-                                        _vm._v(" "),
-                                        _c("b-col", [
-                                          _c("i", {
-                                            staticClass: "fas fa-money-bill-alt"
-                                          }),
-                                          _vm._v(
-                                            " " +
-                                              _vm._s(game.bets.length) +
-                                              "\n                                "
-                                          )
-                                        ])
-                                      ],
-                                      1
+                                      "span",
+                                      {
+                                        class: game.awayTeam.isWinner
+                                          ? "font-weight-bold"
+                                          : ""
+                                      },
+                                      [_vm._v(_vm._s(game.awayTeam.score))]
+                                    ),
+                                    _c("br"),
+                                    _vm._v(" "),
+                                    _c(
+                                      "span",
+                                      {
+                                        class: game.homeTeam.isWinner
+                                          ? "font-weight-bold"
+                                          : ""
+                                      },
+                                      [_vm._v(_vm._s(game.homeTeam.score))]
                                     )
-                                  ],
-                                  1
-                                )
-                              : _vm._e()
-                          ],
-                          2
-                        )
-                      ],
-                      1
-                    )
-                  })
-                ],
-                2
+                                  ])
+                                : _vm._e(),
+                              _vm._v(" "),
+                              _c("b-col", { staticClass: "text-center" }, [
+                                game.status == "upcoming"
+                                  ? _c("span", [_vm._v(_vm._s(game.startTime))])
+                                  : _vm._e(),
+                                _vm._v(" "),
+                                game.endedAt
+                                  ? _c("span", [
+                                      _c("strong", [_vm._v("Final")])
+                                    ])
+                                  : _vm._e(),
+                                _vm._v(" "),
+                                game.status == "in progress" && game.period
+                                  ? _c("span", [_vm._v(_vm._s(game.period))])
+                                  : _vm._e(),
+                                _vm._v(" "),
+                                game.status == "postponed"
+                                  ? _c("span", [_vm._v("Postponed")])
+                                  : _vm._e()
+                              ])
+                            ],
+                            1
+                          ),
+                          _vm._v(" "),
+                          game.bets.length || game.highlightsCount
+                            ? _c(
+                                "template",
+                                { slot: "footer" },
+                                [
+                                  _c(
+                                    "b-row",
+                                    [
+                                      _c("b-col", [
+                                        _c("i", {
+                                          staticClass: "fas fa-money-bill-alt"
+                                        }),
+                                        _vm._v(
+                                          " $" +
+                                            _vm._s(game.betAmount) +
+                                            " (" +
+                                            _vm._s(game.bets.length) +
+                                            ")\n                                "
+                                        )
+                                      ]),
+                                      _vm._v(" "),
+                                      _c("b-col", [
+                                        _c("i", {
+                                          staticClass: "fas fa-video"
+                                        }),
+                                        _vm._v(
+                                          " " +
+                                            _vm._s(game.highlightsCount) +
+                                            "\n                                "
+                                        )
+                                      ])
+                                    ],
+                                    1
+                                  )
+                                ],
+                                1
+                              )
+                            : _vm._e()
+                        ],
+                        2
+                      )
+                    ],
+                    1
+                  )
+                })
               )
             ],
             1
@@ -63656,7 +63639,7 @@ var render = function() {
               }
             }
           },
-          [_c("i", { staticClass: "fas fa-arrow-left" })]
+          [_c("i", { staticClass: "fas fa-arrow-circle-left" })]
         ),
         _vm._v(" "),
         _c("span", { staticClass: "text-muted" }, [
@@ -63673,12 +63656,12 @@ var render = function() {
               }
             }
           },
-          [_c("i", { staticClass: "fas fa-arrow-right" })]
+          [_c("i", { staticClass: "fas fa-arrow-circle-right" })]
         )
       ]),
       _vm._v(" "),
       _c("games-list", {
-        class: this.isLoading ? "fade" : "show",
+        class: _vm.isLoading ? "fade" : "show",
         attrs: { "games-by-league": _vm.gamesList }
       })
     ],

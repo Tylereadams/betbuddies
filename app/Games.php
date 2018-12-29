@@ -175,9 +175,8 @@ class Games extends Model
                 'thumbUrl' => $this->homeTeam->logoUrl(),
                 'spread' => (int) $this->getTeamSpread('home'),
                 'isWinner' => $this->home_score > $this->away_score && ($this->ended_at) ? true : false,
-                'betCount' => $this->bets()->where(function($q){
-                    $q->where('opponent_team_id', $this->home_team_id);
-                    $q->orWhere('team_id', $this->home_team_id);
+                'betCount' => $this->bets->filter(function ($bet) {
+                    return in_array($this->home_team_id, [$bet->opponent_team_id, $bet->team_id]);
                 })->count()
             ],
             'awayTeam' => [
@@ -187,14 +186,14 @@ class Games extends Model
                 'thumbUrl' => $this->awayTeam->logoUrl(),
                 'spread' => (int) $this->getTeamSpread('away'),
                 'isWinner' => $this->away_score > $this->home_score && ($this->ended_at) ? true : false,
-                'betCount' => $this->bets()->where(function($q){
-                    $q->where('opponent_team_id', $this->away_team_id);
-                    $q->orWhere('team_id', $this->away_team_id);
+                'betCount' => $this->bets->filter(function ($bet) {
+                    return in_array($this->away_team_id, [$bet->opponent_team_id, $bet->team_id]);
                 })->count()
             ],
             'bets' => $this->bets->map(function($bet){
                 return $bet->getCardData();
             }),
+            'betAmount' => $this->bets->pluck('amount')->sum(),
             'highlightsCount' => $this->tweets->count(),
             'isBettable' => $this->isBettable(),
             'broadcast' => $this->broadcast,
