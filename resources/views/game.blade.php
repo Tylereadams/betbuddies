@@ -13,7 +13,7 @@
         </div>
     @endif
 
-    <div class="container">
+    <div class="container pt-2">
         <div class="row text-center game-teams__header">
             <div class="col">
                 <img src="{{ $game['awayTeam']['thumbUrl'] }}" class="avatar-lg"><br>
@@ -53,14 +53,14 @@
             @endif
         </div>
 
-        <div class="row pb-4">
+        <div row="pb-4">
+            <bets-list bets="{{ json_encode($game['bets']) }}"></bets-list>
+        </div>
+
+        <div>
             @foreach($tweets as $tweet)
                 @include('partials.highlight', $tweet)
             @endforeach
-        </div>
-
-        <div row="pb-4">
-            <bets-list bets="{{ json_encode($game['bets']) }}"></bets-list>
         </div>
     </div>
 

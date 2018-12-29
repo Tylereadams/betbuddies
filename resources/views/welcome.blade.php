@@ -67,8 +67,6 @@
             }
         </style>
 
-        @include('partials.scripts.fullstory')
-
     </head>
     <body>
         <div class="flex-center position-ref full-height">

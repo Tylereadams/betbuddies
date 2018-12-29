@@ -58,7 +58,7 @@ class GamesController extends Controller
         $tweets = TweetLogs::where('game_id', $game->id)
             ->orderBy('created_at', 'ASC')
             ->get();
-        $tweets->load('team');
+        $tweets->load('team.players');
 
         $data['tweets'] = [];
         foreach($tweets as $tweet){
@@ -69,7 +69,8 @@ class GamesController extends Controller
                     return [
                         'name' => $player->first_name.' '.$player->last_name
                     ];
-                })
+                }),
+                'period' => $tweet->period
             ];
         }
 

@@ -3,60 +3,52 @@
         <b-tabs>
             <div v-for="(leagueGames, key) in gamesList">
                 <b-tab>
+                    <!--Tab Titles-->
                     <template slot="title">
                         <b-nav-item>
                             {{ key.toUpperCase() }}
                         </b-nav-item>
                     </template>
 
-                    <template>
-                        <b-table hover :items="leagueGames" :fields="fields" thead-class="d-none border-0">
-
+                     <!--Games list-->
+                    <div v-for="game of leagueGames" class="mt-2" v-on:click="goToGame(game.urlSegment)">
+                        <b-card>
+                            <b-row>
                                 <!-- Team Names -->
-                                <template slot="teams" slot-scope="data">
-                                    <div @click.stop="data.toggleDetails">
-                                        <img :src="data.item.awayTeam.thumbUrl" class="avatar">&nbsp;<span :class="data.item.awayTeam.isWinner ? 'font-weight-bold' : ''">{{ data.item.awayTeam.name }}</span> <span v-if="data.item.awayTeam.isWinner"><i class="fas fa-caret-left"></i></span><span v-if="data.item.awayTeam.betCount">({{ data.item.awayTeam.betCount }})</span><br>
-                                        <img :src="data.item.homeTeam.thumbUrl" class="avatar">&nbsp;<span :class="data.item.homeTeam.isWinner ? 'font-weight-bold' : ''">{{ data.item.homeTeam.name }}</span> <span v-if="data.item.homeTeam.isWinner"><i class="fas fa-caret-left"></i></span><span v-if="data.item.homeTeam.betCount"> ({{ data.item.homeTeam.betCount }})</span>
-                                    </div>
-                                </template>
+                                <b-col cols="6">
+                                    <img :src="game.awayTeam.thumbUrl" class="avatar">&nbsp;<span :class="game.awayTeam.isWinner ? 'font-weight-bold' : ''">{{ game.awayTeam.name }}</span> <span v-if="game.awayTeam.isWinner"><i class="fas fa-caret-left"></i></span><span v-if="game.awayTeam.betCount">({{ game.awayTeam.betCount }})</span><br>
+                                    <img :src="game.homeTeam.thumbUrl" class="avatar">&nbsp;<span :class="game.homeTeam.isWinner ? 'font-weight-bold' : ''">{{ game.homeTeam.name }}</span> <span v-if="game.homeTeam.isWinner"><i class="fas fa-caret-left"></i></span><span v-if="game.homeTeam.betCount"> ({{ game.homeTeam.betCount }})</span>
+                                </b-col>
 
                                 <!-- Scores -->
-                                <template slot="score" slot-scope="data">
-                                    <div @click.stop="data.toggleDetails">
-                                        <div v-if="data.item.status == 'in progress' || data.item.status == 'ended'">
-                                            <!-- In progress games-->
-                                            <span :class="data.item.awayTeam.isWinner ? 'font-weight-bold' : ''">{{ data.item.awayTeam.score }}</span><br>
-                                            <span :class="data.item.homeTeam.isWinner ? 'font-weight-bold' : ''">{{ data.item.homeTeam.score }}</span>
-                                        </div>
-                                    </div>
-                                </template>
+                                <b-col v-if="game.status == 'in progress' || game.status == 'ended'">
+                                    <!-- In progress or ended games-->
+                                    <span :class="game.awayTeam.isWinner ? 'font-weight-bold' : ''">{{ game.awayTeam.score }}</span><br>
+                                    <span :class="game.homeTeam.isWinner ? 'font-weight-bold' : ''">{{ game.homeTeam.score }}</span>
+                                </b-col>
 
                                 <!-- Time / Status -->
-                                <template slot="status" slot-scope="data">
-                                    <div @click.stop="data.toggleDetails">
-                                        <span v-if="data.item.status == 'upcoming'">{{ data.item.startTime }}</span>
-                                        <span v-if="data.item.endedAt"><strong>Final</strong></span>
-                                        <span v-if="data.item.status == 'in progress' && data.item.period">{{ data.item.period }}</span>
-                                        <span v-if="data.item.status == 'postponed'">Postponed</span>
-                                    </div>
-                                </template>
+                                <b-col class="text-center">
+                                    <span v-if="game.status == 'upcoming'">{{ game.startTime }}</span>
+                                    <span v-if="game.endedAt"><strong>Final</strong></span>
+                                    <span v-if="game.status == 'in progress' && game.period">{{ game.period }}</span>
+                                    <span v-if="game.status == 'postponed'">Postponed</span>
+                                </b-col>
+                            </b-row>
 
-                                <template slot="row-details" slot-scope="data">
-                                    <b-row class="mb-2 text-center" align-v="center">
-                                        <b-col>
-                                            <b><i class="fas fa-file-invoice-dollar text-secondary"></i> {{ data.item.bets.length }}</b><br>
-                                            <b><i class="fas fa-video text-secondary"></i> {{ data.item.highlightsCount }}</b>
-                                        </b-col>
-                                        <b-col><b-button href="#" class="text-white" variant="primary">View game <i class="fas fa-caret-right"></i></b-button></b-col>
-                                    </b-row>
-                                </template>
+                            <template slot="footer" v-if="game.bets.length || game.highlightsCount">
+                                <b-row class="text-center">
+                                    <b-col>
+                                        <i class="fas fa-video"></i>&nbsp;{{ game.highlightsCount }}
+                                    </b-col>
+                                    <b-col>
+                                        <i class="fas fa-money-bill-alt"></i>&nbsp;{{ game.bets.length }}
+                                    </b-col>
+                                </b-row>
+                            </template>
+                        </b-card>
+                    </div>
 
-                        </b-table>
-                    </template>
-
-                    <!--<div class='row pt-3' v-on:click="goToGame(game.urlSegment)" v-for="(game, key) in leagueGames">-->
-
-                    <!--</div>-->
                 </b-tab>
             </div>
         </b-tabs>
@@ -85,19 +77,19 @@
             }
         },
         methods: {
-        //     refreshGames: function(date){
-        //         var self = this;
-        //
-        //         self.isLoading = true;
-        //
-        //         axios.get('/api/games/' + self.date).then(response => {
-        //             self.gamesList = response.data.gamesByLeague;
-        //             self.isLoading = false;
-        //         });
-        //     },
-        //     goToGame: function(urlSegment){
-        //         window.location.href = '/game/' + urlSegment;
-        //     }
+            refreshGames: function(date){
+                var self = this;
+
+                self.isLoading = true;
+
+                axios.get('/api/games/' + self.date).then(response => {
+                    self.gamesList = response.data.gamesByLeague;
+                    self.isLoading = false;
+                });
+            },
+            goToGame: function(urlSegment){
+                window.location.href = '/game/' + urlSegment;
+            }
         // },
         // mounted: function () {
         //     setInterval(function () {
