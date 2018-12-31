@@ -22,7 +22,8 @@ class HighlightHelper
         'structure',
         'crowd',
         'audience',
-        'fan'
+        'fan',
+        'madden'
     ];
 
     const THRESHOLD = 90;
