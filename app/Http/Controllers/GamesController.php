@@ -43,40 +43,47 @@ class GamesController extends Controller
      */
     public function game($urlSegment)
     {
-        $game = Games::where('url_segment', $urlSegment)->firstOrFail();
-        $game->load(['bets.user', 'bets.opponent', 'bets.opponentTeam', 'bets.game.homeTeam', 'bets.game.awayTeam']);
+//        $game = Games::where('url_segment', $urlSegment)->firstOrFail();
+//        $game->load(['bets.user', 'bets.opponent', 'bets.opponentTeam', 'bets.game.homeTeam', 'bets.game.awayTeam']);
+//
+//        $data['game'] = $game->getCardData();
+//        $data['bets'] = $game->bets->sortByDesc('created_at');
+//
+//        $tweets = TweetLogs::where('game_id', $game->id)
+//            ->orderBy('created_at', 'ASC')
+//            ->get();
+//        $tweets->load('team.players');
+//
+//        $data['tweets'] = [];
+//        foreach($tweets as $tweet){
+//            $data['tweets'][] = [
+//                'imageUrl' => $tweet->media_url,
+//                'highlightUrl' => $tweet->highlightUrl(),
+//                'players' => $tweet->players->map(function($player){
+//                    return [
+//                        'name' => $player->first_name.' '.$player->last_name
+//                    ];
+//                }),
+//                'period' => $tweet->period
+//            ];
+//        }
+//
+//        $data['venue']['photoUrl'] = $game->homeTeam->venue ? $game->homeTeam->venue->photoUrl() : '';
+
+        return view('game', ['urlSegment' => $urlSegment]);
+    }
+
+    public function gameJson($urlSegment)
+    {
+        $game = Games::where('url_segment', $urlSegment)->first();
+        $game->load(['bets.user', 'bets.game.homeTeam', 'bets.game.awayTeam', 'bets' => function ($q) {
+            $q->orderBy('created_at', 'DESC');
+        }]);
 
         $data['game'] = $game->getCardData();
+        $data['venueThumbUrl'] = $game->homeTeam->venue ? $game->homeTeam->venue->photoUrl() : '';
 
-        $data['bets'] = [];
-        $bets = $game->bets->sortByDesc('created_at');
-
-        foreach($bets as $bet){
-            $data['bets'][] = $bet->getCardData();
-        }
-
-        $tweets = TweetLogs::where('game_id', $game->id)
-            ->orderBy('created_at', 'ASC')
-            ->get();
-        $tweets->load('team.players');
-
-        $data['tweets'] = [];
-        foreach($tweets as $tweet){
-            $data['tweets'][] = [
-                'imageUrl' => $tweet->media_url,
-                'highlightUrl' => $tweet->highlightUrl(),
-                'players' => $tweet->players->map(function($player){
-                    return [
-                        'name' => $player->first_name.' '.$player->last_name
-                    ];
-                }),
-                'period' => $tweet->period
-            ];
-        }
-
-        $data['venue']['photoUrl'] = $game->homeTeam->venue ? $game->homeTeam->venue->photoUrl() : '';
-
-        return view('game', $data);
+        return response()->json($data);
     }
 
     public function gamesJson($date = 'now')

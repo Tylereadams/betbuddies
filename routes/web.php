@@ -54,8 +54,13 @@ Route::group(['middleware' => ['auth']], function () {
     Route::post('password/email', 'Auth\ForgotPasswordController@sendResetLinkEmail');
     Route::get('password/reset/{token}', 'Auth\ResetPasswordController@showResetForm');
     Route::post('password/reset', 'Auth\ResetPasswordController@reset');
+
+    Route::prefix('api')->group(function () {
+        Route::post('game/{urlSegment}/bet', 'BetsController@store');
+    });
 });
 
 Route::prefix('api')->group(function () {
     Route::get('games/{date?}', 'GamesController@gamesJson');
+    Route::get('game/{urlSegment}', 'GamesController@gameJson');
 });

@@ -1,78 +1,67 @@
 <template>
     <b-container>
 
-        @if($game['isBettable'])
-        @include('partials.createBetModal')
-        @else
-        <div class="scrolling-wrapper">
-            @foreach($tweetsToEmbed as $tweet)
+        <div v-for="bet in bets" class="pb-2">
+            <b-card
+                    header-tag="header"
+                    footer-tag="footer">
+                <h6 slot="header" class="mb-0">
+                    <b-row align-v="center">
+                        <b-col>
+                            <img :src="bet.user.avatarUrl">{{ bet.user.name }} created a bet on the {{ bet.team.name }} {{ formatSpread(bet.spread) }}
+                        </b-col>
+                    </b-row>
+                </h6>
 
-            @include('partials.embeddedTweet', $tweet)
+                <b-row align-v="center" class="text-center">
+                    <b-col>
+                        <img class="avatar-lg" :src="bet.opponentTeam.thumbUrl">
+                        <h5>{{ bet.opponentTeam.name }} <small>{{ formatSpread(bet.spread, true) }}</small></h5>
+                    </b-col>
+                </b-row>
 
-            @endforeach
+                <template slot="footer">
+                    <b-row align-v="center" class="text-center">
+                        <b-col>
+                            <h5>${{ bet.amount }}</h5>
+                        </b-col>
+                        <b-col>
+                            <b-button href="#" variant="success" v-if="!bet.fromMe">Accept</b-button>
+                            <b-button href="#" variant="danger" v-if="bet.fromMe">Delete</b-button>
+                        </b-col>
+                    </b-row>
+                </template>
+            </b-card>
         </div>
-        @endif
-        @if(count($bets) || $game['isBettable'])
-        <div class="row">
-            <div class="col">
-                <div class="table-responsive">
-                    <table class="table table-borderless table-condensed table-hover">
-                        <thead>
-                        <tr>
-                            <th colspan="4" data-toggle="modal" data-target="#createBetModal">
-                                Bets ({{ count($bets) }})
-                                @if($game['isBettable'])
-                                <!-- Button trigger modal -->
-                                <a class="clickable text-primary">
-                                    <i class="fas fa-plus"></i>
-                                </a>
-                                @endif
-                            </th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        @foreach($bets as $bet)
-                        @include('partials.bet-row')
-                        @endforeach
-                        </tbody>
-                    </table>
-                    @if(!count($bets) && $game['isBettable'])
-                    <div class="jumbotron jumbotron-fluid">
-                        <div class="text-center">
-                            @guest
-                            <a href="login" class="btn btn-light btn-large" disabled>Login to Bet</a>
-                            @endguest
-                            @auth
-                            <button class="btn btn-primary btn-large " data-toggle="modal" data-target="#createBetModal">Add a bet</button>
-                            @endauth
-                        </div>
-                    </div>
-                    @endif
-                </div>
-            </div>
-        </div>
-
     </b-container>
 </template>
 
 <script type="text/babel">
     export default {
         props: [
+            'bets'
         ],
         data: function () {
             return {
             }
         },
         methods: {
-            refreshBets: function(){
-                var self = this;
-
-                self.isLoading = true;
-
-                axios.get('/api/games/' + self.date).then(response => {
-                    self.betList = response.data.gamesByLeague;
-                    self.isLoading = false;
-                });
+            // refreshBets: function(){
+            //     var self = this;
+            //
+            //     self.isLoading = true;
+            //
+            //     axios.get('/api/games/' + self.date).then(response => {
+            //         self.betList = response.data.gamesByLeague;
+            //         self.isLoading = false;
+            //     });
+            // }
+            formatSpread: function(spread, inverse = false) {
+                spread = parseInt(spread);
+                if(inverse){
+                    spread = (spread * -1);
+                }
+                return spread > 0 ? '+' + spread : spread;
             }
         },
         mounted: function () {

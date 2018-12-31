@@ -45,11 +45,12 @@ class BetsController extends Controller
      */
     public function store()
     {
-        $gameId = \Request::get('gameId');
-        $game = Games::findOrfail($gameId);
+        $gameId = Input::get('gameId');
 
-        if(!$game || Carbon::parse($game->start_date)->timestamp < Carbon::now()->timestamp){
-            return redirect()->back()->withErrors(['The game has already started.']);
+        $game = Games::findOrFail($gameId);
+
+        if(Carbon::parse($game->start_date)->timestamp < Carbon::now()->timestamp){
+            return response()->json(['errors' => ['Game has already started']]);
         }
 
         // validate
@@ -67,19 +68,19 @@ class BetsController extends Controller
 
         // process the login
         if ($validator->fails()) {
-            return back()->withErrors($validator);
+            return response()->json(['errors' => $validator->errors()->all()]);
         }
 
         $userBet = new UsersBets();
         $userBet->amount = Input::get('amount');
         $userBet->spread = Input::get('spread');
         $userBet->team_id = Input::get('teamId');
-        $userBet->game_id = Input::get('gameId');
+        $userBet->game_id = $gameId;
         $userBet->user_id = Auth::id();
 
         $userBet->save();
 
-        return redirect()->route('game', ['urlSegment' => $userBet->game->url_segment]);
+        return response()->json($userBet->getCardData());
     }
 
     /**
