@@ -2,15 +2,15 @@
     <div>
         <b-tabs>
             <div v-for="(leagueGames, leagueName) in gamesList" :key="leagueName">
-                <b-tab :title="leagueName.toUpperCase()">
+                <b-tab :title="leagueName.toUpperCase()" class="rounded">
                      <!--Games list-->
-                    <div v-for="game of leagueGames" class="mt-2" v-on:click="goToGame(game.urlSegment)">
+                    <div v-for="game of leagueGames" class="mt-2 clickable shadow-sm rounded" v-on:click="goToGame(game.urlSegment)">
                         <b-card footer-class="pt-1 pb-1 text-secondary">
                             <b-row>
                                 <!-- Team Names -->
                                 <b-col cols="6">
-                                    <img :src="game.awayTeam.thumbUrl" class="avatar">&nbsp;<span :class="game.awayTeam.isWinner ? 'font-weight-bold' : ''">{{ game.awayTeam.name }}</span> <span v-if="game.awayTeam.isWinner"><i class="fas fa-caret-left"></i></span><span v-if="game.awayTeam.betCount">({{ game.awayTeam.betCount }})</span><br>
-                                    <img :src="game.homeTeam.thumbUrl" class="avatar">&nbsp;<span :class="game.homeTeam.isWinner ? 'font-weight-bold' : ''">{{ game.homeTeam.name }}</span> <span v-if="game.homeTeam.isWinner"><i class="fas fa-caret-left"></i></span><span v-if="game.homeTeam.betCount"> ({{ game.homeTeam.betCount }})</span>
+                                    <img :src="game.awayTeam.thumbUrl" class="avatar">&nbsp;<span :class="game.awayTeam.isWinner ? 'font-weight-bold' : ''">{{ game.awayTeam.name }}</span> <span v-if="game.awayTeam.isWinner"><i class="fas fa-caret-left"></i></span><br>
+                                    <img :src="game.homeTeam.thumbUrl" class="avatar">&nbsp;<span :class="game.homeTeam.isWinner ? 'font-weight-bold' : ''">{{ game.homeTeam.name }}</span> <span v-if="game.homeTeam.isWinner"><i class="fas fa-caret-left"></i></span>
                                 </b-col>
 
                                 <!-- Scores -->

@@ -1,7 +1,7 @@
 <template>
     <div v-cloak>
 
-        <div class="jumbotron"
+        <div class="jumbotron d-none d-sm-block d-md-none"
              v-if="venueThumbUrl"
              v-bind:style="{ backgroundImage: 'url(' + venueThumbUrl + ')' }"
              style="
@@ -39,62 +39,79 @@
                         <strong>Final</strong>
                     </div>
                     <div class="text-center" v-else>
-                        <strong>{{ game.startDate }} {{ game.startTime }}</strong><br>
-                        <strong>{{ game.location }}</strong><br>
-                        <strong>{{ game.broadcast }}</strong>
+                        <small>{{ game.startDate }} {{ game.startTime }}</small><br>
+                        <small>{{ game.location }}</small><br>
+                        <small>{{ game.broadcast }}</small>
                     </div>
                 </div>
             </div>
 
             <b-row>
-                <b-col class="pb-2">
-                    <b-btn v-b-modal.modal-center variant="primary">Add Bet</b-btn>
+                <b-col>
+                    <b-tabs card>
+                        <b-tab title="Bets" class="px-0">
+                            <!-- Modal Component -->
+                            <b-modal id="modal-center" ref="newBetModal" @ok="handleOk" @cancel="handleCancel" :busy="isLoading" centered title="Create a new bet">
 
-                    <!-- Modal Component -->
-                    <b-modal id="modal-center" ref="newBetModal" @ok="handleOk" @cancel="handleCancel" :busy="isLoading" centered title="Create a new bet">
+                                <div v-for="error in errors">
+                                    <b-alert variant="danger"
+                                             dismissible
+                                             fade
+                                             :show="errors.length"
+                                             @dismissed="showDismissibleAlert=false">
+                                        {{ error }}<br>
+                                    </b-alert>
+                                </div>
 
-                        <div v-for="error in errors">
-                            <b-alert variant="danger"
-                                     dismissible
-                                     fade
-                                     :show="errors.length"
-                                     @dismissed="showDismissibleAlert=false">
-                                {{ error }}<br>
-                            </b-alert>
-                        </div>
+                                <b-row>
+                                    <b-col>
+                                        <b-form-group label="Select team">
+                                            <b-form-radio-group id="btnradios2"
+                                                                buttons
+                                                                button-variant="outline-primary"
+                                                                v-model="newBet.teamId"
+                                                                :options="options" />
+                                        </b-form-group>
+                                    </b-col>
+                                </b-row>
 
-                        <b-row>
-                            <b-col>
-                                <b-form-group label="Select team">
-                                    <b-form-radio-group id="btnradios2"
-                                                        buttons
-                                                        button-variant="outline-primary"
-                                                        v-model="newBet.teamId"
-                                                        :options="options" />
-                                </b-form-group>
-                            </b-col>
-                        </b-row>
+                                <b-row>
+                                    <b-col>
+                                        <label for="spreadInput">Spread</label>
+                                        <b-input-group label="Spread" prepend="+/-">
+                                            <b-form-input id="spreadInput" label="Spread:" type="number" min="-100.00" step="0.5" v-model="newBet.spread"></b-form-input>
+                                        </b-input-group>
+                                    </b-col>
+                                    <b-col>
+                                        <label for="amountInput">Amount</label>
+                                        <b-input-group label="Amount" prepend="$">
+                                            <b-form-input id="amountInput" type="number" min="0.00" step="1" v-model="newBet.amount"></b-form-input>
+                                        </b-input-group>
+                                    </b-col>
+                                </b-row>
 
-                        <b-row>
-                            <b-col>
-                                <label for="spreadInput">Spread</label>
-                                <b-input-group label="Spread" prepend="+/-">
-                                    <b-form-input id="spreadInput" label="Spread:" type="number" min="-100.00" step="0.5" v-model="newBet.spread"></b-form-input>
-                                </b-input-group>
-                            </b-col>
-                            <b-col>
-                                <label for="amountInput">Amount</label>
-                                <b-input-group label="Amount" prepend="$">
-                                    <b-form-input id="amountInput" type="number" min="0.00" step="1" v-model="newBet.amount"></b-form-input>
-                                </b-input-group>
-                            </b-col>
-                        </b-row>
+                            </b-modal>
 
-                    </b-modal>
+                            <!-- Bets List-->
+                            <bets-list :bets="game.bets" @refreshGame="refreshGame"></bets-list>
+
+                            <div v-if="!game.bets.length">
+                                <div class="jumbotron text-center">
+                                    <button type="button" class="btn btn-primary"  v-b-modal.modal-center>Add a Bet</button>
+                                </div>
+                            </div>
+                        </b-tab>
+                        <b-tab title="Highlights">
+
+                        </b-tab>
+                    </b-tabs>
                 </b-col>
-                <!-- Bets List-->
-                <bets-list :bets="game.bets"></bets-list>
             </b-row>
+
+            <nav class="navbar fixed-bottom" v-if="game.isBettable">
+                <button type="button" class="btn btn-primary btn-circle btn-lg"  v-b-modal.modal-center><i class="fas fa-plus"></i></button>
+            </nav>
+
         </div>
 
         <!-- Highlights -->
@@ -150,10 +167,12 @@
                     spread: self.newBet.spread
                 }).then(response => {
                     self.errors = response.data.errors;
-                    this.refreshGame();
                     self.isLoading = false;
-                    this.clearNewBet();
-                    this.$refs.newBetModal.hide()
+                    if(!self.errors){
+                        this.refreshGame();
+                        this.clearNewBet();
+                        this.$refs.newBetModal.hide()
+                    }
                 });
             },
             handleCancel (evt) {
@@ -177,7 +196,7 @@
 
             setInterval(function () {
                 this.refreshGame();
-            }.bind(this), 5 * 60000); // every 5 minutes update the scores
+            }.bind(this), .5 * 60000); // every 5 minutes update the scores
         },
         computed: {
 

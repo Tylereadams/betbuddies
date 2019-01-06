@@ -45,7 +45,6 @@ Route::group(['middleware' => ['auth']], function () {
 
     // Bets
     Route::delete('bets/{usersBets}', 'BetsController@delete')->name('bets.delete');
-    Route::post('bets/{usersBets}/accept', 'BetsController@accept')->name('bets.accept');
 
     Route::post('/game/{urlSegment}', 'BetsController@store');
 
@@ -57,6 +56,7 @@ Route::group(['middleware' => ['auth']], function () {
 
     Route::prefix('api')->group(function () {
         Route::post('game/{urlSegment}/bet', 'BetsController@store');
+        Route::post('bet/{usersBets}/accept', 'BetsController@accept');
     });
 });
 
