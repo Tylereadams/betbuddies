@@ -129,10 +129,10 @@ class BetsController extends Controller
         }
 
         if(!$usersBets->game->isBettable()){
-            return back()->withErrors(['errors' => 'Game has already started.']);
+            return response()->json(['errors' => 'Game has already started.']);
         }
 
-        return back();
+        return response()->json([], 200);
     }
 
     /**
