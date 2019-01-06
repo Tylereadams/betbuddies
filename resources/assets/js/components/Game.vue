@@ -95,7 +95,7 @@
                             <!-- Bets List-->
                             <bets-list :bets="game.bets" @refreshGame="refreshGame"></bets-list>
 
-                            <div v-if="!game.bets.length">
+                            <div v-if="!game.bets.length && game.isBettable">
                                 <div class="jumbotron text-center">
                                     <button type="button" class="btn btn-primary"  v-b-modal.modal-center>Add a Bet</button>
                                 </div>
