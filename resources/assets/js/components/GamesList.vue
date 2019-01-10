@@ -5,7 +5,9 @@
                 <b-tab :title="leagueName.toUpperCase()" class="rounded">
                      <!--Games list-->
                     <div v-for="game of leagueGames" class="mt-2 clickable shadow-sm rounded" v-on:click="goToGame(game.urlSegment)">
-                        <b-card footer-class="pt-1 pb-1 text-secondary">
+                        <b-card footer-class="pt-1 pb-1 text-secondary"
+                                footer-bg-variant="white"
+                        >
                             <b-row>
                                 <!-- Team Names -->
                                 <b-col cols="6">
@@ -29,13 +31,12 @@
                                 </b-col>
                             </b-row>
 
-                            <template slot="footer" v-if="game.bets.length || game.highlightsCount">
+                            <template slot="footer"
+                                      v-if="game.bets.length || game.highlightsCount">
                                 <b-row>
                                     <b-col>
-                                        <i class="fas fa-money-bill-alt"></i>&nbsp;${{ game.betAmount }} ({{ game.bets.length }})
-                                    </b-col>
-                                    <b-col>
-                                        <i class="fas fa-video"></i>&nbsp;{{ game.highlightsCount }}
+                                        <span v-if="game.betAmout"><i class="fas fa-money-bill-alt"></i>&nbsp;${{ game.betAmount }}</span>&nbsp;
+                                        <span v-if="game.highlightsCount"><i class="fas fa-video" v-if="game.highlightsCount"></i>&nbsp;{{ game.highlightsCount }}</span>
                                     </b-col>
                                 </b-row>
                             </template>
