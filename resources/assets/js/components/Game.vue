@@ -102,8 +102,15 @@
                                 </div>
                             </div>
                         </b-tab>
-                        <b-tab title="Highlights">
-
+                        <b-tab title="Highlights" v-if="highlights.length">
+                            <div v-for="highlight in highlights" class="pb-3 text-center">
+                                <div>
+                                    <video controls>
+                                        <source :src="highlight.url" type="video/mp4">
+                                        Your browser does not support the video tag.
+                                    </video>
+                                </div>
+                            </div>
                         </b-tab>
                     </b-tabs>
                 </b-col>
@@ -128,6 +135,7 @@
             return {
                 isLoading: false,
                 game: [],
+                highlights: [],
                 venueThumbUrl: '',
                 options: [],
                 newBet: {
@@ -146,6 +154,7 @@
 
                 axios.get('/api/game/' + this.urlSegment).then(response => {
                     self.game = response.data.game;
+                    self.highlights = response.data.highlights;
                     self.venueThumbUrl = response.data.venueThumbUrl;
                     self.isLoading = false;
                     self.options = [

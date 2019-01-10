@@ -111,6 +111,13 @@ class TweetLogs extends Model
         $this->save();
     }
 
+    public function getCardData()
+    {
+        return [
+            'url' => $this->highlightUrl()
+        ];
+    }
+
     /**
      * Uploads video to streamable service
      */
