@@ -107,7 +107,7 @@
 
                                 <div class="row">
                                     <div class="col">
-                                        <video controls>
+                                        <video width="300" controls>
                                             <source :src="highlight.url" type="video/mp4">
                                             Your browser does not support the video tag.
                                         </video>
