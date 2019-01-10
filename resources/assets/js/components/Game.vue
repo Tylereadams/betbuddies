@@ -154,6 +154,7 @@
                 axios.get('/api/game/' + this.urlSegment).then(response => {
                     self.game = response.data.game;
                     self.highlights = response.data.highlights;
+                    console.log(response.data)
                     self.venueThumbUrl = response.data.venueThumbUrl;
                     self.isLoading = false;
                     self.options = [
