@@ -44,8 +44,6 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('user/{urlSegment?}', 'UserController@profile');
 
     // Bets
-    Route::delete('bets/{usersBets}', 'BetsController@delete')->name('bets.delete');
-    Route::post('bets/{usersBets}/accept', 'BetsController@accept')->name('bets.accept');
 
     Route::post('/game/{urlSegment}', 'BetsController@store');
 
@@ -54,4 +52,15 @@ Route::group(['middleware' => ['auth']], function () {
     Route::post('password/email', 'Auth\ForgotPasswordController@sendResetLinkEmail');
     Route::get('password/reset/{token}', 'Auth\ResetPasswordController@showResetForm');
     Route::post('password/reset', 'Auth\ResetPasswordController@reset');
+
+    Route::prefix('api')->group(function () {
+        Route::post('game/{urlSegment}/bet', 'BetsController@store');
+        Route::post('bet/{usersBets}/accept', 'BetsController@accept');
+        Route::delete('bet/{usersBets}', 'BetsController@delete');
+    });
+});
+
+Route::prefix('api')->group(function () {
+    Route::get('games/{date?}', 'GamesController@gamesJson');
+    Route::get('game/{urlSegment}', 'GamesController@gameJson');
 });

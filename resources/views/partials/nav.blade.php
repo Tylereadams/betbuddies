@@ -1,41 +1,30 @@
-<nav class="navbar navbar-light bg-light">
-    <a class="navbar-brand" href="{{ url('/tweet-log') }}">
-        <i class="fas fa-search text-secondary"></i>
-    </a>
-    <a class="navbar-brand" href="{{ url('/games') }}">
-        <i class="fas fa-calendar-alt text-secondary"></i>
-    </a>
-    @auth
-    <a class="navbar-brand" href="{{ url('/user') }}">
-        <i class="far fa-user text-secondary"></i>
-    </a>
-    @endauth
-    <!-- Authentication Links -->
-    @guest
-        <ul class="nav">
-            <li class="nav-item"><a class="nav-link" href="{{ route('login') }}">Login</a></li>
-            <li class="nav-item"><a class="nav-link" href="{{ route('register') }}">Register</a></li>
-        </ul>
-    @else
-        <small>Hello, {{ Auth::user()->name }}</small>
+<b-navbar toggleable="md" type="dark" variant="primary" class="mb-2">
 
-        <!-- Collapse button -->
-        <button class="navbar-toggler toggler-example" type="button" data-toggle="collapse" data-target="#navbarSupportedContent1" aria-controls="navbarSupportedContent1"
-                aria-expanded="false" aria-label="Toggle navigation"><span class="dark-blue-text"><i class="fa fa-bars fa-1x"></i></span></button>
+    <b-navbar-toggle target="nav_collapse"></b-navbar-toggle>
 
-        <!-- Collapsible content -->
-        <div class="collapse navbar-collapse" id="navbarSupportedContent1">
+    <b-navbar-brand href="#"><i class="fas fa-users"></i> BetBuddies</b-navbar-brand>
 
-            <!-- Links -->
-            <ul class="nav justify-content-end">
-                <li class="nav-item active">
-                    <a class="nav-link" href="{{ route('logout') }}">Logout</a>
-                </li>
-            </ul>
-            <!-- Links -->
+    <b-collapse is-nav id="nav_collapse">
 
-        </div>
-        <!-- Collapsible content -->
+        <b-navbar-nav>
+            <b-nav-item left href="{{ url('/games') }}">
+                    <i class="fas fa-calendar-alt"></i> Games
+            </b-nav-item>
+            @auth
+                <b-nav-item href="{{ url('/user') }}"><i class="far fa-user"></i> Profile</b-nav-item>
+             @endauth
+        </b-navbar-nav>
 
-    @endguest
-</nav>
+        <b-navbar-nav class="ml-auto">
+            @auth
+                <b-nav-item href="{{ url('/logout') }}"><i class="fas fa-sign-out-alt"></i> Logout</b-nav-item>
+            @endauth
+
+            @guest
+                <b-nav-item href="{{ route('login') }}"><i class="fas fa-sign-in-alt"></i> Login</b-nav-item>
+                <b-nav-item href="{{ route('register') }}"><i class="fas fa-user-plus"></i> Sign up</b-nav-item>
+            @endguest
+        </b-navbar-nav>
+
+    </b-collapse>
+</b-navbar>

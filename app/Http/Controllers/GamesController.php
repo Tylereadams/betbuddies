@@ -3,9 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Games;
+use App\Leagues;
 use App\Services\CardCreator;
 use App\TweetLogs;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Cache;
 //use Intervention\Image\ImageManager;
 //use Thujohn\Twitter\Facades\Twitter;
 //use Illuminate\Support\Facades\Cache;
@@ -21,37 +23,15 @@ class GamesController extends Controller
      */
     public function gamesByDate($date = 'now')
     {
-        // Default date to today
-        if(!$date){
-            $date = \Request::get('date', 'today');
-        }
-
+        $leagueName = \Request::get('league');
         $date = Carbon::parse($date)->format('Y-m-d');
 
+        $data['urlDate'] = $date;
         $data['date'] = Carbon::parse($date)->format('M j, Y');
         $data['tomorrow'] = Carbon::parse($date)->addDay()->format('Y-m-d');
         $data['yesterday'] = Carbon::parse($date)->subDay()->format('Y-m-d');
-
-        $games = Games::where('start_date', 'LIKE', $date.'%')
-            ->orderBy('league_id')
-            ->orderBy('status')
-            ->orderBy('period')
-            ->orderBy('start_date')
-            ->get();
-
-        $games->load(['homeTeam', 'awayTeam', 'league']);
-
-        if($games->isEmpty()){
-            return view('games', $data);
-        }
-
-        $data['gamesByLeague'] = [];
-        // Add games to data
-        foreach($games as $game) {
-            $data['gamesByLeague'][$game->league->name][] = $game->getCardData();
-        }
-
-        $data['selectedLeague'] = \Request::get('league') ? \Request::get('league') : array_keys($data['gamesByLeague'])[0];
+        $data['gamesByLeague'] = $this->getGamesData($date);
+        $data['selectedLeague'] = $leagueName;
 
         return view('games', $data);
     }
@@ -63,39 +43,90 @@ class GamesController extends Controller
      */
     public function game($urlSegment)
     {
-        $game = Games::where('url_segment', $urlSegment)->firstOrFail();
-        $game->load(['bets.user', 'bets.opponent', 'bets.opponentTeam', 'bets.game.homeTeam', 'bets.game.awayTeam']);
+//        $game = Games::where('url_segment', $urlSegment)->firstOrFail();
+//        $game->load(['bets.user', 'bets.opponent', 'bets.opponentTeam', 'bets.game.homeTeam', 'bets.game.awayTeam']);
+//
+//        $data['game'] = $game->getCardData();
+//        $data['bets'] = $game->bets->sortByDesc('created_at');
+//
+//        $tweets = TweetLogs::where('game_id', $game->id)
+//            ->orderBy('created_at', 'ASC')
+//            ->get();
+//        $tweets->load('team.players');
+//
+//        $data['tweets'] = [];
+//        foreach($tweets as $tweet){
+//            $data['tweets'][] = [
+//                'imageUrl' => $tweet->media_url,
+//                'highlightUrl' => $tweet->highlightUrl(),
+//                'players' => $tweet->players->map(function($player){
+//                    return [
+//                        'name' => $player->first_name.' '.$player->last_name
+//                    ];
+//                }),
+//                'period' => $tweet->period
+//            ];
+//        }
+//
+//        $data['venue']['photoUrl'] = $game->homeTeam->venue ? $game->homeTeam->venue->photoUrl() : '';
+
+        return view('game', ['urlSegment' => $urlSegment]);
+    }
+
+    public function gameJson($urlSegment)
+    {
+        $game = Games::where('url_segment', $urlSegment)->first();
+        $game->load([
+            'bets.user',
+            'bets.game.homeTeam',
+            'bets.game.awayTeam',
+            'bets' => function ($q) {
+            $q->orderBy('created_at', 'DESC');
+        }]);
 
         $data['game'] = $game->getCardData();
+        $data['venueThumbUrl'] = $game->homeTeam->venue ? $game->homeTeam->venue->photoUrl() : '';
 
-        $data['bets'] = [];
-        $bets = $game->bets->sortByDesc('created_at');
+        return response()->json($data);
+    }
 
-        foreach($bets as $bet){
-            $data['bets'][] = $bet->getCardData();
+    public function gamesJson($date = 'now')
+    {
+        // Default date to today
+        if(!$date){
+            $date = \Request::get('date', 'today');
         }
 
-        $tweets = TweetLogs::where('game_id', $game->id)
-            ->orderBy('created_at', 'ASC')
-            ->get();
-        $tweets->load('team');
+        $date = Carbon::parse($date)->format('Y-m-d');
 
-        $data['tweets'] = [];
-        foreach($tweets as $tweet){
-            $data['tweets'][] = [
-                'imageUrl' => $tweet->media_url,
-                'highlightUrl' => $tweet->highlightUrl(),
-                'players' => $tweet->players->map(function($player){
-                    return [
-                        'name' => $player->first_name.' '.$player->last_name
-                    ];
-                })
-            ];
+
+        $data['gamesByLeague'] = $this->getGamesData($date);
+
+        return response()->json($data);
+    }
+
+    private function getGamesData($date = 'now')
+    {
+        $startDate = Carbon::parse($date)->subDay(1)->format('Y-m-d');
+        $endDate = Carbon::parse($date)->addDay(1)->format('Y-m-d');
+
+        $games = Cache::remember('games-data-'.$startDate.'-'.$endDate, 2, function () use ($startDate, $endDate) {
+            return Games::where('start_date', '>', $startDate)
+                ->where('start_date', '<', $endDate)
+                ->orderByRaw('FIELD(league_id,'.Leagues::NFL_ID.','.Leagues::NBA_ID.','.Leagues::MLB_ID.','.Leagues::NHL_ID.')')
+                ->orderByRaw('FIELD(status,'.Games::IN_PROGRESS.','.Games::ENDED.','.Games::UPCOMING.','.Games::POSTPONED.')')
+                ->orderBy('start_date')
+                ->get();
+        });
+        $games->load(['homeTeam', 'awayTeam', 'league']);
+
+        $data = [];
+        // Add games to data
+        foreach($games as $game) {
+            $data[$game->league->name][] = $game->getCardData();
         }
 
-        $data['venue']['photoUrl'] = $game->homeTeam->venue ? $game->homeTeam->venue->photoUrl() : '';
-
-        return view('game', $data);
+        return $data;
     }
 
     /**

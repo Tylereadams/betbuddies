@@ -48,34 +48,39 @@
     </td>
     <td class="align-middle">
         <div class="row">
-            @if($bet['isAcceptable'] && $bet['fromMe'])
-                <button type="button" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#deleteBetModal{{ $bet['id'] }}">
-                    Delete
-                </button>
-            @elseif($bet['isAcceptable'] && !$bet['fromMe'])
-                {{-- Modal --}}
-                <button type="button" class="btn btn-success btn-sm" data-toggle="modal" data-target="#acceptBetModal-{{ $bet['id'] }}">
-                    Accept
-                </button>
-            @endif
+            {{--@if($bet['isAcceptable'] && $bet['fromMe'])--}}
+                {{--<button type="button" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#deleteBetModal{{ $bet['id'] }}">--}}
+                    {{--Delete--}}
+                {{--</button>--}}
+            {{--@elseif($bet['isAcceptable'] && !$bet['fromMe'])--}}
+                 {{--Modal --}}
+                {{--<button type="button" class="btn btn-success btn-sm" data-toggle="modal" data-target="#acceptBetModal-{{ $bet['id'] }}">--}}
+                    {{--Accept--}}
+                {{--</button>--}}
+            {{--@endif--}}
                 {{ $bet['game']['awayTeam']['score'] }}<br>
                 {{ $bet['game']['homeTeam']['score'] }}
         </div>
+    </td>
+    <td class="align-middle">
+        <h4>
+            <a href="/game/{{ $bet['game']['urlSegment'] }}"><i class="fas fa-arrow-circle-right text-secondary"></i></a>
+        </h4>
     </td>
 </tr>
 
 @section('modal')
 
-    @foreach($bets as $bet)
-        @if($bet['isAcceptable'] && $bet['fromMe'])
+    {{--@foreach($bets as $bet)--}}
+        {{--@if($bet['isAcceptable'] && $bet['fromMe'])--}}
             {{-- Modal --}}
-            @include('partials.deleteBetModal', ['bet'=> $bet])
-        @endif
+            {{--@include('partials.deleteBetModal', ['bet'=> $bet])--}}
+        {{--@endif--}}
 
-        @if($bet['isAcceptable'] && !$bet['fromMe'])
+        {{--@if($bet['isAcceptable'] && !$bet['fromMe'])--}}
             {{-- Modal --}}
-            @include('partials.acceptBetModal', ['bet' => $bet])
-        @endif
-    @endforeach
+            {{--@include('partials.acceptBetModal', ['bet' => $bet])--}}
+        {{--@endif--}}
+    {{--@endforeach--}}
 
 @endsection

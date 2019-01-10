@@ -45,20 +45,20 @@ class BetsController extends Controller
      */
     public function store()
     {
-        $gameId = \Request::get('gameId');
-        $game = Games::findOrfail($gameId);
+        $gameId = Input::get('gameId');
 
-        if(!$game || Carbon::parse($game->start_date)->timestamp < Carbon::now()->timestamp){
-            return redirect()->back()->withErrors(['The game has already started.']);
+        $game = Games::findOrFail($gameId);
+
+        if(!$game->isBettable()){
+            return response()->json(['errors' => ['Game has already started']]);
         }
 
         // validate
-        // read more on validation at http://laravel.com/docs/validation
         $rules = array(
             'amount'       => 'required',
             'spread'       => 'required',
             'teamId'       => 'required',
-            'gameId'       => 'required',
+            'gameId'       => 'required'
         );
         $messages = [
             'teamId.required' => 'Pick a team.'
@@ -67,19 +67,19 @@ class BetsController extends Controller
 
         // process the login
         if ($validator->fails()) {
-            return back()->withErrors($validator);
+            return response()->json(['errors' => $validator->errors()->all()]);
         }
 
         $userBet = new UsersBets();
         $userBet->amount = Input::get('amount');
         $userBet->spread = Input::get('spread');
         $userBet->team_id = Input::get('teamId');
-        $userBet->game_id = Input::get('gameId');
+        $userBet->game_id = $gameId;
         $userBet->user_id = Auth::id();
 
         $userBet->save();
 
-        return redirect()->route('game', ['urlSegment' => $userBet->game->url_segment]);
+        return response()->json($userBet->getCardData());
     }
 
     /**
@@ -129,10 +129,10 @@ class BetsController extends Controller
         }
 
         if(!$usersBets->game->isBettable()){
-            return back()->withErrors(['message' => 'Game has already started.']);
+            return response()->json(['errors' => 'Game has already started.']);
         }
 
-        return back();
+        return response()->json([], 200);
     }
 
     /**
@@ -143,17 +143,17 @@ class BetsController extends Controller
     public function accept(UsersBets $usersBets)
     {
         if(Auth::id() == $usersBets->user_id){
-            return back()->withErrors(['message' => 'Can\'t accept your own bet. Accept someone else\'s, dummy.']);
+            return back()->withErrors(['errors' => 'Can\'t accept your own bet. Accept someone else\'s, dummy.']);
         }
 
         if(!$usersBets->game->isBettable()){
-            return back()->withErrors(['message' => 'Game has already started.']);
+            return back()->withErrors(['errors' => 'Game has already started.']);
         }
 
         $usersBets->opponent_id = Auth::id();
         $usersBets->opponent_team_id = $usersBets->team_id == $usersBets->game->homeTeam->id ? $usersBets->game->awayTeam->id : $usersBets->game->homeTeam->id;
         $usersBets->save();
 
-        return back();
+        return response()->json($usersBets);
     }
 }

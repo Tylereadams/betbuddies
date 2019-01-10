@@ -5,7 +5,9 @@
     <div class="row">
         <div class="col-md-8 col-md-offset-2">
             <div class="panel panel-default">
-                <div class="panel-heading">Login</div>
+
+                <h2>Login</h2>
+                <hr>
 
                 <div class="panel-body">
                     <form class="form-horizontal" method="POST" action="{{ route('login') }}">
@@ -55,9 +57,9 @@
                                     Login
                                 </button>
 
-                                {{--<a class="btn btn-link" href="{{ route('password.request') }}">--}}
-                                    {{--Forgot Your Password?--}}
-                                {{--</a>--}}
+                                <p class="pt-2">
+                                    Don't have a login? <a href="{{ route('register') }}"><i class="fas fa-user-plus"></i> Sign up</a>
+                                </p>
                             </div>
                         </div>
                     </form>

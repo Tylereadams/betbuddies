@@ -88,8 +88,13 @@ class UsersBets extends Model
             'isWinner' => $winner && $winner->id == Auth::id() ? true : false,
             'isLoser' => $winner && $winner->id != Auth::id() ? true : false,
             'isHome' => $this->team->id == $this->game->homeTeam->id ? true : false,
+            'humanDate' => $this->created_at->diffInHours(Carbon::now()) >= 24 ? $this->created_at->format('M d, Y h:ia') : $this->created_at->diffForHumans()
         ];
 
+        $betData['team'] = $this->game->homeTeam->id == $this->team->id ? $betData['game']['homeTeam'] : $betData['game']['awayTeam'];
+        $betData['opponentTeam'] = $this->game->homeTeam->id == $this->team->id ? $betData['game']['awayTeam'] : $betData['game']['homeTeam'];
+
+        // Opponent user data
         if($this->opponent) {
             $betData['opponent'] = [
                 'id' => $this->opponent->id,
@@ -97,8 +102,7 @@ class UsersBets extends Model
                 'avatarUrl' => $this->opponent->avatarUrl,
                 'urlSegment' => $this->opponent->url_segment,
                 'isMe' => $this->opponent->id == Auth::id() ? true : false,
-                'isWinner' => $winner && $winner->id == $this->opponent->id ? true : false,
-                'isHome' => $this->opponentTeam->id == $this->game->homeTeam->id ? true : false
+                'isWinner' => $winner && $winner->id == $this->opponent->id ? true : false
             ];
         }
 

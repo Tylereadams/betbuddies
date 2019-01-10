@@ -63,11 +63,16 @@ class User extends Authenticatable
     public function getUrlSegmentAttribute()
     {
         // Create URL segment if we don't have one.
-        if(!$this->url_segment){
+        if(!isset($this->url_segment)){
             $this->createUrlSegment();
         }
 
         return $this->url_segment;
+    }
+
+    public function avatarUrl()
+    {
+        return null; //$this->avatar;
     }
 
     /**
@@ -87,15 +92,6 @@ class User extends Authenticatable
         $this->save();
 
         return $this->url_segment;
-    }
-
-
-    /**
-     * Create avatar url
-     */
-    public function avatarUrl()
-    {
-        return 'https://graph.facebook.com/v2.8/'.$this->avatar.'/picture?type=normal';
     }
 
     public function getCardData()

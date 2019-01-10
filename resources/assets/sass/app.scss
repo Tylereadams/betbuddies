@@ -1,9 +1,11 @@
 
 // Fonts
-@import url("https://fonts.googleapis.com/css?family=Raleway:300,400,600");
+@import url("https://use.fontawesome.com/releases/v5.6.0/css/all.css");
 
 // Variables
 @import "variables";
 
-// Bootstrap
-@import "~bootstrap-sass/assets/stylesheets/bootstrap";
+// app.scss
+@import "~bootstrap/dist/css/bootstrap.css";
+@import "~bootstrap-vue/dist/bootstrap-vue.css";
+@import url("/css/main.css");

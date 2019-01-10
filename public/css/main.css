@@ -1,14 +1,21 @@
 .avatar{
     vertical-align: middle;
-    width: 18px;
-    height: 18px;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+}
+
+.avatar-md {
+    vertical-align: middle;
+    width: 35px;
+    height: 35px;
     border-radius: 50%;
 }
 
 .avatar-lg {
     vertical-align: middle;
-    width: 50px;
-    height: 50px;
+    width: 60px;
+    height: 60px;
     border-radius: 50%;
 }
 
@@ -75,4 +82,32 @@ html, body {
 
 .table td {
     padding: .6em !important;
+}
+
+
+/* Circle Button */
+.btn-circle {
+    width: 30px;
+    height: 30px;
+    text-align: center;
+    padding: 4px 0;
+    font-size: 12px;
+    line-height: 1.428571429;
+    border-radius: 15px;
+}
+.btn-circle.btn-lg {
+    width: 30px;
+    height: 30px;
+    padding: 5px 6px;
+    font-size: 15px;
+    line-height: 1.33;
+    border-radius: 25px;
+}
+.btn-circle.btn-xl {
+    width: 70px;
+    height: 70px;
+    padding: 10px 16px;
+    font-size: 24px;
+    line-height: 1.33;
+    border-radius: 35px;
 }
