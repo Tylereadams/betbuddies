@@ -104,12 +104,15 @@
                         </b-tab>
                         <b-tab title="Highlights" v-if="highlights.length">
                             <div v-for="highlight in highlights" class="pb-3 text-center">
-                                <div>
+
+                                <!-- 4:3 aspect ratio -->
+                                <div class="embed-responsive embed-responsive-4by3">
                                     <video controls>
                                         <source :src="highlight.url" type="video/mp4">
                                         Your browser does not support the video tag.
                                     </video>
                                 </div>
+
                             </div>
                         </b-tab>
                     </b-tabs>
@@ -154,7 +157,6 @@
                 axios.get('/api/game/' + this.urlSegment).then(response => {
                     self.game = response.data.game;
                     self.highlights = response.data.highlights;
-                    console.log(response.data)
                     self.venueThumbUrl = response.data.venueThumbUrl;
                     self.isLoading = false;
                     self.options = [
