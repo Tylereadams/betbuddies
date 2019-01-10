@@ -105,12 +105,13 @@
                         <b-tab title="Highlights" v-if="highlights.length">
                             <div v-for="highlight in highlights" class="pb-3 text-center">
 
-                                <!-- 4:3 aspect ratio -->
-                                <div class="embed-responsive embed-responsive-4by3">
-                                    <video controls>
-                                        <source :src="highlight.url" type="video/mp4">
-                                        Your browser does not support the video tag.
-                                    </video>
+                                <div class="row">
+                                    <div class="col">
+                                        <video controls>
+                                            <source :src="highlight.url" type="video/mp4">
+                                            Your browser does not support the video tag.
+                                        </video>
+                                    </div>
                                 </div>
 
                             </div>
