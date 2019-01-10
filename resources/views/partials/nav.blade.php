@@ -1,4 +1,4 @@
-<b-navbar toggleable="md" type="dark" variant="primary" class="mb-2">
+<b-navbar toggleable="md" type="dark" variant="primary">
 
     <b-navbar-toggle target="nav_collapse"></b-navbar-toggle>
 

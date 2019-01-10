@@ -13,7 +13,7 @@
         " v-if="venueThumbUrl">
         </div>
 
-        <div class="container" v-if="game.homeTeam && game.awayTeam">
+        <div class="container mt-2" v-if="game.homeTeam && game.awayTeam">
             <div class="row text-center game-teams__header">
                 <div class="col">
                     <img :src="game.awayTeam.thumbUrl" class="avatar-lg"><br>
