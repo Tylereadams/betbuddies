@@ -122,7 +122,6 @@
 
         </div>
 
-        <!-- Highlights -->
     </div>
 </template>
 
