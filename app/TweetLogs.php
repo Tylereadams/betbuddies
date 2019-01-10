@@ -114,7 +114,8 @@ class TweetLogs extends Model
     public function getCardData()
     {
         return [
-            'url' => $this->highlightUrl()
+            'url' => $this->highlightUrl(),
+            'posterUrl' => $this->media_url
         ];
     }
 
