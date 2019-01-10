@@ -85,6 +85,10 @@ class GamesController extends Controller
         }]);
 
         $data['game'] = $game->getCardData();
+
+        $data['highlights'] = $game->tweets->map(function($tweet){
+           return $tweet->getCardData();
+        });
         $data['venueThumbUrl'] = $game->homeTeam->venue ? $game->homeTeam->venue->photoUrl() : '';
 
         return response()->json($data);
