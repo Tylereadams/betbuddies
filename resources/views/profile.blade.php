@@ -2,11 +2,11 @@
 
 @section('content')
 <div class="container">
-    <div class="row jumbotron">
+    <b-jumbotron bg-variant="white"  border-variant="light">
         <div class="col-12">
             <h3><i class="fas fa-user-circle"></i> {{ $user['name'] }}</h3>
         </div>
-    </div>
+    </b-jumbotron>
     <div class="row">
         <div class="col-6 col-sm-2 text-center">
             <h6>Winnings</h6>
@@ -30,10 +30,10 @@
                     </tbody>
                 </table>
             @else
-                <div class="jumbotron jumbotron-fluid">
+                <div class="jumbotron jumbotron-fluid" bg-variant="light">
                     <div class="text-center">
                         <a href="{{ route('games') }}">
-                            <button class="btn btn-primary btn-large">Add a bet</button>
+                            <button class="btn btn-primary btn-large">Find a game to bet on <i class="fas fa-arrow-circle-right"></i></button>
                         </a>
                     </div>
                 </div>
@@ -45,16 +45,16 @@
 
 @section('modal')
 
-    @foreach($bets as $bet)
-        @if($bet['isAcceptable'] && $bet['fromMe'])
+    {{--@foreach($bets as $bet)--}}
+        {{--@if($bet['isAcceptable'] && $bet['fromMe'])--}}
             {{-- Modal --}}
-            @include('partials.deleteBetModal', ['bet'=> $bet])
-        @endif
+            {{--@include('partials.deleteBetModal', ['bet'=> $bet])--}}
+        {{--@endif--}}
 
-        @if($bet['isAcceptable'] && !$bet['fromMe'])
+        {{--@if($bet['isAcceptable'] && !$bet['fromMe'])--}}
             {{-- Modal --}}
-            @include('partials.acceptBetModal', ['bet' => $bet])
-        @endif
-    @endforeach
+            {{--@include('partials.acceptBetModal', ['bet' => $bet])--}}
+        {{--@endif--}}
+    {{--@endforeach--}}
 
 @endsection

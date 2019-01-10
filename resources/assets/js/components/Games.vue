@@ -1,12 +1,8 @@
 <template>
     <b-container class="p-2" v-cloak>
 
-        <div class="text-center h5">
-            <a class="text-secondary " v-on:click="changeDate(-1)"><i class="fas fa-arrow-circle-left"></i></a>
-            <span class="text-muted">{{ getFormattedDate() }}</span>
-            <a class="text-secondary" v-on:click="changeDate(+1)"><i class="fas fa-arrow-circle-right"></i></a>
-        </div>
-
+        <h2>Games</h2>
+        <hr>
         <games-list v-bind:games-by-league="gamesList" :class="isLoading ? 'fade' : 'show'"></games-list>
 
     </b-container>

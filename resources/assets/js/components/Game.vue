@@ -1,9 +1,17 @@
 <template>
     <div v-cloak>
 
+        <!--<div :src="venueThumbUrl" rounded class="bg-gradient-light" fluid-grow />-->
 
-        <b-img :src="venueThumbUrl" rounded class="bg-gradient-light" fluid-grow />
-
+        <div class="jumbotron bg-gradient-light"
+        v-bind:style="{ backgroundImage: 'url(' + venueThumbUrl + ')' }"
+        style="
+        background-size: 100% 190px;
+        background-repeat: no-repeat;
+        min-height: 190px !important;
+        position: relative;
+        " v-if="venueThumbUrl">
+        </div>
 
         <div class="container" v-if="game.homeTeam && game.awayTeam">
             <div class="row text-center game-teams__header">

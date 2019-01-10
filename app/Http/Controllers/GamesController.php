@@ -76,7 +76,11 @@ class GamesController extends Controller
     public function gameJson($urlSegment)
     {
         $game = Games::where('url_segment', $urlSegment)->first();
-        $game->load(['bets.user', 'bets.game.homeTeam', 'bets.game.awayTeam', 'bets' => function ($q) {
+        $game->load([
+            'bets.user',
+            'bets.game.homeTeam',
+            'bets.game.awayTeam',
+            'bets' => function ($q) {
             $q->orderBy('created_at', 'DESC');
         }]);
 
@@ -103,10 +107,12 @@ class GamesController extends Controller
 
     private function getGamesData($date = 'now')
     {
-        $date = Carbon::parse($date)->format('Y-m-d');
+        $startDate = Carbon::parse($date)->subDay(1)->format('Y-m-d');
+        $endDate = Carbon::parse($date)->addDay(1)->format('Y-m-d');
 
-        $games = Cache::remember('games-data-'.$date, 2, function () use($date) {
-            return Games::where('start_date', 'LIKE', $date.'%')
+        $games = Cache::remember('games-data-'.$startDate.'-'.$endDate, 2, function () use ($startDate, $endDate) {
+            return Games::where('start_date', '>', $startDate)
+                ->where('start_date', '<', $endDate)
                 ->orderByRaw('FIELD(league_id,'.Leagues::NFL_ID.','.Leagues::NBA_ID.','.Leagues::MLB_ID.','.Leagues::NHL_ID.')')
                 ->orderByRaw('FIELD(status,'.Games::IN_PROGRESS.','.Games::ENDED.','.Games::UPCOMING.','.Games::POSTPONED.')')
                 ->orderBy('start_date')

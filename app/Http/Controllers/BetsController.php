@@ -49,7 +49,7 @@ class BetsController extends Controller
 
         $game = Games::findOrFail($gameId);
 
-        if(Carbon::parse($game->start_date)->timestamp < Carbon::now()->timestamp){
+        if(!$game->isBettable()){
             return response()->json(['errors' => ['Game has already started']]);
         }
 

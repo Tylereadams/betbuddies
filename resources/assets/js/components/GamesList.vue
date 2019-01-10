@@ -22,7 +22,7 @@
 
                                 <!-- Time / Status -->
                                 <b-col class="text-center">
-                                    <span v-if="game.status == 'upcoming'">{{ game.startTime }}</span>
+                                    <span v-if="game.status == 'upcoming'">{{ game.startDate }}<br>{{ game.startTime }}</span>
                                     <span v-if="game.endedAt"><strong>Final</strong></span>
                                     <span v-if="game.status == 'in progress' && game.period">{{ game.period }}</span>
                                     <span v-if="game.status == 'postponed'">Postponed</span>

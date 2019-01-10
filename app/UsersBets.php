@@ -3,10 +3,10 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
-use App\User;
+use Illuminate\Foundation\Auth\User;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use Auth;
 use Carbon\Carbon;
+use Auth;
 
 class UsersBets extends Model
 {
@@ -30,7 +30,7 @@ class UsersBets extends Model
 
     public function user()
     {
-        return $this->belongsTo(User::class, 'user_id');
+        return $this->belongsTo(User::class);
     }
 
     public function team()
@@ -62,7 +62,7 @@ class UsersBets extends Model
             'user' => [
                 'id' => $this->user->id,
                 'name' => $this->user->name,
-                'avatarUrl' => $this->user->avatarUrl(),
+                'avatarUrl' => $this->user->avatarUrl,
                 'urlSegment' => $this->user->url_segment,
                 'isWinner' => $winner && $winner->id == $this->user->id ? true : false,
                 'isMe' => $this->user->id == Auth::id() ? true : false,
@@ -87,6 +87,7 @@ class UsersBets extends Model
             'fromMe' => $this->user_id == Auth::id() ? true : false,
             'isWinner' => $winner && $winner->id == Auth::id() ? true : false,
             'isLoser' => $winner && $winner->id != Auth::id() ? true : false,
+            'isHome' => $this->team->id == $this->game->homeTeam->id ? true : false,
             'humanDate' => $this->created_at->diffInHours(Carbon::now()) >= 24 ? $this->created_at->format('M d, Y h:ia') : $this->created_at->diffForHumans()
         ];
 
@@ -98,7 +99,7 @@ class UsersBets extends Model
             $betData['opponent'] = [
                 'id' => $this->opponent->id,
                 'name' => $this->opponent->name,
-                'avatarUrl' => $this->opponent->avatarUrl(),
+                'avatarUrl' => $this->opponent->avatarUrl,
                 'urlSegment' => $this->opponent->url_segment,
                 'isMe' => $this->opponent->id == Auth::id() ? true : false,
                 'isWinner' => $winner && $winner->id == $this->opponent->id ? true : false

@@ -19,55 +19,40 @@
                         </div>
                     </template>
 
-                    <b-row align-v="center">
-                        <b-col class="text-center">
-                            <img :src="bet.opponentTeam.thumbUrl" class="avatar-lg"><br>
-                            <h4>{{ bet.opponentTeam.name }} {{ formatSpread(bet.spread, true) }}</h4>
+                    <b-row align-v="center" class="text-center">
+                        <b-col class="text-center" v-if="bet.isAcceptable">
+                            <img :src="bet.team.thumbUrl" class="avatar-lg"><br>
+                            <h4>{{ bet.team.name }} {{ formatSpread(bet.spread, true) }}</h4>
                             <small class="text-secondary">vs {{ bet.team.name }}</small>
                         </b-col>
 
-                        <!--ACCEPTED BET-->
-                        <!--<b-col cols="8">-->
-                        <!--<div class="pb-1">-->
-                        <!--&lt;!&ndash;Bet User&ndash;&gt;-->
-                        <!--<div style="float:left;" class="mr-2 mt-1 align-middle">-->
-                        <!--<img :src="bet.user.avatarUrl" class="avatar-md" v-if="bet.user.avatarUrl">-->
-                        <!--<i class="fas fa-user-circle fa-2x text-muted" v-if="!bet.user.avatarUrl"></i>-->
-                        <!--</div>-->
-                        <!--<div>-->
-                        <!--<p class="h6 m-0 text-truncate">{{ bet.user.name }}</p>-->
-                        <!--{{ bet.team.name }} <small class="text-muted">{{ formatSpread(bet.spread) }}</small>-->
-                        <!--</div>-->
-                        <!--</div>-->
-
-                        <!--&lt;!&ndash;Opponent&ndash;&gt;-->
-                        <!--<div class="pt-1">-->
-                        <!--&lt;!&ndash;Avatar&ndash;&gt;-->
-                        <!--<div style="float:left;" class="mr-2 mt-1 align-middle">-->
-                        <!--<img :src="bet.user.avatarUrl" class="avatar-md" v-if="bet.opponent">-->
-                        <!--<button type="button" class="btn btn-outline-success btn-circle btn-lg" v-if="!bet.opponent">?</button>-->
-                        <!--</div>-->
-                        <!--<div v-if="bet.opponent">-->
-                        <!--<p class="h6 m-0 text-truncate">{{ bet.opponent ? bet.opponent.name : 'Thomas Dinkleman' }}</p>-->
-                        <!--{{ bet.opponentTeam.name }} <small class="text-muted">{{ formatSpread(bet.spread) }}</small>-->
-                        <!--</div>-->
-                        <!--<div v-if="!bet.opponent">-->
-                        <!--<p class="h6 m-0 text-truncate">-</p>-->
-                        <!--<span class="text-muted">{{ bet.opponentTeam.name }} {{ formatSpread(bet.spread) }}</span>-->
-                        <!--</div>-->
-                        <!--</div>-->
-                        <!--</b-col>-->
-                        <!--<b-col v-align="center" class="text-center">-->
-                        <!--</b-col>-->
+                        <b-col v-if="!bet.isAcceptable">
+                            <img :src="bet.game.awayTeam.thumbUrl" class="avatar-lg"><br>
+                            <h4>{{ bet.game.awayTeam.name }} {{ formatSpread(bet.spread, true) }}</h4>
+                        </b-col>
+                        <b-col v-if="!bet.isAcceptable">
+                            <img :src="bet.game.homeTeam.thumbUrl" class="avatar-lg"><br>
+                            <h4>{{ bet.game.homeTeam.name }} {{ formatSpread(bet.spread) }}</h4>
+                        </b-col>
                     </b-row>
 
+                    <template slot="footer">
 
-                    <template slot="footer" v-if="bet.isAcceptable">
-                        <b-row>
+                        <!--ACCEPTED BET-->
+                        <b-row align-v="center" class="text-center" v-if="!bet.isAcceptable">
                             <b-col>
+                                <h6 class="text-secondary m-0"><i class="fas fa-user-circle fa-1x text-muted" v-b-popover.hover="{content:bet.user.name}"></i> {{ bet.opponent.name }}</h6>
+                            </b-col>
+                            <b-col>
+                                <h6 class="text-secondary m-0"><i class="fas fa-user-circle fa-1x text-muted" v-b-popover.hover="{content:bet.user.name}"></i> {{ bet.user.name }}</h6>
+                            </b-col>
+                        </b-row>
+
+                        <b-row v-if="bet.isAcceptable">
+                            <b-col class="text-center">
                                 <!--<b-button href="#" variant="outline-secondary">Share <i class="fas fa-share"></i></b-button>-->
                             </b-col>
-                            <b-col cols="4" class="text-right">
+                            <b-col class="text-center">
                                 <b-button variant="success" v-if="!bet.fromMe" v-on:click="acceptBet(bet)">Accept</b-button>
                                 <b-button variant="danger" v-if="bet.fromMe" v-on:click="deleteBet(bet)">Delete</b-button>
                             </b-col>
