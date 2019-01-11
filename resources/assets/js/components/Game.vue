@@ -47,10 +47,10 @@
                 </div>
             </div>
 
-            <b-row v-if="game.bets.length || highlights">
+            <b-row v-if="game.bets.length || highlights.length || game.isBettable">
                 <b-col>
                     <b-tabs card>
-                        <b-tab title="Bets" class="px-0" v-if="game.bets.length">
+                        <b-tab title="Bets" class="px-0" v-if="game.bets.length || game.isBettable">
                             <!-- Modal Component -->
                             <b-modal id="modal-center" ref="newBetModal" @ok="handleOk" @cancel="handleCancel" :busy="isLoading" centered title="Create a new bet">
 
