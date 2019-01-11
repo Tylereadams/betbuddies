@@ -35,7 +35,7 @@
                                       v-if="game.bets.length || game.highlightsCount">
                                 <b-row>
                                     <b-col>
-                                        <span v-if="game.betAmout"><i class="fas fa-money-bill-alt"></i>&nbsp;${{ game.betAmount }}</span>&nbsp;
+                                        <span v-if="game.betAmount"><i class="fas fa-money-bill-alt"></i>&nbsp;${{ game.betAmount }}</span>&nbsp;
                                         <span v-if="game.highlightsCount"><i class="fas fa-video" v-if="game.highlightsCount"></i>&nbsp;{{ game.highlightsCount }}</span>
                                     </b-col>
                                 </b-row>
