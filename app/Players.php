@@ -21,4 +21,9 @@ class Players extends Model
     {
         return $this->hasManyThrough(TweetLogs::class, PlayersTweets::class, 'player_id', 'id', 'id', 'tweet_logs_id');
     }
+
+    public function getFullName()
+    {
+        return $this->first_name.' '.$this->last_name;
+    }
 }

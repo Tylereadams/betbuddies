@@ -115,7 +115,11 @@ class TweetLogs extends Model
     {
         return [
             'url' => $this->highlightUrl(),
-            'posterUrl' => $this->media_url
+            'posterUrl' => $this->media_url,
+            'players' => $this->players->map(function($player){
+                return ['name' => $player->getFullName()];
+            }),
+            'logoUrl' => $this->team->logoUrl()
         ];
     }
 

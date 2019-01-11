@@ -13,7 +13,7 @@
         " v-if="venueThumbUrl">
         </div>
 
-        <div class="container mt-2" v-if="game.homeTeam && game.awayTeam">
+        <div class="container pt-3" v-if="game.homeTeam && game.awayTeam">
             <div class="row text-center game-teams__header">
                 <div class="col">
                     <img :src="game.awayTeam.thumbUrl" class="avatar-lg"><br>
@@ -47,10 +47,10 @@
                 </div>
             </div>
 
-            <b-row>
+            <b-row v-if="game.bets.length || highlights">
                 <b-col>
                     <b-tabs card>
-                        <b-tab title="Bets" class="px-0" v-if="game.bets.length || game.isBettable">
+                        <b-tab title="Bets" class="px-0" v-if="game.bets.length">
                             <!-- Modal Component -->
                             <b-modal id="modal-center" ref="newBetModal" @ok="handleOk" @cancel="handleCancel" :busy="isLoading" centered title="Create a new bet">
 
@@ -102,18 +102,25 @@
                                 </div>
                             </div>
                         </b-tab>
+
+                        <!--Highlights-->
                         <b-tab title="Highlights" v-if="highlights.length">
-                            <div v-for="highlight in highlights" class="pb-3 text-center">
+                            <div v-for="highlight in highlights" class="pb-3">
+                                <b-card no-body>
+                                    <video :poster="highlight.posterUrl" controls class="embed-responsive embed-responsive-4by3">
+                                        <source :src="highlight.url" type="video/mp4">
+                                        Your browser does not support the video tag.
+                                    </video>
 
-                                <div class="row">
-                                    <div class="col">
-                                        <video width="300" :poster="highlight.posterUrl" controls>
-                                            <source :src="highlight.url" type="video/mp4">
-                                            Your browser does not support the video tag.
-                                        </video>
-                                    </div>
-                                </div>
-
+                                    <b-card-footer>
+                                        <span>
+                                           <img :src="highlight.logoUrl" class="avatar">
+                                        </span>
+                                        <span v-for="(player, index) in highlight.players">
+                                            <span>{{ player.name}}</span><span v-if="index+1 < highlight.players.length">, </span>
+                                        </span>
+                                    </b-card-footer>
+                                </b-card>
                             </div>
                         </b-tab>
                     </b-tabs>

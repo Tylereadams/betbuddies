@@ -1,5 +1,5 @@
 <template>
-    <b-container class="p-2" v-cloak>
+    <b-container class="pt-3" v-cloak>
 
         <h2>Games</h2>
         <hr>

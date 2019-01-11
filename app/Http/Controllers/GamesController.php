@@ -103,7 +103,6 @@ class GamesController extends Controller
 
         $date = Carbon::parse($date)->format('Y-m-d');
 
-
         $data['gamesByLeague'] = $this->getGamesData($date);
 
         return response()->json($data);
