@@ -81,6 +81,11 @@
                 if(inverse){
                     spread = (spread * -1);
                 }
+
+                if(spread == 0){
+                    return 'E';
+                }
+
                 return spread > 0 ? '+' + spread : spread;
             },
             acceptBet: function(bet) {
