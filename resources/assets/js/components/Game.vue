@@ -40,7 +40,7 @@
                         <strong>Final</strong>
                     </div>
                     <div class="text-center" v-else>
-                        <small>{{ game.startDate }} {{ game.startTime }}</small><br>
+                        <small><span v-if="game.startDate">{{ game.startDate }} </span>{{ game.startTime }}</small><br>
                         <small>{{ game.location }}</small><br>
                         <small>{{ game.broadcast }}</small>
                     </div>

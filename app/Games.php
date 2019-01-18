@@ -38,6 +38,10 @@ class Games extends Model
                 $status = Games::IN_PROGRESS;
             } elseif ($pastStartDate && $game->ended_at){ // Game ended
                 $status = Games::ENDED;
+
+                // Update game's bets
+                $game->updateBets();
+
             } else { // Game upcoming
                 $status = Games::UPCOMING;
             }
@@ -197,7 +201,7 @@ class Games extends Model
             'highlightsCount' => $this->tweets->count(),
             'isBettable' => $this->isBettable(),
             'broadcast' => $this->broadcast,
-            'startDate' => $startDate->format('n/j'),
+            'startDate' => !$startDate->isToday() ? $startDate->format('n/j') : '',
             'startTime' => $startDate->format('g:ia'),
             'endedAt' => $this->ended_at
         ];
@@ -230,5 +234,24 @@ class Games extends Model
             return false;
         }
     }
+
+    public function updateBets()
+    {
+        $bets = UsersBets::where('game_id', $this->id)->get();
+
+        foreach($bets as $bet) {
+            $winningUserId = $this->isWinner($bet->team) ? $bet->user_id : $bet->opponent_id;
+            $losingUserId = !$this->isWinner($bet->team) ? $bet->user_id : $bet->opponent_id;
+
+            if($winningUserId && $losingUserId) {
+                // Update bet with the winner and loser
+                $bet->winning_user_id = $winningUserId;
+                $bet->losing_user_id = $losingUserId;
+
+                $bet->save();
+            }
+        }
+    }
+
 
 }

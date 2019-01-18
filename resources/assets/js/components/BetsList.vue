@@ -23,17 +23,17 @@
                     <b-row align-v="center" class="text-center">
                         <b-col class="text-center" v-if="bet.isAcceptable">
                             <img :src="bet.team.thumbUrl" class="avatar-lg"><br>
-                            <h4>{{ bet.team.name }} {{ formatSpread(bet.spread, true) }}</h4>
+                            <h4>{{ bet.team.name }} <span class="font-weight-light">{{ formatSpread(bet.spread, true) }}</span></h4>
                             <small class="text-secondary">vs {{ bet.opponentTeam.name }}</small>
                         </b-col>
 
                         <b-col v-if="!bet.isAcceptable">
                             <img :src="bet.game.awayTeam.thumbUrl" class="avatar-lg"><br>
-                            <h4>{{ bet.game.awayTeam.name }} {{ formatSpread(bet.spread, true) }}</h4>
+                            <h4>{{ bet.game.awayTeam.name }} <span class="font-weight-light">{{ formatSpread(bet.spread, true) }}</span></h4>
                         </b-col>
                         <b-col v-if="!bet.isAcceptable">
                             <img :src="bet.game.homeTeam.thumbUrl" class="avatar-lg"><br>
-                            <h4>{{ bet.game.homeTeam.name }} {{ formatSpread(bet.spread) }}</h4>
+                            <h4>{{ bet.game.homeTeam.name }} <span class="font-weight-light">{{ formatSpread(bet.spread) }}</span></h4>
                         </b-col>
                     </b-row>
 

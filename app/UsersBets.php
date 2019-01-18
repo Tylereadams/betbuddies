@@ -48,6 +48,16 @@ class UsersBets extends Model
         return $this->belongsTo(Teams::class, 'opponent_team_id');
     }
 
+    public function winningUser()
+    {
+        return $this->belongsTo(User::class, 'winning_user_id');
+    }
+
+    public function losingUser()
+    {
+        return $this->belongsTo(User::class, 'losing_user_id');
+    }
+
     public function opponentSpread()
     {
         return ($this->opponentTeam->id == $this->game->homeTeam->id ? $this->game->home_spread : $this->game->away_spread);
