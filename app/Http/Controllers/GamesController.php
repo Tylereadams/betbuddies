@@ -8,6 +8,7 @@ use App\Services\CardCreator;
 use App\TweetLogs;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Cache;
+use Auth;
 //use Intervention\Image\ImageManager;
 //use Thujohn\Twitter\Facades\Twitter;
 //use Illuminate\Support\Facades\Cache;
@@ -85,6 +86,8 @@ class GamesController extends Controller
         }]);
 
         $data['game'] = $game->getCardData();
+
+        $data['authCheck'] = Auth::check();
 
         $data['highlights'] = $game->tweets->map(function($tweet){
            return $tweet->getCardData();

@@ -47,7 +47,7 @@
                 </div>
             </div>
 
-            <b-row v-if="game.bets.length || highlights.length || game.isBettable">
+            <b-row v-if="(game.bets.length || highlights.length || game.isBettable)">
                 <b-col>
                     <b-tabs card>
                         <b-tab title="Bets" class="px-0" v-if="game.bets.length || game.isBettable">
@@ -94,11 +94,17 @@
                             </b-modal>
 
                             <!-- Bets List-->
-                            <bets-list :bets="game.bets" @refreshGame="refreshGame"></bets-list>
+                            <bets-list :bets="game.bets" @refreshGame="refreshGame" v-if="authCheck"></bets-list>
 
-                            <div v-if="!game.bets.length && game.isBettable">
+                            <div v-if="!game.bets.length && game.isBettable && authCheck">
                                 <div class="jumbotron text-center">
                                     <button type="button" class="btn btn-primary"  v-b-modal.modal-center>Add a Bet</button>
+                                </div>
+                            </div>
+
+                            <div v-if="!authCheck">
+                                <div class="jumbotron text-center">
+                                    <a href="/login">Login to view and place bets</a>
                                 </div>
                             </div>
                         </b-tab>
@@ -127,7 +133,7 @@
                 </b-col>
             </b-row>
 
-            <nav class="navbar fixed-bottom" v-if="game.isBettable">
+            <nav class="navbar fixed-bottom" v-if="game.isBettable && authCheck">
                 <button type="button" class="btn btn-primary btn-circle btn-lg"  v-b-modal.modal-center><i class="fas fa-plus"></i></button>
             </nav>
 
@@ -143,6 +149,7 @@
         ],
         data: function () {
             return {
+                authCheck: false,
                 isLoading: false,
                 game: [],
                 highlights: [],
@@ -164,6 +171,7 @@
 
                 axios.get('/api/game/' + this.urlSegment).then(response => {
                     self.game = response.data.game;
+                    self.authCheck = response.data.authCheck;
                     self.highlights = response.data.highlights;
                     self.venueThumbUrl = response.data.venueThumbUrl;
                     self.isLoading = false;
