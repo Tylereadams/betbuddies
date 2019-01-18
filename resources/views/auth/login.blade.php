@@ -6,7 +6,7 @@
         <div class="col-md-8 col-md-offset-2">
             <div class="panel panel-default">
 
-                <h2>Login</h2>
+                <h2 class="pt-2">Login</h2>
                 <hr>
 
                 <div class="panel-body">
