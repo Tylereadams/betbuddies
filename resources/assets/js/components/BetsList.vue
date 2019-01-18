@@ -12,7 +12,7 @@
                             <h4 style="float:left;" class="m-0">
                                 <i class="fas fa-user-circle fa-1x text-muted" v-if="!bet.user.avatarUrl" v-b-popover.hover="{content:bet.user.name}"></i>
                             </h4>&nbsp;
-                            <span class="text-secondary">{{ bet.humanDate }}</span>
+                            <span class="text-secondary align-middle">{{ bet.humanDate }}</span>
                         </div>
                         <div class="text-right p-2">
                             <h5 class="m-0">${{ bet.amount }}</h5>
