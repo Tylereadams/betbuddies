@@ -22,9 +22,9 @@
                     <!--TODO: Fix THE SPREAD FORMATTING-->
                     <b-row align-v="center" class="text-center">
                         <b-col class="text-center" v-if="bet.isAcceptable">
-                            <img :src="bet.team.thumbUrl" class="avatar-lg"><br>
-                            <h4>{{ bet.team.name }} <span class="font-weight-light">{{ formatSpread(bet.spread, true) }}</span></h4>
-                            <small class="text-secondary">vs {{ bet.opponentTeam.name }}</small>
+                            <img :src="bet.opponentTeam.thumbUrl" class="avatar-lg"><br>
+                            <h4>{{ bet.opponentTeam.name }} <span class="font-weight-light">{{ formatSpread(bet.spread, true) }}</span></h4>
+                            <small class="text-secondary">vs {{ bet.team.name }} ({{ bet.user.name }})</small>
                         </b-col>
 
                         <b-col v-if="!bet.isAcceptable">
@@ -40,7 +40,7 @@
                     <template slot="footer">
 
                         <!--ACCEPTED BET-->
-                        <b-row align-v="center" class="text-center" v-if="!bet.isAcceptable">
+                        <b-row align-v="center" class="text-center" v-if="!bet.isAcceptable && bet.opponent">
                             <b-col>
                                 <h6 class="text-secondary m-0"><i class="fas fa-user-circle fa-1x text-muted" v-b-popover.hover="{content:bet.user.name}"></i> {{ bet.opponent.name }}</h6>
                             </b-col>
