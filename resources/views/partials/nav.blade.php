@@ -4,15 +4,18 @@
 
     <b-navbar-brand href="#"><i class="fas fa-users"></i> BetBuddies</b-navbar-brand>
 
+    <b-navbar-nav class="ml-auto">
+        @auth
+            <b-nav-item href="{{ url('/user') }}">{{ Auth::user()->name }} <i class="far fa-user"></i></b-nav-item>
+        @endauth
+    </b-navbar-nav>
+
     <b-collapse is-nav id="nav_collapse">
 
         <b-navbar-nav>
             <b-nav-item left href="{{ url('/games') }}">
                     <i class="fas fa-calendar-alt"></i> Games
             </b-nav-item>
-            @auth
-                <b-nav-item href="{{ url('/user') }}"><i class="far fa-user"></i> Profile</b-nav-item>
-             @endauth
         </b-navbar-nav>
 
         <b-navbar-nav class="ml-auto">
@@ -27,4 +30,5 @@
         </b-navbar-nav>
 
     </b-collapse>
+
 </b-navbar>
