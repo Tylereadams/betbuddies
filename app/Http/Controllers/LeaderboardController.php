@@ -2,11 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\UsersBets;
-use App\User;
 use App\Stats;
-use Illuminate\Support\Facades\Request;
-use Carbon\Carbon;
 
 class LeaderboardController extends Controller
 {
@@ -17,6 +13,13 @@ class LeaderboardController extends Controller
             ->orderBy('winnings', 'DESC')
             ->get();
         $stats->load('user');
+
+        $games = Games::take(1000)->orderBy('created_at', 'DESC')->get();
+
+        foreach($games as $game) {
+            // Update game's bets
+            $game->updateBets();
+        }
 
         $statsData = [];
         foreach($stats as $stat) {

@@ -240,13 +240,18 @@ class Games extends Model
         $bets = UsersBets::where('game_id', $this->id)->get();
 
         foreach($bets as $bet) {
-            $winningUserId = $this->isWinner($bet->team) ? $bet->user_id : $bet->opponent_id;
-            $losingUserId = !$this->isWinner($bet->team) ? $bet->user_id : $bet->opponent_id;
 
-            if($winningUserId && $losingUserId) {
+            if(!$bet->opponent_id){
+                continue;
+            }
+
+            $winningUser = $bet->getWinner();
+            $losingUser = $winningUser->id != $bet->user_id ? $bet->user : $bet->opponent;
+
+            if($winningUser && $losingUser) {
                 // Update bet with the winner and loser
-                $bet->winning_user_id = $winningUserId;
-                $bet->losing_user_id = $losingUserId;
+                $bet->winning_user_id = $winningUser->id;
+                $bet->losing_user_id = $losingUser->id;
 
                 $bet->save();
             }

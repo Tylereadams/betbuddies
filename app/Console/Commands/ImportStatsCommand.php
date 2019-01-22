@@ -67,6 +67,7 @@ class ImportStatsCommand extends Command
                 $winnerStats = Stats::firstOrNew([
                     'user_id' => $bet->winner->id
                 ]);
+
                 $winnerStats->wins++;
                 $winnerStats->winnings = $winnerStats->winnings + $bet->amount;
                 $winnerStats->win_percentage = $winnerStats->getWinPercentage();
