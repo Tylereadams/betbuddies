@@ -36,13 +36,14 @@ Route::get('/games/{date?}', 'GamesController@gamesByDate')->name('games');
 // Leaderboard routes
 Route::get('/leaderboard', 'LeaderboardController@index')->name('leaderboard');
 
+Route::get('user/{urlSegment?}', 'UserController@profile');
+
 /**
  * Auth Routes
  */
 Route::group(['middleware' => ['auth']], function () {
 
     Route::get('logout', 'Auth\LoginController@logout')->name('logout');
-    Route::get('user/{urlSegment?}', 'UserController@profile');
 
     // Bets
 

@@ -23,7 +23,7 @@
                             <tbody>
                             @foreach($stats as $stat)
                                 <tr>
-                                    <td>{{ $stat['name'] }}</td>
+                                    <td><a href="{{ $stat['profileUrl'] }}">{{ $stat['name'] }}</a></td>
                                     <td class="text-center">{{ $stat['wins'] }}</td>
                                     <td class="text-center">{{ $stat['losses'] }}</td>
                                     <td class="text-center">{{ $stat['win_percentage'] }}</td>

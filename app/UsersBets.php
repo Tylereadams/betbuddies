@@ -65,7 +65,7 @@ class UsersBets extends Model
 
     public function getCardData()
     {
-        $winner = $this->getwinner();
+        $winner = $this->getWinner();
 
         $betData = [
             'id' => $this->id,
@@ -145,7 +145,7 @@ class UsersBets extends Model
      * Returns a winning user objects only if a valid bet was completed
      * @return bool|mixed
      */
-    public function getwinner()
+    public function getWinner()
     {
         if(!$this->game->ended_at || !$this->opponent_id){
             return false;

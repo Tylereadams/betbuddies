@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\UsersBets;
 use App\User;
+use App\Stats;
 
 class UserController extends Controller
 {
@@ -26,30 +27,16 @@ class UserController extends Controller
         $bets->load(['game.homeTeam', 'game.awayTeam', 'user', 'opponent', 'opponentTeam']);
 
         $data['bets'] = [];
-
-        $wins = 0;
-        $losses = 0;
-        $totalWinnings = 0;
         foreach($bets as $bet){
             $data['bets'][] = $bet->getCardData();
-
-            $winner = $bet->getwinner();
-            if(!$winner){
-                continue;
-            }
-
-            if($winner->id  == $user->id){
-                $wins++;
-                $totalWinnings = $totalWinnings + $bet->amount;
-            } else {
-                $losses++;
-                $totalWinnings = $totalWinnings - $bet->amount;
-            }
         }
 
-        $data['winnings'] = $totalWinnings;
-        $data['betsWon'] = $wins;
-        $data['betsLost'] = $losses;
+        $userStats = Stats::where('user_id', $user->id)->first();
+
+        $data['winnings'] = $userStats ? $userStats->winnings : 0;
+        $data['wins'] = $userStats ? $userStats->wins : 0;
+        $data['losses'] = $userStats ? $userStats->losses : 0;
+        $data['winPercentage'] = $userStats ? $userStats->win_percentage : 0.00;
 
         return view('profile', $data);
     }

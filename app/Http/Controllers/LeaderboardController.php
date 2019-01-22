@@ -26,6 +26,7 @@ class LeaderboardController extends Controller
                 'losses' => $stat->losses,
                 'win_percentage' => $stat->win_percentage,
                 'winnings' => $stat->winnings,
+                'profileUrl' => $stat->user->profileUrl()
             ];
         }
 

@@ -98,6 +98,11 @@ class User extends Authenticatable
         return $this->url_segment;
     }
 
+    public function profileUrl()
+    {
+        return '/user/'.$this->url_segment;
+    }
+
     public function getCardData()
     {
         $data = [
@@ -108,32 +113,5 @@ class User extends Authenticatable
 
         return $data;
     }
-
-    public function getBetWinnings()
-    {
-        $totalWinnings = 0;
-        foreach($this->allBets() as $bet){
-            if(!$bet->game->ended_at){
-                continue;
-            }
-
-            $winner = $bet->getwinner();
-
-            // Continue if hasn't been accepted
-            if(!$winner){
-                continue;
-            }
-
-            // User won, add, else subtract
-            if($winner->id == Auth::id()){
-                $totalWinnings = $totalWinnings + $bet->amount;
-            } else {
-                $totalWinnings = $totalWinnings - $bet->amount;
-            }
-        }
-
-        return $totalWinnings;
-    }
-
 
 }
