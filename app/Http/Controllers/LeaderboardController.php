@@ -15,13 +15,6 @@ class LeaderboardController extends Controller
             ->get();
         $stats->load('user');
 
-        $games = Games::take(1000)->orderBy('created_at', 'DESC')->get();
-
-        foreach($games as $game) {
-            // Update game's bets
-            $game->updateBets();
-        }
-
         $statsData = [];
         foreach($stats as $stat) {
             $statsData[] = [
