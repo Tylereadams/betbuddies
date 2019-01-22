@@ -34,7 +34,7 @@ Route::get('/game/{urlSegment}', 'GamesController@game')->name('game');
 Route::get('/games/{date?}', 'GamesController@gamesByDate')->name('games');
 
 // Leaderboard routes
-Route::get('/leaderboard', 'LeaderBoardController@index')->name('leaderboard');
+Route::get('/leaderboard', 'LeaderboardController@index')->name('leaderboard');
 
 /**
  * Auth Routes
