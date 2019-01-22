@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Stats;
-use Games;
+use App\Games;
 
 class LeaderboardController extends Controller
 {
