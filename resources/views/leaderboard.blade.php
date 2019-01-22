@@ -27,7 +27,7 @@
                                     <td class="text-center">{{ $stat['wins'] }}</td>
                                     <td class="text-center">{{ $stat['losses'] }}</td>
                                     <td class="text-center">{{ $stat['win_percentage'] }}</td>
-                                    <td class="text-center">${{ $stat['winnings'] }}</td>
+                                    <td class="text-center @if($stat['winnings'] > 0) text-success @elseif($stat['winnings'] < 0) text-danger @else  @endif"><strong>${{ $stat['winnings'] }}</strong></td>
                                 </tr>
                             @endforeach
                             </tbody>
