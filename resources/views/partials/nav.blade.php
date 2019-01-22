@@ -16,6 +16,9 @@
             <b-nav-item left href="{{ url('/games') }}">
                     <i class="fas fa-calendar-alt"></i> Games
             </b-nav-item>
+            <b-nav-item left href="{{ url('/leaderboard') }}">
+                <i class="fas fa-trophy"></i> Leaderboard
+            </b-nav-item>
         </b-navbar-nav>
 
         <b-navbar-nav class="ml-auto">

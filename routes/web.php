@@ -14,8 +14,6 @@
 // Normal Routes
 Route::get('/', 'PagesController@index');
 Route::get('/home', 'HomeController@index')->name('home');
-Route::get('/fullstory', 'HomeController@fullstory');
-Route::get('issues', 'IssuesController@issues');
 
 Route::get('machine-learning', 'MachineLearningController@index');
 Route::get('tweet-log', 'AdminController@tweetLog');
@@ -34,6 +32,9 @@ Route::get('playersearch', 'PlayersController@jsonSearch');
 // Game routes
 Route::get('/game/{urlSegment}', 'GamesController@game')->name('game');
 Route::get('/games/{date?}', 'GamesController@gamesByDate')->name('games');
+
+// Leaderboard routes
+Route::get('/leaderboard', 'LeaderBoardController@index')->name('leaderboard');
 
 /**
  * Auth Routes

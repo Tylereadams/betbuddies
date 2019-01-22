@@ -43,10 +43,14 @@ class User extends Authenticatable
         return $this->hasMany(UsersBets::class, 'opponent_id');
     }
 
+    public function stats()
+    {
+        return $this->hasOne(Stats::class);
+    }
+
     public function allBets() {
         return $this->bets->merge($this->acceptedBets());
     }
-
 
     /**
      * Modifiers
@@ -113,15 +117,15 @@ class User extends Authenticatable
                 continue;
             }
 
-            $winningUser = $bet->getWinningUser();
+            $winner = $bet->getwinner();
 
             // Continue if hasn't been accepted
-            if(!$winningUser){
+            if(!$winner){
                 continue;
             }
 
             // User won, add, else subtract
-            if($winningUser->id == Auth::id()){
+            if($winner->id == Auth::id()){
                 $totalWinnings = $totalWinnings + $bet->amount;
             } else {
                 $totalWinnings = $totalWinnings - $bet->amount;

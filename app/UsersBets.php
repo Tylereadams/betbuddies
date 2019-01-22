@@ -48,14 +48,14 @@ class UsersBets extends Model
         return $this->belongsTo(Teams::class, 'opponent_team_id');
     }
 
-    public function winningUser()
+    public function winner()
     {
         return $this->belongsTo(User::class, 'winning_user_id');
     }
 
-    public function losingUser()
+    public function loser()
     {
-        return $this->belongsTo(User::class, 'losing_user_id');
+        return $this->belongsTo(User::class,  'losing_user_id');
     }
 
     public function opponentSpread()
@@ -65,7 +65,7 @@ class UsersBets extends Model
 
     public function getCardData()
     {
-        $winner = $this->getWinningUser();
+        $winner = $this->getwinner();
 
         $betData = [
             'id' => $this->id,
@@ -145,7 +145,7 @@ class UsersBets extends Model
      * Returns a winning user objects only if a valid bet was completed
      * @return bool|mixed
      */
-    public function getWinningUser()
+    public function getwinner()
     {
         if(!$this->game->ended_at || !$this->opponent_id){
             return false;

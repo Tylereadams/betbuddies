@@ -33,7 +33,7 @@ class UserController extends Controller
         foreach($bets as $bet){
             $data['bets'][] = $bet->getCardData();
 
-            $winner = $bet->getWinningUser();
+            $winner = $bet->getwinner();
             if(!$winner){
                 continue;
             }
