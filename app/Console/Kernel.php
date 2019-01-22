@@ -53,6 +53,10 @@ class Kernel extends ConsoleKernel
         $schedule->command('betbuddies:match-tweets-to-players')
             ->everyFiveMinutes();
 
+        // Update new bets to the Leaderboard
+        $schedule->command('betbuddies:import-stats 5')
+            ->everyFiveMinutes();
+
         // Tweet status messages for today
 //        $schedule->command('betbuddies:tweet-start-end')
 //            ->everyMinute();
