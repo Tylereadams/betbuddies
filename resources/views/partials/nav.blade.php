@@ -2,7 +2,7 @@
 
     <b-navbar-toggle target="nav_collapse"></b-navbar-toggle>
 
-    <b-navbar-brand href="#"><i class="fas fa-users"></i> BetBuddies</b-navbar-brand>
+    <b-navbar-brand href="/"><i class="fas fa-users"></i>&nbsp;BetBuddies</b-navbar-brand>
 
     <b-navbar-nav class="ml-auto">
         @auth

@@ -3,29 +3,29 @@
 @section('content')
 <div class="container">
     <div class="row">
-        <div class="col-md-8 col-md-offset-2">
+        <div class="col-md-12">
             <div class="panel panel-default">
 
                 <h2 class="pt-2"><i class="fas fa-user-circle fa-1x text-muted"></i> {{ $user['name'] }}</h2>
                 <hr>
 
             <div class="row jumbotron jumbotron-fluid bg-light">
-                <div class="col-4 col-sm-2 text-center">
-                    <h5>Winnings</h5>
-                    <p>${{ $winnings }}</p>
+                <div class="col-4 col-sm-4 text-center">
+                    <h4>Record</h4>
+                    <h5>{{ $wins }} - {{ $losses }}</h5>
                 </div>
-                <div class="col-4 col-sm-2 text-center">
-                    <h5>Record</h5>
-                    <p>{{ $wins }} - {{ $losses }}</p>
+                <div class="col-4 col-sm-4 text-center">
+                    <h4>Win %</h4>
+                    <h5>{{ number_format($winPercentage, 3) }}</h5>
                 </div>
-                <div class="col-4 col-sm-2 text-center">
-                    <h5>Win %</h5>
-                    <p>{{ $winPercentage}}</p>
+                <div class="col-4 col-sm-4 text-center">
+                    <h4>Winnings</h4>
+                    <h5>${{ $winnings }}</h5>
                 </div>
             </div>
             <div class="row">
                 <div class="col-md-12">
-                    <h4 class="mt-2"><span class="fa fa-clock-o ion-clock float-right"></span> Recent Activity</h4>
+                    <h4 class="mt-2"><span class="fa fa-clock-o ion-clock float-right"></span> Completed Bets</h4>
 
                     @if($bets)
                         <table class="table table-condensed table-borderless table-hover">

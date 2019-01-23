@@ -2,11 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\UsersBets;
 use App\User;
-use App\Stats;
 
 class UserController extends Controller
 {
@@ -19,10 +17,12 @@ class UserController extends Controller
             'user' => $user->getCardData(),
         ];
 
+        // TODO: Filter out bets that aren't acceptable and haven't been accepted
         $bets = UsersBets::where(function($q) use($user){
             $q->where('opponent_id', $user->id);
             $q->orWhere('user_id', $user->id);
-        })->whereNotNull('opponent_id')
+        })->whereNotNull('winning_user_id')
+            ->whereNotNull('losing_user_id')
             ->orderBy('created_at', 'DESC')
             ->get();
         $bets->load(['game.homeTeam', 'game.awayTeam', 'user', 'opponent', 'opponentTeam']);
@@ -32,12 +32,14 @@ class UserController extends Controller
             $data['bets'][] = $bet->getCardData();
         }
 
-        $userStats = Stats::where('user_id', $user->id)->first();
+        $betsWon = $bets->where('winning_user_id', $user->id);
+        $betsLost = $bets->where('losing_user_id', $user->id);
+        $totalBets = $betsWon->count() + $betsLost->count();
 
-        $data['winnings'] = $userStats ? $userStats->winnings : 0;
-        $data['wins'] = $userStats ? $userStats->wins : 0;
-        $data['losses'] = $userStats ? $userStats->losses : 0;
-        $data['winPercentage'] = $userStats ? $userStats->win_percentage : 0.00;
+        $data['winnings'] = $betsWon->sum('amount') - $betsLost->sum('amount');
+        $data['wins'] = $betsWon->count();
+        $data['losses'] = $betsLost->count();
+        $data['winPercentage'] = $betsWon->count() / $totalBets;
 
         return view('profile', $data);
     }

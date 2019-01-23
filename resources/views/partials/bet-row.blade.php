@@ -1,11 +1,20 @@
 <tr>
-    <td class="border-left {{ $bet['isWinner'] ? 'border-success' : '' }} {{ $bet['isLoser'] ? 'border-danger' : '' }} link-row" data-href="{{ url('game/'.$bet['game']['urlSegment'] ) }}">${{ $bet['amount'] }}</td>
-    <td class="text-truncate align-middle link-row" data-href="{{ url('game/'.$bet['game']['urlSegment'] ) }}">
+    <td class="border-left {{ $bet['isWinner'] ? 'border-success' : '' }} {{ $bet['isLoser'] ? 'border-danger' : '' }} text-truncate link-row" data-href="{{ url('game/'.$bet['game']['urlSegment'] ) }}">
         <img src="{{ $bet['game']['awayTeam']['thumbUrl'] }}" class="avatar">&nbsp;{{ $bet['game']['awayTeam']['name'] }} <small>@if(!$bet['isHome']){{ formatSpread($bet['spread']) }}@endif</small><br>
         <img src="{{ $bet['game']['homeTeam']['thumbUrl'] }}" class="avatar">&nbsp;{{ $bet['game']['homeTeam']['name'] }} <small>@if($bet['isHome']){{ formatSpread($bet['spread']) }}@endif</small>
     </td>
-    <td class="text-truncate align-middle  link-row" data-href="{{ url('game/'.$bet['game']['urlSegment'] ) }}">
-        {{-- Bet created with home Team --}}
+
+    {{-- Scores --}}
+    <td>
+        <div class="row">
+            {{ $bet['game']['awayTeam']['score'] }}<br>
+            {{ $bet['game']['homeTeam']['score'] }}
+        </div>
+    </td>
+
+    {{-- User Names --}}
+    <td class="text-truncate link-row align-middle text-center" data-href="{{ url('game/'.$bet['game']['urlSegment'] ) }}">
+         {{--Bet created with home Team--}}
         @if($bet['isHome'])
             <small class="font-italic font-weight-light mt-2">
                 @if(isset($bet['opponent']))
@@ -24,7 +33,7 @@
                     &nbsp;<i class="fas fa-times text-danger"></i>
                 @endif
             </small>
-        {{-- Bet created with away Team --}}
+         {{--Bet created with away Team--}}
         @else
             <small class="font-italic font-weight-light mt-2"><i class="fas fa-user-circle"></i> <a href="{{ url('user/'.$bet['user']['urlSegment']) }}">{{ $bet['user']['name'] }}</a>
                 @if($bet['user']['isWinner'] && $bet['user']['isMe'])
@@ -45,42 +54,19 @@
             </small>
             &nbsp
         @endif
+
+        {{--vs<br>--}}
+        {{--<i class="fas fa-user-circle"></i> <a href="{{ url('user/'.$bet['opponent']['urlSegment']) }}">{{ $bet['opponent']['name'] }}</a>--}}
+
     </td>
+
+    {{-- Amount --}}
     <td class="align-middle">
-        <div class="row">
-            {{--@if($bet['isAcceptable'] && $bet['fromMe'])--}}
-                {{--<button type="button" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#deleteBetModal{{ $bet['id'] }}">--}}
-                    {{--Delete--}}
-                {{--</button>--}}
-            {{--@elseif($bet['isAcceptable'] && !$bet['fromMe'])--}}
-                 {{--Modal --}}
-                {{--<button type="button" class="btn btn-success btn-sm" data-toggle="modal" data-target="#acceptBetModal-{{ $bet['id'] }}">--}}
-                    {{--Accept--}}
-                {{--</button>--}}
-            {{--@endif--}}
-                {{ $bet['game']['awayTeam']['score'] }}<br>
-                {{ $bet['game']['homeTeam']['score'] }}
-        </div>
-    </td>
-    <td class="align-middle">
-        <h4>
-            <a href="/game/{{ $bet['game']['urlSegment'] }}"><i class="fas fa-arrow-circle-right text-secondary"></i></a>
-        </h4>
+        <strong class="{{ $bet['isWinner'] ? 'text-success' : 'text-danger' }}">${{ $bet['amount'] }}</strong>
     </td>
 </tr>
 
 @section('modal')
 
-    {{--@foreach($bets as $bet)--}}
-        {{--@if($bet['isAcceptable'] && $bet['fromMe'])--}}
-            {{-- Modal --}}
-            {{--@include('partials.deleteBetModal', ['bet'=> $bet])--}}
-        {{--@endif--}}
-
-        {{--@if($bet['isAcceptable'] && !$bet['fromMe'])--}}
-            {{-- Modal --}}
-            {{--@include('partials.acceptBetModal', ['bet' => $bet])--}}
-        {{--@endif--}}
-    {{--@endforeach--}}
 
 @endsection

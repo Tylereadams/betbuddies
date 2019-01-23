@@ -246,6 +246,9 @@ class Games extends Model
             }
 
             $winningUser = $bet->getWinner();
+            if(!$winningUser){
+                continue;
+            }
             $losingUser = $winningUser->id != $bet->user_id ? $bet->user : $bet->opponent;
 
             if($winningUser && $losingUser) {
