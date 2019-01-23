@@ -114,7 +114,7 @@ class GamesController extends Controller
     private function getGamesData($date = 'now')
     {
         $startDate = Carbon::parse($date)->subDay(1)->format('Y-m-d');
-        $endDate = Carbon::parse($date)->addDay(1)->format('Y-m-d');
+        $endDate = Carbon::parse($date)->addDay(5)->format('Y-m-d');
 
         $games = Cache::remember('games-data-'.$startDate.'-'.$endDate, 2, function () use ($startDate, $endDate) {
             return Games::where('start_date', '>', $startDate)

@@ -201,7 +201,7 @@ class Games extends Model
             'highlightsCount' => $this->tweets->count(),
             'isBettable' => $this->isBettable(),
             'broadcast' => $this->broadcast,
-            'startDate' => !$startDate->isToday() ? $startDate->format('n/j') : '',
+            'startDate' => $startDate->format('n/j'),
             'startTime' => $startDate->format('g:ia'),
             'endedAt' => $this->ended_at
         ];
