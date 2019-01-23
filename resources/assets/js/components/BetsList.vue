@@ -2,7 +2,7 @@
     <div>
 
         <div v-for="bet in bets" class="pb-3">
-            <div>
+            <div v-if="bet.isAcceptable || bet.opponent !== undefined">
                 <b-card class="shadow-sm rounded"
                         header-tag="header"
                         footer-tag="footer"

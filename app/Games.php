@@ -194,7 +194,7 @@ class Games extends Model
                     return in_array($this->away_team_id, [$bet->opponent_team_id, $bet->team_id]);
                 })->count()
             ],
-            'bets' => $this->bets->map(function($bet){
+            'bets' => $this->bets->map(function($bet) {
                 return $bet->getCardData();
             }),
             'betAmount' => $this->bets->pluck('amount')->sum(),

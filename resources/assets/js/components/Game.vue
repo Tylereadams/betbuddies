@@ -47,7 +47,7 @@
                 </div>
             </div>
 
-            <b-row v-if="(game.bets.length || highlights.length || game.isBettable)">
+            <b-row v-if="(game.bets.length || highlights.length || game.isBettable || !authCheck)">
                 <b-col>
                     <b-tabs card>
                         <b-tab title="Bets" class="px-0" v-if="game.bets.length || game.isBettable">

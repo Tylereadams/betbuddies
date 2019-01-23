@@ -86,9 +86,7 @@ class GamesController extends Controller
         }]);
 
         $data['game'] = $game->getCardData();
-
         $data['authCheck'] = Auth::check();
-
         $data['highlights'] = $game->tweets->map(function($tweet){
            return $tweet->getCardData();
         });

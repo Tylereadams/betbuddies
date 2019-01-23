@@ -85,17 +85,7 @@
             goToGame: function(urlSegment){
                 window.location.href = '/game/' + urlSegment;
             }
-        // },
-        // mounted: function () {
-        //     setInterval(function () {
-        //         this.refreshGames(self.date);
-        //     }.bind(this), 5 * 60000); // every 5 minutes update the scores
         },
-        computed: {
-            leagueTitles: function() {
-                var self = this;
-                console.log(this.gamesList)
-            }
-        }
+
     }
 </script>
