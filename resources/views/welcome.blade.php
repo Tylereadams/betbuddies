@@ -7,7 +7,7 @@
 @section('content')
     <div class="position-relative overflow-hidden p-3 p-md-5 m-md-3 text-center">
         <div class="col-md-12 mx-auto">
-            <h1 class="display-4">
+            <h1 class="display-4 pt-4">
                 <a href="{{ url('/games') }}">
                     <i class="fas fa-users"></i><br>
                     BetBuddies

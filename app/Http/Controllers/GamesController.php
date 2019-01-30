@@ -4,8 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Games;
 use App\Leagues;
-use App\Services\CardCreator;
-use App\TweetLogs;
+use App\Teams;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Cache;
 use Auth;
@@ -90,7 +89,14 @@ class GamesController extends Controller
         $data['highlights'] = $game->tweets->map(function($tweet){
            return $tweet->getCardData();
         });
-        $data['venueThumbUrl'] = $game->homeTeam->venue ? $game->homeTeam->venue->photoUrl() : '';
+
+        // TODO: Temporary Stadium pic
+        if($game->id == 8878){
+            $data['venueThumbUrl'] = '/img/venues/mercedes-benz-stadium-62-sb.png';
+        } else {
+            $data['venueThumbUrl'] = $game->homeTeam->venue ? $game->homeTeam->venue->photoUrl() : '';
+        }
+
 
         return response()->json($data);
     }
