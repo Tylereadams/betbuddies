@@ -25,7 +25,7 @@
             </div>
             <div class="row">
                 <div class="col-md-12">
-                    <h4 class="mt-2"><span class="fa fa-clock-o ion-clock float-right"></span> Completed Bets</h4>
+                    <h4 class="mt-2"><span class="fa fa-clock-o ion-clock float-right"></span> Bet History</h4>
 
                     @if($bets)
                         <table class="table table-condensed table-borderless table-hover">

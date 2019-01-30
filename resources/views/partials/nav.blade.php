@@ -4,10 +4,16 @@
 
     <b-navbar-brand href="/"><i class="fas fa-users"></i>&nbsp;BetBuddies</b-navbar-brand>
 
+
+
     <b-navbar-nav class="ml-auto">
         @auth
             <b-nav-item href="{{ url('/user') }}">{{ Auth::user()->name }} <i class="far fa-user"></i></b-nav-item>
         @endauth
+
+        @guest
+            <b-nav-item href="{{ route('login') }}"><i class="fas fa-sign-in-alt"></i> Login</b-nav-item>
+        @endguest
     </b-navbar-nav>
 
     <b-collapse is-nav id="nav_collapse">

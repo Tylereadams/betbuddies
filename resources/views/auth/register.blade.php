@@ -5,7 +5,8 @@
     <div class="row">
         <div class="col-md-8 col-md-offset-2">
             <div class="panel panel-default">
-                <h2>Register</h2>
+
+                <h2 class="pt-2">Register</h2>
                 <hr>
 
                 <div class="panel-body">
@@ -67,6 +68,14 @@
                                 <button type="submit" class="btn btn-primary">
                                     Register
                                 </button>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="col-md-8 col-md-offset-4">
+                                <p class="pt-2">
+                                    Already have a login? <a href="{{ route('login') }}"><i class="fas fa-sign-in-alt"></i> Login</a>
+                                </p>
                             </div>
                         </div>
                     </form>
