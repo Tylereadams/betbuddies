@@ -92,11 +92,10 @@ class GamesController extends Controller
 
         // TODO: Temporary Stadium pic
         if($game->id == 8878){
-            $data['venueThumbUrl'] = '/img/venues/mercedes-benz-stadium-62-sb.png';
+            $data['venueThumbUrl'] = url('/img/venues/Mercedes-Benz-Stadium-62-sb.png');
         } else {
             $data['venueThumbUrl'] = $game->homeTeam->venue ? $game->homeTeam->venue->photoUrl() : '';
         }
-
 
         return response()->json($data);
     }
