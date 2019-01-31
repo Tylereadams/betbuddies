@@ -16,8 +16,8 @@
     <meta property="og:title" content="BetBuddies.co" />
     <meta property="og:type" content="website" />
     <meta property="og:url" content="{{ url()->current() }}" />
-    <meta property="og:image" content="{{ url('/img/wide_open_graph.jpg') }}" />
-    <meta property="og:description" content="Custom Bets. Peer to Peer. Totally Free." />
+    <meta property="og:image" content="{{ url('/img/iphone_screenshot.png') }}" />
+    <meta property="og:description" content="A free and easy way to create and track custom bets with your buddies." />
     <meta name="twitter:card" content="summary" />
 
 
