@@ -13,6 +13,14 @@
     <!-- Styles -->
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
 
+    <meta property="og:title" content="BetBuddies.co" />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="{{ url()->current() }}" />
+    <meta property="og:image" content="{{ url('/img/open_graph_generic.jpg') }}" />
+    <meta property="og:description" content="Custom Bets. Peer to Peer. Totally Free." />
+    <meta name="twitter:card" content="summary" />
+
+
     @yield('header')
 
 </head>
