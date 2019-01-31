@@ -79,8 +79,12 @@
                                 <b-row>
                                     <b-col>
                                         <label for="spreadInput">Spread</label>
-                                        <b-input-group label="Spread" prepend="+/-">
-                                            <b-form-input id="spreadInput" label="Spread:" type="number" min="-100.00" step="0.5" v-model="newBet.spread"></b-form-input>
+
+                                        <b-input-group label="Spread" class="input-group mb-3">
+                                            <div class="input-group-prepend clickable" v-on:click="flipSpread">
+                                                <span class="input-group-text" id="spread-input">+/-</span>
+                                            </div>
+                                            <b-form-input id="spreadInput" label="Spread:" type="number" min="-100" step="0.5" v-model="newBet.spread" aria-describedby="spread-input"></b-form-input>
                                         </b-input-group>
                                     </b-col>
                                     <b-col>
@@ -215,6 +219,10 @@
                     amount: null,
                     spread: null
                 }
+            },
+            flipSpread: function() {
+                var self = this;
+                self.newBet.spread = self.newBet.spread * -1;
             }
         },
         mounted: function () {

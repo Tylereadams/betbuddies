@@ -1,6 +1,5 @@
 <template>
     <div>
-
         <div v-for="bet in bets" class="pb-3">
             <div v-if="bet.isAcceptable || bet.opponent !== undefined">
                 <b-card class="shadow-sm rounded"
@@ -19,7 +18,6 @@
                         </div>
                     </template>
 
-                    <!--TODO: Fix THE SPREAD FORMATTING-->
                     <b-row align-v="center" class="text-center">
                         <b-col class="text-center" v-if="bet.isAcceptable">
                             <img :src="bet.opponentTeam.thumbUrl" class="avatar-lg"><br>
