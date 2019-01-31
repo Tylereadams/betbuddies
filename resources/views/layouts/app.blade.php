@@ -18,7 +18,7 @@
     <meta property="og:url" content="{{ url()->current() }}" />
     <meta property="og:image" content="{{ url('/img/iphone_screenshot.png') }}" />
     <meta property="og:description" content="A free and easy way to create and track custom bets with your buddies." />
-    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:card" content="summary_large_image" />
 
 
     @yield('header')
