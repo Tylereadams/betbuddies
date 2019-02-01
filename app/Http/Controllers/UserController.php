@@ -39,7 +39,7 @@ class UserController extends Controller
         $data['winnings'] = $betsWon->sum('amount') - $betsLost->sum('amount');
         $data['wins'] = $betsWon->count();
         $data['losses'] = $betsLost->count();
-        $data['winPercentage'] = $betsWon->count() / $totalBets;
+        $data['winPercentage'] = $betsWon->count() ? $betsWon->count() / $totalBets : 0;
 
         return view('profile', $data);
     }
