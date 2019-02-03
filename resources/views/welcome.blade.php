@@ -13,7 +13,7 @@
                     BetBuddies
                 </a>
             </h1>
-            <p class="lead">A <span class="font-weight-bold">free</span> and <span  class="font-weight-bold">easy</span> way to create custom bets with your buddies.</p>
+            <p class="lead">A <span class="font-weight-bold">free</span> and <span  class="font-weight-bold">easy</span> way to create custom bets with your buddies. We don't even need a real email.</p>
 
             <div class="row pt-3">
                 <div class="col">
