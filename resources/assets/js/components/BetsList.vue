@@ -75,7 +75,7 @@
         },
         methods: {
             formatSpread: function(spread, inverse = false) {
-                spread = parseInt(spread);
+                spread = parseFloat(spread);
                 if(inverse){
                     spread = (spread * -1);
                 }
