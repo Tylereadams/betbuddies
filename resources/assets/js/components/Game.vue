@@ -41,7 +41,7 @@
                     </div>
                     <div class="text-center" v-else>
                         <small><span v-if="game.startDate">{{ game.startDate }} </span>{{ game.startTime }}</small><br>
-                        <small>{{ game.location }}</small><br>
+                        <small>{{ game.urlSegment == 'rams-patriots-2019-02-03-1830'  ?  'Atlanta, GA' : game.location}}</small><br>
                         <small>{{ game.broadcast }}</small>
                     </div>
                 </div>

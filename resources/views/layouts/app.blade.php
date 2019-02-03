@@ -15,8 +15,8 @@
 
     <meta property="og:title" content="BetBuddies.co" />
     <meta property="og:type" content="website" />
-    <meta property="og:url" content="{{ url()->current() }}" />
-    <meta property="og:image" content="{{ url('/img/iphone_screenshot.png') }}" />
+    <meta property="og:url" content="{{ url('game/rams-patriots-2019-02-03-1830') }}" />
+    <meta property="og:image" content="{{ url('/img/super_bowl_open_graph.jpg') }}" />
     <meta property="og:description" content="A free and easy way to create and track custom bets with your buddies." />
     <meta name="twitter:card" content="summary_large_image" />
 
