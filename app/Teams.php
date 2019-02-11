@@ -17,6 +17,9 @@ class Teams extends Model
 
     protected $fillable = ['nickname', 'location', 'latitude', 'longitude', 'hashtag', 'league'];
 
+    protected $primaryKey = 'id';
+
+
     const BUFFER_MINUTES = 20;
     /**
      * Relations
@@ -31,9 +34,18 @@ class Teams extends Model
         return $this->hasMany(TeamsColors::class, 'team_id');
     }
 
+    public function credentials() {
+        return $this->hasOne(TeamCredentials::class, 'team_id');
+    }
+
     public function tweets()
     {
         return $this->hasMany(TeamsTweets::class, 'team_id');
+    }
+
+    public function tweetLogs()
+    {
+        return $this->hasMany(TweetLogs::class, 'team_id');
     }
 
     public function venue()
@@ -44,6 +56,16 @@ class Teams extends Model
     public function players()
     {
         return $this->hasMany(Players::class, 'team_id');
+    }
+
+    public function homeGames()
+    {
+        return $this->hasMany(Games::class, 'home_team_id');
+    }
+
+    public function awayGames()
+    {
+        return $this->hasMany(Games::class, 'away_team_id');
     }
 
 
@@ -70,58 +92,37 @@ class Teams extends Model
      * @param string $date
      * @return array|string - log of tweets
      */
-    public function sendGameTweets(Games $game)
+    public function sendTweets()
     {
         $this->reconfigTeamTwitter();
 
-        echo 'Getting tweets from '.$this->twitter."\n";
-
-        // Get only videos from this team, including both got the order off.
-        $timeline = $this->getTimeline([$this->twitter]);
-
         // Get the video's we've checked already
-        $existingTweets = TweetLogs::where('team_id', $this->id)
+        $unsentTweets = TweetLogs::where('team_id', $this->id)
             ->where('created_at', '>', Carbon::now()->subHours(24))
-            ->pluck('tweet_id')
-            ->toArray();
+            ->whereNull('sent_at')
+            ->get();
+
+        if(!$unsentTweets) {
+            return;
+        }
 
         $postedTweets = [];
-        foreach($timeline as $tweet) {
+        foreach($unsentTweets as $unsentTweet) {
 
-            // If it's a retweet, check the original instead.
-            if(isset($tweet->retweeted_status)){
-                $tweet = Twitter::getTweet($tweet->retweeted_status->id, ['include_entities' => 1, 'trim_user' => 1]);
-            }
-
-            // Make sure it's a tweet we want
-            if(in_array($tweet->id, $existingTweets) || !$this->isValidTweet($tweet, $game)){
-                continue;
-            }
-
-            $mediaUrl = $tweet->extended_entities->media[0]->expanded_url;
-
-            echo "posting tweet ".$mediaUrl."\n";
+            echo "posting tweet ".$unsentTweet->video_url."\n";
             if (\App::environment('production'))
             {
                 // Post the tweet on production
-                Twitter::postTweet([
-                    'status' => '#'.hashTagFormat($game->homeTeam->nickname).' '.$game->home_score.' #'.hashTagFormat($game->awayTeam->nickname).' '.$game->away_score.'                                               
-                                             '.$mediaUrl
-                ]);
+                if(Twitter::postTweet([
+                    'status' => '#'.hashTagFormat($unsentTweet->game->homeTeam->nickname).' '.$unsentTweet->game->home_score.' #'.hashTagFormat($unsentTweet->game->awayTeam->nickname).' '.$unsentTweet->game->away_score.'                                               
+                                             '.$unsentTweet->getTweetUrl()
+                ])) {
+                    $unsentTweet->sent_at = Carbon::now();
+                    $unsentTweet->save();
+                };
             }
 
-            TeamsTweets::updateOrCreate([
-                'team_id' => $this->id,
-                'game_id' => $game->id,
-                'tweet_id' => $tweet->id,
-                'media_url' => $mediaUrl,
-                'text' => $tweet->text
-            ], [
-                'period' => $game->period ? $game->period : 1
-            ]);
-
-            $postedTweets[] = $tweet;
-            $existingTweets[] = $tweet->id;
+            $postedTweets[] = $unsentTweet;
         }
 
         if(!empty($postedTweets)){

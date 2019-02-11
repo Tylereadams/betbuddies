@@ -5,7 +5,7 @@ namespace App\Console\Commands;
 use App\Leagues;
 use Illuminate\Console\Command;
 use Carbon\Carbon;
-use App\Games;
+use App\Teams;
 
 class TweetGameCommand extends Command
 {
@@ -44,24 +44,25 @@ class TweetGameCommand extends Command
         $minDate = Carbon::parse($this->argument('date'))->subHours(5)->format('Y-m-d H:i:s');
         $maxDate = Carbon::parse($this->argument('date'))->addHours(5)->format('Y-m-d H:i:s');
 
-        // Get games that have been played within 10 hours of the time given
-        $games = Games::where('start_date', '>', $minDate)
-            ->where('start_date', '<', $maxDate)
-            // TODO: Only MLB games for now, no data for the others.
-            ->where('league_id', Leagues::MLB_ID)
-            ->get();
-        $games->load(['homeTeam.tweets', 'awayTeam.tweets']);
+        // Get teams with games within date and has credentials
+        $teams = Teams::where(function($q) use($minDate, $maxDate) {
+            $q->whereHas('awayGames', function($q) use($minDate, $maxDate) {
+                $q->where('start_date', '>', $minDate);
+                $q->where('start_date', '<', $maxDate);
+            });
+            $q->orWhereHas('homeGames', function($q) use($minDate, $maxDate) {
+                $q->where('start_date', '>', $minDate);
+                $q->where('start_date', '<', $maxDate);
+            });
+        })->whereHas('credentials')->get();
 
-        if(!$games){
-            return 'No results.';
+        if(!$teams){
+            return 'No team twitters with games.';
         }
 
         $result = [];
-        foreach($games as $game) {
-            $teams = [$game->homeTeam, $game->awayTeam];
-            foreach($teams as $team) {
-                $result[] = $team->sendGameTweets($game);
-            }
+        foreach($teams as $team) {
+            $result[] = $team->sendTweets();
         }
     }
 }

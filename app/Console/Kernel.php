@@ -38,8 +38,8 @@ class Kernel extends ConsoleKernel
             ->dailyAt(5);
 
         // Tweet the videos for today
-//        $schedule->command('betbuddies:tweet-highlights')
-//            ->everyFiveMinutes();
+        $schedule->command('betbuddies:tweet-highlights')
+            ->everyFiveMinutes();
 
         // Log the tweets of team accounts
         $schedule->command('betbuddies:log-tweets')
@@ -54,7 +54,7 @@ class Kernel extends ConsoleKernel
             ->everyFiveMinutes();
 
         // Update new bets to the Leaderboard
-        $schedule->command('betbuddies:import-stats 5')
+        $schedule->command('betbuddies:import-stats 7')
             ->everyFiveMinutes();
 
         // Tweet status messages for today
