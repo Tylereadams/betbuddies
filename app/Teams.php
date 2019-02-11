@@ -157,16 +157,19 @@ class Teams extends Model
      */
     public function sendEndTweet(Games $game)
     {
-        if(!$this->reconfigTeamTwitter() || !$game->ended_at){
+        if(!$this->credentials || !$this->reconfigTeamTwitter()){
+            echo $this->nickname." skipping. \n";
             return false;
         }
+
+        echo $this->nickname." sending final tweet\n";
 
         // Draw the card with Final score
         $cardCreator = new CardCreator($game);
         $cardImage = $cardCreator->getGameCard();
 
         $media = null;
-        if($cardImage){
+        if($cardImage) {
             // Get media ID from twitter, required to post image.
             $media = Twitter::uploadMedia(['media' => $cardImage->stream()]);
         }
@@ -179,18 +182,13 @@ class Teams extends Model
     }
 
     /**
-     * Logs into team's twitter account, Todo: move this to the constructor or something.
+     * Logs into team's twitter account
      * @return bool
      */
     public function reconfigTeamTwitter()
     {
         if(getenv('TWITTER_CONSUMER_KEY'.$this->getKey()) === false){
-            return Twitter::reconfig([
-                'consumer_key' => env('TWITTER_CONSUMER_KEY_YANKEES_49'),
-                'consumer_secret' => env('TWITTER_CONSUMER_SECRET_YANKEES_49'),
-                'token' => env('TWITTER_ACCESS_TOKEN_YANKEES_49'),
-                'secret' => env('TWITTER_ACCESS_TOKEN_SECRET_YANKEES_49')
-            ]);
+            return false;
         }
 
         // Get the config for this team's twitter account

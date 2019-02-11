@@ -32,6 +32,8 @@ Route::get('playersearch', 'PlayersController@jsonSearch');
 // Game routes
 Route::get('/game/{urlSegment}', 'GamesController@game')->name('game');
 Route::get('/games/{date?}', 'GamesController@gamesByDate')->name('games');
+Route::get('/game/{urlSegment}/image', 'GamesController@image');
+
 
 // Leaderboard routes
 Route::get('/leaderboard', 'LeaderboardController@index')->name('leaderboard');

@@ -15,14 +15,14 @@ class TweetStartEndCommand extends Command
      *
      * @var string
      */
-    protected $signature = 'betbuddies:tweet-start-end {date=now}';
+    protected $signature = 'betbuddies:send-final-tweet {date=now}';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Tweets the beginning and end of a game.';
+    protected $description = 'Sends a tweet at the end of a game.';
 
     /**
      * Create a new command instance.
@@ -49,7 +49,7 @@ class TweetStartEndCommand extends Command
         $games = Games::where('start_date', '>', $minDate)
             ->where('start_date', '<', $maxDate)
             ->get();
-//        $games->load(['homeTeam.tweets', 'awayTeam.tweets']);
+        $games->load(['homeTeam.credentials', 'awayTeam.credentials']);
 
         if(!$games){
             return 'No results.';
@@ -59,19 +59,16 @@ class TweetStartEndCommand extends Command
             $startDate = Carbon::parse($game->start_date);
 
             // Game hasn't started yet, keep it movin'
-            if(!$startDate->isPast()){
+            if(!$startDate->isPast() || !$game->ended_at){
                 continue;
             }
 
-            // Send end tweet after game has ended
-//            if(Carbon::parse($game->ended_at)->isPast()){
-//                // Only send the ending tweet once, didn't want to save these tweets to DB so storing in cache for 10 hours if it got sent
-//                Cache::remember('ending-tweet-'.$game->id, 60 * 10, function ()use($game) {
-//                    $game->homeTeam->sendEndTweet($game);
-//                    $game->awayTeam->sendEndTweet($game);
-//                    return true;
-//                });
-//            }
+            // Only send the ending tweet once, didn't want to save these tweets to DB so storing in cache for 24 hours if it got sent
+            Cache::remember('ending-tweet-'.$game->id, 60 * 24, function ()use($game) {
+                $game->homeTeam->sendEndTweet($game);
+                $game->awayTeam->sendEndTweet($game);
+                return true;
+            });
         }
     }
 }

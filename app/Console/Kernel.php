@@ -58,8 +58,8 @@ class Kernel extends ConsoleKernel
             ->everyFiveMinutes();
 
         // Tweet status messages for today
-//        $schedule->command('betbuddies:tweet-start-end')
-//            ->everyMinute();
+        $schedule->command('betbuddies:send-final-tweet')
+            ->everyMinute();
     }
 
     /**

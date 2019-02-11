@@ -9,7 +9,7 @@ use Intervention\Image\ImageManager;
 class CardCreator
 {
 
-    public function __construct(Games $game)
+    public function __construct($game)
     {
         $this->imageHeight = 700;
         $this->imageWidth = 1200;
@@ -22,15 +22,18 @@ class CardCreator
         $this->homeScoreOffsetWidth =  intval($this->imageWidth / 1.37);
         $this->awayScoreOffsetWidth =  intval($this->imageWidth / 3.75);
 
+        $this->finalTextOffsetWidth = intval($this->imageWidth / 2);
+        $this->finalTextOffsetHeigth = intval($this->imageWidth / 3.75);
+
         $this->homeRgbColor = hex2rgb($game->homeTeam->colors->first()->hex);
         $this->awayRgbColor = hex2rgb($game->awayTeam->colors->first()->hex);
 
         $this->fontParams = [
-            'smallSize' => 65,
+            'smallSize' => 45,
             'largeSize' => 120,
             'medium' => public_path().'/fonts/Roboto-Medium.ttf',
             'light' => public_path().'/fonts/Roboto-Light.ttf',
-            'secondaryColor' => '#000000'
+            'secondaryColor' => '#808080'
         ];
 
         $this->game = $game;
@@ -43,7 +46,7 @@ class CardCreator
     public function getGameCard()
     {
         // Make sure there is a photo of the stadium to use
-        if(!$this->game->homeTeam->venue){
+        if(!$this->game->homeTeam || !$this->game->awayTeam){
             return false;
         }
 
@@ -53,9 +56,9 @@ class CardCreator
         // create an image manager instance with favored driver
         $manager = new ImageManager();
 
-        $fill = $manager->make(public_path().$this->game->homeTeam->venue->transparentPhotoUrl())->resize($this->imageWidth, $this->imageHeight);
+        //$fill = $manager->make(public_path().$this->game->homeTeam->venue->transparentPhotoUrl())->resize($this->imageWidth, $this->imageHeight);
 
-        $img->fill($fill);
+        //$img->fill($fill);
 
         // to finally create image instances
         $homeImage = $manager->make(public_path().$this->game->homeTeam->logoUrlLarge())
@@ -113,10 +116,9 @@ class CardCreator
             $font->color('#ffffff');
         });
 
-
         // 'Final' text
-//        $img->text('Final', $this->finalOffsetWidth, $this->finalOffsetHeigth, function($font) {
-//            $font->file($this->fontParams['light']);
+//        $img->text('Final', $this->finalTextOffsetWidth, $this->finalTextOffsetHeigth, function($font) {
+//            $font->file($this->fontParams['medium']);
 //            $font->size($this->fontParams['smallSize']);
 //            $font->align('center');
 //            $font->color($this->fontParams['secondaryColor']);

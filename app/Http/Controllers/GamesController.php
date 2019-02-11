@@ -4,15 +4,10 @@ namespace App\Http\Controllers;
 
 use App\Games;
 use App\Leagues;
-use App\Teams;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Cache;
 use Auth;
-//use Intervention\Image\ImageManager;
-//use Thujohn\Twitter\Facades\Twitter;
-//use Illuminate\Support\Facades\Cache;
-//use Intervention\Image\Facades\Image;
-//use Illuminate\Support\Facades\File;
+use App\Services\CardCreator;
 
 class GamesController extends Controller
 {
@@ -142,18 +137,13 @@ class GamesController extends Controller
      * Returns an image of the final score and stadium background
      * @return mixed
      */
-//    public function image()
-//    {
-//        $game = Games::find(\Request::get('id'));
-//
-//        if(!$game){
-//            $game = Games::latest()->first();
-//        }
-//
-//        $cardCreator = new CardCreator($game);
-//
-//        $img = $cardCreator->getGameCard();
-//
-//        return $img->response('png');
-//    }
+    public function image($urlSegment)
+    {
+        $game = Games::where('url_segment', $urlSegment)->firstOrFail();
+
+        $cardCreator = new CardCreator($game);
+        $img = $cardCreator->getGameCard();
+
+        return $img->response('png');
+    }
 }
