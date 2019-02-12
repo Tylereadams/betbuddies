@@ -115,7 +115,7 @@ class Teams extends Model
                 // Post the tweet on production
                 if(Twitter::postTweet([
                     'status' => '#'.hashTagFormat($unsentTweet->game->homeTeam->nickname).' '.$unsentTweet->game->home_score.' #'.hashTagFormat($unsentTweet->game->awayTeam->nickname).' '.$unsentTweet->game->away_score.'                                               
-                                             '.$unsentTweet->getTweetUrl()
+                                             '.$unsentTweet->getTweetUrl().'/video/1'
                 ])) {
                     $unsentTweet->sent_at = Carbon::now();
                     $unsentTweet->save();

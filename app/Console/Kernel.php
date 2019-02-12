@@ -39,7 +39,7 @@ class Kernel extends ConsoleKernel
 
         // Tweet the videos for today
         $schedule->command('betbuddies:tweet-highlights')
-            ->everyFiveMinutes();
+            ->everyMinute();
 
         // Log the tweets of team accounts
         $schedule->command('betbuddies:log-tweets')
