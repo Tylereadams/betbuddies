@@ -6,8 +6,6 @@ use App\Services\CardCreator;
 use Illuminate\Database\Eloquent\Model;
 use Thujohn\Twitter\Facades\Twitter;
 use Carbon\Carbon;
-use Symfony\Component\Process\Process;
-use Symfony\Component\Process\Exception\ProcessFailedException;
 use Illuminate\Support\Facades\Cache;
 
 class Teams extends Model
@@ -94,17 +92,25 @@ class Teams extends Model
      */
     public function sendTweets()
     {
-        $this->reconfigTeamTwitter();
+        if(!isset($this->credentials->token) || !isset($this->credentials->token_secret)) {
+            return false;
+        }
 
-        // Get the video's we've checked already
+        Twitter::reconfig(['token' => $this->credentials->token, 'secret' => decrypt($this->credentials->token_secret)]);
+
+        // Get unsent tweets in the last 72 hours
         $unsentTweets = TweetLogs::where('team_id', $this->id)
-            ->where('created_at', '>', Carbon::now()->subHours(24))
+            ->where('created_at', '>', Carbon::now()->subHours(72))
             ->whereNull('sent_at')
+            ->whereNotNull('game_id')
+            ->orderBy('created_at', 'DESC')
             ->get();
 
         if(!$unsentTweets) {
             return;
         }
+
+        echo "sending ".$this->nickname." tweets.\n";
 
         $postedTweets = [];
         foreach($unsentTweets as $unsentTweet) {
@@ -125,30 +131,11 @@ class Teams extends Model
             $postedTweets[] = $unsentTweet;
         }
 
-        if(!empty($postedTweets)){
-            echo count($postedTweets) ." posted \r\n";
-        }
+        echo count($postedTweets) ." posted \r\n";
 
         return $postedTweets;
     }
 
-    /**
-     * Sends a tweet if a game just started.
-     * @param \App\Games $game
-     * @return bool
-     */
-    public function sendStartTweet(Games $game)
-    {
-        // Login to twitter only if game hasn't started yet.
-        if(!$this->reconfigTeamTwitter() || $game->ended_at){
-            return false;
-        }
-
-        // Post the tweet on production
-        Twitter::postTweet([
-            'status' => '#'.hashTagFormat($game->homeTeam->nickname).' vs #'.hashTagFormat($game->awayTeam->nickname).' is starting soon.'
-        ]);
-    }
 
     /**
      * Tweet to send at the end of the game
@@ -157,10 +144,11 @@ class Teams extends Model
      */
     public function sendEndTweet(Games $game)
     {
-        if(!$this->credentials || !$this->reconfigTeamTwitter()){
-            echo $this->nickname." skipping. \n";
+        if(!isset($this->credentials->token) || !isset($this->credentials->token_secret)) {
             return false;
         }
+
+        Twitter::reconfig(['token' => $this->credentials->token, 'secret' => decrypt($this->credentials->token_secret)]);
 
         echo $this->nickname." sending final tweet\n";
 
@@ -182,35 +170,6 @@ class Teams extends Model
     }
 
     /**
-     * Logs into team's twitter account
-     * @return bool
-     */
-    public function reconfigTeamTwitter()
-    {
-        if(getenv('TWITTER_CONSUMER_KEY'.$this->getKey()) === false){
-            return false;
-        }
-
-        // Get the config for this team's twitter account
-        return Twitter::reconfig([
-            'consumer_key' => env('TWITTER_CONSUMER_KEY'.$this->getKey()),
-            'consumer_secret' => env('TWITTER_CONSUMER_SECRET'.$this->getKey()),
-            'token' => env('TWITTER_ACCESS_TOKEN'.$this->getKey()),
-            'secret' => env('TWITTER_ACCESS_TOKEN_SECRET'.$this->getKey())
-        ]);
-    }
-
-//    private function clearTweets()
-//    {
-//        $tweets = Twitter::getUserTimeline(['count' => 200]);
-//
-//        $tweetsDeleted = [];
-//        foreach($tweets as $tweet) {
-//            $tweetsDeleted[] = Twitter::destroyTweet($tweet->id);
-//        }
-//    }
-
-    /**
      * Gets the timeline of given twitter handles (no preceding @ is needed for the handles)
      * @param array $teamHandles
      * @return static
@@ -218,12 +177,10 @@ class Teams extends Model
     public function getTimeline($teamHandles = [])
     {
         foreach($teamHandles as $handle){
-
             // Cache the twitter timeline for 3 minutes so we don't hit a rate limit
             $timelines[] = Cache::remember($handle.'-twitter-timeline', 3, function () use($handle) {
                     return Twitter::getUserTimeline(['screen_name' => $handle, 'count' => 50, 'include_entities' => 1]);
                 });
-
         }
 
         // Merge and sort collection by most recent

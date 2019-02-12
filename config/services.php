@@ -38,6 +38,12 @@ return [
     'streamable' => [
         'email' => env('STREAMABLE_EMAIL'),
         'password' => env('STREAMABLE_PASSWORD'),
-    ]
+    ],
+
+    'twitter' => [
+        'client_id' => env('TWITTER_CONSUMER_KEY'),
+        'client_secret' => env('TWITTER_CONSUMER_SECRET'),
+        'redirect' => "/login/twitter/callback",
+    ],
 
 ];

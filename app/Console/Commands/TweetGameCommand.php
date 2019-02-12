@@ -54,7 +54,10 @@ class TweetGameCommand extends Command
                 $q->where('start_date', '>', $minDate);
                 $q->where('start_date', '<', $maxDate);
             });
-        })->whereHas('credentials')->get();
+        })->whereHas('credentials', function($q){
+            $q->whereNotNull('token_secret');
+            $q->whereNotNull('token');
+        })->get();
 
         if(!$teams){
             return 'No team twitters with games.';

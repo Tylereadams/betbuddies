@@ -23,7 +23,7 @@ class ImportTeams extends Command
      *
      * @var string
      */
-    protected $description = 'Imports teams twitter data or updates them if already present.';
+    protected $description = 'Imports offical teams twitter profile image and banner and updates profile/banner.';
 
     /**
      * Create a new command instance.
@@ -45,46 +45,26 @@ class ImportTeams extends Command
         $leagues = Leagues::all();
 
         foreach($leagues as $league){
-            $teams = Teams::where('league_id', $league->id)->where('nickname', '!=', 'yankees')->get();
+            $teams = Teams::where('league_id', $league->id)->whereHas('credentials', function($q){
+                $q->whereNotNull('token');
+                $q->whereNotNull('token_secret');
+            })->get();
 
             foreach($teams as $team) {
-                $teamToUpdate = Teams::where('location', $team['location'])
-                    ->where('nickname', $team['nickname'])
-                    ->first();
+                echo $team->nickname."...\n";
 
-                // Swap the twitter keys so we can use it on the team
-                if(getenv('TWITTER_CONSUMER_KEY'.$teamToUpdate->getKey())){
-                    // Get the config for this team's twitter account
-                    Twitter::reconfig([
-                        'consumer_key' => env('TWITTER_CONSUMER_KEY'.$teamToUpdate->getKey()),
-                        'consumer_secret' => env('TWITTER_CONSUMER_SECRET'.$teamToUpdate->getKey()),
-                        'token' => env('TWITTER_ACCESS_TOKEN'.$teamToUpdate->getKey()),
-                        'secret' => env('TWITTER_ACCESS_TOKEN_SECRET'.$teamToUpdate->getKey())
-                    ]);
+                // Get the config for this team's twitter account
+                Twitter::reconfig(['token' => $team->credentials->token, 'secret' => decrypt($team->credentials->token_secret)]);
 
-                    echo $teamToUpdate->nickname."...\n";
+                $twitterAccount = Twitter::getUsers(['screen_name' => $team->twitter]);
 
-                    $twitterAccount = Twitter::getUsers(['screen_name' => $team->twitter]);
+                Twitter::postUserBdanner([
+                    'banner' => base64_encode(file_get_contents($twitterAccount->profile_banner_url))
+                ]);
 
-                    Twitter::postUserBanner([
-                        'banner' => base64_encode(file_get_contents($twitterAccount->profile_banner_url))
-                    ]);
-
-                    Twitter::postProfileImage([
-                        'image' => base64_encode(file_get_contents('https://twitter.com/'.$team->twitter.'/profile_image?size=original'))
-                    ]);
-                }
-
-                $teamToUpdate->league_id = $team['league_id'];
-                $teamToUpdate->twitter = $team['twitter'];
-                $teamToUpdate->slug = $team['slug'];
-                $teamToUpdate->hashtag = $team['hashtag'];
-                $teamToUpdate->location = $team['location'];
-                $teamToUpdate->latitude = $team['latitude'];
-                $teamToUpdate->longitude = $team['longitude'];
-                $teamToUpdate->updated_at = Carbon::now();
-
-                $teamToUpdate->save();
+                Twitter::postProfileImage([
+                    'image' => base64_encode(file_get_contents('https://twitter.com/'.$team->twitter.'/profile_image?size=original'))
+                ]);
             }
         }
     }
