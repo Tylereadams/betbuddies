@@ -58,7 +58,7 @@ class ImportTeams extends Command
 
                 $twitterAccount = Twitter::getUsers(['screen_name' => $team->twitter]);
 
-                Twitter::postUserBdanner([
+                Twitter::postUserBanner([
                     'banner' => base64_encode(file_get_contents($twitterAccount->profile_banner_url))
                 ]);
 
