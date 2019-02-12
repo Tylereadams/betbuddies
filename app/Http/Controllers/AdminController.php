@@ -60,7 +60,6 @@ class AdminController extends Controller
         $teams = Teams::orderBy('nickname')->get();
         $teams->load(['league', 'credentials']);
 
-        dd(config('services.twitter'));
         $selectedTeam = $teams->first();
         if(Request::get('teamId')) {
             $selectedTeam = Teams::where('id', Request::get('teamId'))->first();
