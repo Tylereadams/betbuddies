@@ -8,7 +8,7 @@ use Carbon\Carbon;
 use App\Games;
 use Illuminate\Support\Facades\Cache;
 
-class TweetStartEndCommand extends Command
+class TweetEndCommand extends Command
 {
     /**
      * The name and signature of the console command.

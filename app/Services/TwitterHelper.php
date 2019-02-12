@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Games;
+use App\Teams;
 use Carbon\Carbon;
 
 class TwitterHelper
@@ -29,6 +30,14 @@ class TwitterHelper
         }
 
         return true;
+    }
+
+    public static function getTeamTwitterDescription(Teams $team)
+    {
+        if(!$team->twitter) {
+            return '';
+        }
+        return 'Tweeting scores during @'.$team->twitter.' games. Free highlight included.';
     }
 
 }
