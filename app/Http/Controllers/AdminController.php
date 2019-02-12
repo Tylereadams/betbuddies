@@ -18,7 +18,7 @@ class AdminController extends Controller
 
 
     /**
-     * Redirect the user to the GitHub authentication page.
+     * Redirect the user to the Twitter authentication page.
      *
      * @return \Illuminate\Http\Response
      */
@@ -28,7 +28,7 @@ class AdminController extends Controller
     }
 
     /**
-     * Obtain the user information from GitHub.
+     * Obtain the user information from Twitter.
      *
      * @return \Illuminate\Http\Response
      */
@@ -51,11 +51,16 @@ class AdminController extends Controller
         return redirect(url('/team/edit?teamId='.$credentials->team_id));
     }
 
+    /**
+     * Display team edit page
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
     public function editTeamTwitter()
     {
         $teams = Teams::orderBy('nickname')->get();
         $teams->load(['league', 'credentials']);
 
+        dd(env('TWITTER_ACCESS_TOKEN'));
         $selectedTeam = $teams->first();
         if(Request::get('teamId')) {
             $selectedTeam = Teams::where('id', Request::get('teamId'))->first();
@@ -87,6 +92,11 @@ class AdminController extends Controller
         return view('admin.edit-team', $data);
     }
 
+    /**
+     * Save twitter data from team edit page
+     * @param Teams $team
+     * @return \Illuminate\Http\RedirectResponse
+     */
     public function saveTwitterData(Teams $team)
     {
         // Save to DB
@@ -119,6 +129,10 @@ class AdminController extends Controller
         return redirect()->back();
     }
 
+    /**
+     * Display logged tweets all on one page
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
     public function tweetLog()
     {
         $q = Request::get('q');
