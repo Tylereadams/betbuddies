@@ -68,13 +68,6 @@ class LogTeamTweetsCommand extends Command
             // Loop through both teams in game
             foreach($teams as $team) {
 
-                // Must have a token and token_secret
-                if(!isset($this->credentials->token) || !isset($this->credentials->token_secret)) {
-                    continue;
-                }
-
-                Twitter::reconfig(['token' => $this->credentials->token, 'secret' => decrypt($this->credentials->token_secret)]);
-
                 print $team->nickname."\n";
 
                 // Get teams tweets and official league twitter account
