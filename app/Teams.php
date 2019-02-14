@@ -103,7 +103,7 @@ class Teams extends Model
             ->where('created_at', '>', Carbon::now()->subHours(72))
             ->whereNull('sent_at')
             ->whereNotNull('game_id')
-            ->orderBy('created_at', 'DESC')
+            ->orderBy('created_at', 'ASC')
             ->get();
         $unsentTweets->load(['game']);
 
