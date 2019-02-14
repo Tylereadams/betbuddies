@@ -116,7 +116,7 @@ class Teams extends Model
         foreach($unsentTweets as $unsentTweet) {
 
             // Make sure game is updated more recently than when the tweet was created so we have more accurate scores
-            if($unsentTweet->game->updated_at->get($unsentTweet->created_at)) {
+            if($unsentTweet->game->updated_at->gt($unsentTweet->created_at)) {
                 continue;
             }
 
