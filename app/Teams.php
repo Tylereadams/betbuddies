@@ -105,6 +105,7 @@ class Teams extends Model
             ->whereNotNull('game_id')
             ->orderBy('created_at', 'DESC')
             ->get();
+        $unsentTweets->load(['game']);
 
         if(!$unsentTweets) {
             return;
@@ -116,7 +117,7 @@ class Teams extends Model
         foreach($unsentTweets as $unsentTweet) {
 
             // Make sure game is updated more recently than when the tweet was created so we have more accurate scores
-            if($unsentTweet->game->updated_at->gt($unsentTweet->created_at)) {
+            if($unsentTweet->created_at->gt($unsentTweet->game->updated_at)) {
                 continue;
             }
 
