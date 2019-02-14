@@ -115,6 +115,11 @@ class Teams extends Model
         $postedTweets = [];
         foreach($unsentTweets as $unsentTweet) {
 
+            // Make sure game is updated more recently than when the tweet was created so we have more accurate scores
+            if($unsentTweet->game->updated_at->get($unsentTweet->created_at)) {
+                continue;
+            }
+
             echo "posting tweet ".$unsentTweet->video_url."\n";
             if (\App::environment('production'))
             {
