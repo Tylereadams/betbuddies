@@ -40,6 +40,9 @@ Route::get('/leaderboard', 'LeaderboardController@index')->name('leaderboard');
 // User routes
 Route::get('user/{urlSegment?}', 'UserController@profile');
 
+// Samsara route
+Route::get('samsara', 'SamsaraController@getTripData');
+
 
 // Admin Routes
 Route::get('tweet-log', 'AdminController@tweetLog');

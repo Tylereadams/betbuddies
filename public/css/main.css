@@ -76,15 +76,6 @@ html, body {
     border-top: 0;
 }
 
-.table th {
-    padding: 0 !important;
-}
-
-.table td {
-    padding: .6em !important;
-}
-
-
 /* Circle Button */
 .btn-circle {
     width: 30px;
