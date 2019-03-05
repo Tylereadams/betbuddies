@@ -42,7 +42,8 @@ class SamsaraController extends Controller
                 'gallonsConsumed' => round($gallonsConsumed, 2),
                 'milesTraveled' => round($milesTraveled, 2),
                 'gasCost' => round($gallonsConsumed * $localGasPrice, 2),
-                'mpg' => $gallonsConsumed ? round($milesTraveled / $gallonsConsumed, 2) : 0
+                'mpg' => $gallonsConsumed ? round($milesTraveled / $gallonsConsumed, 2) : 0,
+                'currentTrip' => !$trip->endLocation ? true : false
             ];
 
             // Add up totals

@@ -7,15 +7,15 @@
 
         <div class="jumbotron bg-white">
             <div class="row">
-                <div class="col text-center">
-                    <h2><i class="fas fa-car"></i></h2>
+                <div class="col text-center text-secondary">
+                    <h2><i class="fas fa-car "></i></h2>
                     <h3>{{ count($trips) }} trips</h3>
                 </div>
-                <div class="col text-center">
+                <div class="col text-center text-secondary">
                     <h2><i class="fas fa-globe-americas"></i></h2>
                     <h3>{{ $totals['miles'] }} miles</h3>
                 </div>
-                <div class="col text-center">
+                <div class="col text-center text-secondary">
                     <h2><i class="fas fa-money-bill-alt"></i></h2>
                     <h3>${{ money_format('%(#10n', $totals['cost']) }}</h3>
                 </div>
@@ -38,7 +38,13 @@
             <tbody>
             @foreach($trips as $trip)
                 <tr>
-                    <td>{{ $trip['startDate'] }}</td>
+                    <td>
+                        @if(!$trip['endLocation'])
+                            <i class="fas fa-circle text-success"></i>  {{ $trip['startDate'] }}
+                        @else
+                            {{ $trip['startDate'] }}
+                        @endif
+                    </td>
                     <td>{{ str_limit($trip['startLocation'], 30, '...') }}</td>
                     <td>{{ str_limit($trip['endLocation'], 30, '...') }}</td>
                     <td>{{ $trip['gallonsConsumed'] }}</td>
