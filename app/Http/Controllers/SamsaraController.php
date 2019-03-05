@@ -31,7 +31,7 @@ class SamsaraController extends Controller
             $milesTraveled = $this->convertMetersToMiles($trip->distanceMeters);
             $gallonsConsumed = $this->convertMilliletersToGallons($trip->fuelConsumedMl);
 
-            // Get gas price from nearest gas station to end of trip location
+            // Get price of gas from nearest station to end of trip location
             $localGasPrice = $this->getLocalGasPrice($trip->endCoordinates->latitude, $trip->endCoordinates->longitude);
 
             // Setup Data to pass to view
@@ -42,7 +42,7 @@ class SamsaraController extends Controller
                 'gallonsConsumed' => round($gallonsConsumed, 2),
                 'milesTraveled' => round($milesTraveled, 2),
                 'gasCost' => round($gallonsConsumed * $localGasPrice, 2),
-                'mpg' => round($milesTraveled / $gallonsConsumed, 2)
+                'mpg' => $gallonsConsumed ? round($milesTraveled / $gallonsConsumed, 2) : 0
             ];
 
             // Add up totals
@@ -65,9 +65,11 @@ class SamsaraController extends Controller
      */
     private function getLocalGasPrice($latitude, $longitude)
     {
+        // Search radius
         $milesAway = 5;
 
-        // Cache the response from gas buddy, prices aren't changing within 24 hours so cache for that long
+        // Cache the response from gas buddy for 24 hours,
+        // they aren't changing frequently enough to get new data on each page load
         $response = Cache::remember('gas-prices-'.$milesAway.'-'.$latitude.'-'.$longitude, 60 * 24, function () use ($milesAway, $latitude, $longitude) {
             $curl = curl_init();
             curl_setopt_array($curl, array(
