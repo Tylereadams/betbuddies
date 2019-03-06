@@ -32,19 +32,13 @@
                 <th scope="col">Gallons Consumed</th>
                 <th scope="col">Miles Traveled</th>
                 <th scope="col">MPG</th>
-                <th scope="col" data-toggle="tooltip" data-placement="top" title="Source: http://www.mygasfeed.com">Cost</th>
+                <th scope="col" title="Source: http://www.mygasfeed.com">Cost</th>
             </tr>
             </thead>
             <tbody>
             @foreach($trips as $trip)
                 <tr>
-                    <td>
-                        @if(!$trip['endLocation'])
-                            <i class="fas fa-circle text-success"></i>  {{ $trip['startDate'] }}
-                        @else
-                            {{ $trip['startDate'] }}
-                        @endif
-                    </td>
+                    <td>{{ $trip['startDate'] }}</td>
                     <td>{{ str_limit($trip['startLocation'], 30, '...') }}</td>
                     <td>{{ str_limit($trip['endLocation'], 30, '...') }}</td>
                     <td>{{ $trip['gallonsConsumed'] }}</td>
@@ -79,7 +73,7 @@
             $('#trip-stats').DataTable({
                 "paging": false,
             });
-        } );
+        });
     </script>
 
     <style>
