@@ -10,14 +10,14 @@ class SamsaraController extends Controller
      * Returns a view with the cost per trip and cost totals of all trips retrieved from Samsara API
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
-    public function getTripData()
+    public function getTripsData()
     {
         // Setup data to pass back to view
         $data['totals'] = [
                 'gallons' => 0,
+                'avgMpg' => 0,
                 'miles' => 0,
                 'cost' => 0,
-                'avgMpg' => 0
         ];
 
         $beginTime = (strtotime('-90 days') * 1000);
@@ -42,8 +42,7 @@ class SamsaraController extends Controller
                 'gallonsConsumed' => round($gallonsConsumed, 2),
                 'milesTraveled' => round($milesTraveled, 2),
                 'gasCost' => round($gallonsConsumed * $localGasPrice, 2),
-                'mpg' => $gallonsConsumed ? round($milesTraveled / $gallonsConsumed, 2) : 0,
-                'currentTrip' => !$trip->endLocation ? true : false
+                'mpg' => $gallonsConsumed ? round($milesTraveled / $gallonsConsumed, 2) : 0
             ];
 
             // Add up totals

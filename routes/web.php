@@ -41,7 +41,7 @@ Route::get('/leaderboard', 'LeaderboardController@index')->name('leaderboard');
 Route::get('user/{urlSegment?}', 'UserController@profile');
 
 // Samsara route
-Route::get('samsara', 'SamsaraController@getTripData');
+Route::get('samsara', 'SamsaraController@getTripsData');
 
 
 // Admin Routes

@@ -58,6 +58,11 @@
             </tr>
             </tfoot>
         </table>
+
+        <hr>
+
+        <div id="chartContainer" style="height: 300px; width: 100%;"></div>
+
     </div>
 @endsection
 
@@ -67,12 +72,63 @@
     <script src="https://code.jquery.com/jquery-3.3.1.js" crossorigin="anonymous"></script>
     <script src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js" crossorigin="anonymous"></script>
     <script src="https://cdn.datatables.net/1.10.19/js/dataTables.bootstrap4.min.js" crossorigin="anonymous"></script>
+    <script src="https://code.highcharts.com/highcharts.js"></script>
+    <script src="https://code.highcharts.com/modules/exporting.js"></script>
+    <script src="https://code.highcharts.com/modules/export-data.js"></script>
 
     <script>
         $(document).ready(function() {
             $('#trip-stats').DataTable({
                 "paging": false,
             });
+
+            Highcharts.chart('chartContainer', {
+                chart: {
+                    type: 'column'
+                },
+                title: {
+                    text: 'Distance vs Fuel vs Cost'
+                },
+                subtitle: {
+                    text: 'by trip'
+                },
+                xAxis: {
+                    categories: [@foreach($trips as $trip) '{{ $trip['startDate'] }}', @endforeach],
+                    crosshair: true
+                },
+                yAxis: {
+                    min: 0,
+                    title: {
+                        text: ''
+                    }
+                },
+                tooltip: {
+                    headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
+                    pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
+                    '<td style="padding:0"><b>{point.y:.1f}</b></td></tr>',
+                    footerFormat: '</table>',
+                    shared: true,
+                    useHTML: true
+                },
+                plotOptions: {
+                    column: {
+                        pointPadding: 0.2,
+                        borderWidth: 0
+                    }
+                },
+                series: [{
+                    name: 'Miles',
+                    data: [ @foreach($trips as $trip) {{ $trip['milesTraveled'].", " }} @endforeach],
+                }, {
+                    name: 'Gallons',
+                    data: [ @foreach($trips as $trip) {{ $trip['gallonsConsumed'].", " }} @endforeach]
+
+                }, {
+                    name: 'Cost',
+                    data: [ @foreach($trips as $trip) {{ money_format('%(#10n', $trip['gasCost']).", " }} @endforeach]
+                }]
+            });
+
         });
     </script>
 
