@@ -56,8 +56,8 @@ class CardCreator
         // create an image manager instance with favored driver
         $manager = new ImageManager();
 
-        if(isset($this->game->homeTeam->venue) && file_exists(public_path().$this->game->homeTeam->venue->transparentPhotoUrl())) {
-            $fill = $manager->make(public_path().$this->game->homeTeam->venue->transparentPhotoUrl())->resize($this->imageWidth, $this->imageHeight);
+        if(isset($this->game->homeTeam->venue) && file_exists(asset($this->game->homeTeam->venue->transparentPhotoUrl()))) {
+            $fill = $manager->make(asset($this->game->homeTeam->venue->transparentPhotoUrl()))->resize($this->imageWidth, $this->imageHeight);
             $img->fill($fill);
         }
 
