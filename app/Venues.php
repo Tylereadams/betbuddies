@@ -29,6 +29,10 @@ class Venues extends Model
         return url('img/venues/transparent/'.$this->photoSlug().'.png');
     }
 
+    public function transparentPhotoPath()
+    {
+        return 'img/venues/transparent/'.$this->photoSlug().'.png';
+    }
     private function photoSlug()
     {
         return str_slug($this->name.' '.$this->team->id);
