@@ -26,7 +26,7 @@ class Venues extends Model
 
     public function transparentPhotoUrl()
     {
-        return url('img/venues/'.$this->photoSlug().'-transparent.png');
+        return url('img/venues/transparent/'.$this->photoSlug().'-transparent.png');
     }
 
     private function photoSlug()
