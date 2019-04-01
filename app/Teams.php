@@ -105,7 +105,7 @@ class Teams extends Model
             ->whereNotNull('game_id')
             ->orderBy('created_at', 'ASC')
             ->get();
-        $unsentTweets->load(['game']);
+        $unsentTweets->load(['game.homeTeam', 'game.awayTeam']);
 
         if(!$unsentTweets) {
             return;
@@ -170,7 +170,7 @@ class Teams extends Model
 
         // Post the tweet on production
         Twitter::postTweet([
-            'status' => '#'.hashTagFormat($game->awayTeam->nickname).' '.$game->away_score.' #'.hashTagFormat($game->homeTeam->nickname).' '.$game->home_score.' - Final',
+            'status' => '#'.hashTagFormat($game->homeTeam->nickname).' '.$game->home_score.' #'.hashTagFormat($game->awayTeam->nickname).' '.$game->away_score.' - Final',
             'media_ids' => $media ? $media->media_id : null
         ]);
     }
