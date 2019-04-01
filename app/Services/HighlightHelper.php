@@ -15,7 +15,6 @@ class HighlightHelper
         'ice hockey',
         'basketball moves',
         'player',
-        'baseball player'
     ];
 
     const BLACKLIST = [
