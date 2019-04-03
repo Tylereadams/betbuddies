@@ -42,6 +42,10 @@ class Games extends Model
                 // Update game's bets
                 $game->updateBets();
 
+                // Send final tweet for game's to team's twitter account
+                $game->homeTeam->sendEndTweet($game);
+                $game->awayTeam->sendEndTweet($game);
+
             } else { // Game upcoming
                 $status = Games::UPCOMING;
             }
@@ -259,6 +263,11 @@ class Games extends Model
                 $bet->save();
             }
         }
+    }
+
+    public function isOvertime()
+    {
+        return $this->period > $this->league->getTotalPeriods() ? true : false;
     }
 
 

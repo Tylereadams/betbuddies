@@ -64,15 +64,17 @@ class TweetEndCommand extends Command
             }
 
             // Only send the ending tweet once, didn't want to save these tweets to DB so storing in cache for 72 hours if it got sent
-            Cache::remember('ending-tweet-'.$game->id, 60 * 72, function ()use($game) {
+            if(!Cache::has('ending-tweet-'.$game->id)) {
+                Cache::remember('ending-tweet-'.$game->id, 72 * 3600, function ()use($game) {
 
-                echo "ending-tweet-".$game->id."\n";
-                echo 'sent yankees tweet'."\n";
-                echo 'sent tigers tweet'."\n";
+                    echo "ending-tweet-".$game->id."\n";
+                    echo 'sent '.$game->homeTeam->nickname.' tweet'."\n";
+                    echo 'sent '.$game->awayTeam->nickname.' tweet'."\n";
 //                $game->homeTeam->sendEndTweet($game);
 //                $game->awayTeam->sendEndTweet($game);
 //                return true;
-            });
+                });
+            }
         }
     }
 }
