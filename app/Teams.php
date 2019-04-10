@@ -4,9 +4,11 @@ namespace App;
 
 use App\Services\CardCreator;
 use Illuminate\Database\Eloquent\Model;
+use Psy\Exception\RuntimeException;
 use Thujohn\Twitter\Facades\Twitter;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Log;
 
 class Teams extends Model
 {
@@ -122,16 +124,21 @@ class Teams extends Model
             }
 
             echo "posting tweet ".$unsentTweet->video_url."\n";
+
             if (\App::environment('production'))
             {
-                // Post the tweet on production
-                if(Twitter::postTweet([
-                    'status' => '#'.hashTagFormat($unsentTweet->game->homeTeam->nickname).' '.$unsentTweet->game->home_score.' #'.hashTagFormat($unsentTweet->game->awayTeam->nickname).' '.$unsentTweet->game->away_score.'                                               
+                // Try to post the tweet on production
+                try {
+                    if(Twitter::postTweet([
+                        'status' => '#'.hashTagFormat($unsentTweet->game->awayTeam->nickname).' '.$unsentTweet->game->away_score.' #'.hashTagFormat($unsentTweet->game->homeTeam->nickname).' '.$unsentTweet->game->home_score.'                                                
                                              '.$unsentTweet->getTweetUrl().'/video/1'
-                ])) {
-                    $unsentTweet->sent_at = Carbon::now();
-                    $unsentTweet->save();
-                };
+                    ])) {
+                        $unsentTweet->sent_at = Carbon::now();
+                        $unsentTweet->save();
+                    };
+                } catch(RuntimeException $e) {
+                    Log::error($e);
+                }
             }
 
             $postedTweets[] = $unsentTweet;
@@ -168,11 +175,16 @@ class Teams extends Model
             $media = Twitter::uploadMedia(['media' => $cardImage->stream()]);
         }
 
-        // Post the tweet on production
-        Twitter::postTweet([
-            'status' => '#'.hashTagFormat($game->homeTeam->nickname).' '.$game->home_score.' #'.hashTagFormat($game->awayTeam->nickname).' '.$game->away_score.' - Final',
-            'media_ids' => $media ? $media->media_id : null
-        ]);
+        // Try to post the tweet
+        try {
+            Twitter::postTweet([
+                'status' => '#'.hashTagFormat($game->awayTeam->nickname).' '.$game->away_score.' #'.hashTagFormat($game->homeTeam->nickname).' '.$game->home_score.' - Final'. $game->isOvertime() ? ' / OT' : '',
+                'media_ids' => $media ? $media->media_id : null
+            ]);
+        } catch(RuntimeException $e) {
+            Log::error($e);
+        }
+
     }
 
     /**
