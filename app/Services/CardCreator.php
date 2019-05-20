@@ -11,8 +11,8 @@ class CardCreator
 
     public function __construct($game)
     {
-        $this->imageHeight = 700;
-        $this->imageWidth = 1200;
+        $this->imageHeight = 800;
+        $this->imageWidth = 1280;
 
         $this->logoOffsetWidth =  intval($this->imageWidth / 8);
         $this->logoOffsetHeigth =  intval($this->imageHeight / 10);

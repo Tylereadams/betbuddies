@@ -165,26 +165,10 @@ class Teams extends Model
 
         echo $this->nickname." sending final tweet\n";
 
-        // Draw the card with Final score
-        $cardCreator = new CardCreator($game);
-        $cardImage = $cardCreator->getGameCard();
-
-        $media = null;
-        if($cardImage) {
-            // Get media ID from twitter, required to post image.
-            $media = Twitter::uploadMedia(['media' => $cardImage->stream()]);
-        }
-
-        // Try to post the tweet
-        try {
-            Twitter::postTweet([
-                'status' => '#'.hashTagFormat($game->awayTeam->nickname).' '.$game->away_score.' #'.hashTagFormat($game->homeTeam->nickname).' '.$game->home_score.' - Final'. $game->isOvertime() ? ' / OT' : '',
-                'media_ids' => $media ? $media->media_id : null
-            ]);
-        } catch(RuntimeException $e) {
-            Log::error($e);
-        }
-
+        // TODO: Do something about this hard-coded url
+        Twitter::postTweet([
+            'status' => 'http://www.findhighlights.com/'.$game->league->name.'/'.str_slug($game->homeTeam->nickname, '-').'/'.$game->url_segment,
+        ]);
     }
 
     /**
