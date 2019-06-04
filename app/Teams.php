@@ -167,7 +167,7 @@ class Teams extends Model
 
         // TODO: Do something about this hard-coded url
         Twitter::postTweet([
-            'status' => 'http://www.findhighlights.com/'.$game->league->name.'/'.str_slug($game->homeTeam->nickname, '-').'/'.$game->url_segment,
+            'status' => '#'.$game->awayTeam->nickname.' '.$game->away_score.' #'.$game->homeTeam->nickname.' '.$game->home_score.' http://www.findhighlights.com/'.$game->league->name.'/'.str_slug($game->homeTeam->nickname, '-').'/'.$game->url_segment,
         ]);
     }
 
