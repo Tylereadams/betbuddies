@@ -70,7 +70,7 @@ class HighlightHelper
                         return true;
                     }
 
-                    print "failed: ".$description." ".$score."\n";
+                    print "failed: ".$description." ".$score."\n\n";
                     continue;
                 }
 
