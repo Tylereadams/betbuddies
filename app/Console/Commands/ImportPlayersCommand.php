@@ -57,6 +57,7 @@ class ImportPlayersCommand extends Command
             // Insert players
             foreach($playerData as $key => $player){
 
+                // First line is headers, skip it or if player is the defense
                 if($key == 0 || !$player[0] || $player[3] == 'DST'){
                     continue;
                 }
@@ -79,23 +80,23 @@ class ImportPlayersCommand extends Command
             }
 
             // Pull players
-//            $players = Players::whereNotNull('team_id')->whereNull('twitter')->get();
+            $players = Players::whereNotNull('team_id')->whereNull('twitter')->get();
 
             // Lookup their twitter handle via Twitter API
-//            foreach($players as $updatedPlayer){
-//                $results = Twitter::getUsersSearch([
-//                    'q' => $updatedPlayer->first_name.' '.$updatedPlayer->last_name,
-//                    'count' => 3
-//                ]);
-//
-//                if(empty($results) || !$results[0]->verified){
-//                    continue;
-//                }
-//
-//                $updatedPlayer->twitter = $results[0]->screen_name;
-//                $updatedPlayer->updated_at = Carbon::now()->format('Y-m-d H:i:s');
-//                $updatedPlayer->save();
-//            }
+            foreach($players as $updatedPlayer){
+                $results = Twitter::getUsersSearch([
+                    'q' => $updatedPlayer->first_name.' '.$updatedPlayer->last_name,
+                    'count' => 3
+                ]);
+
+                if(empty($results) || !$results[0]->verified){
+                    continue;
+                }
+
+                $updatedPlayer->twitter = $results[0]->screen_name;
+                $updatedPlayer->updated_at = Carbon::now()->format('Y-m-d H:i:s');
+                $updatedPlayer->save();
+            }
         }
     }
 
