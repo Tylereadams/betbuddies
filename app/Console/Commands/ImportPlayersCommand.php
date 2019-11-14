@@ -58,7 +58,7 @@ class ImportPlayersCommand extends Command
             foreach($playerData as $key => $player){
 
                 // First line is headers, skip it or if player is the defense
-                if($key == 0 || !$player[0] || $player[3] == 'DST'){
+                if($key == 0 || !$player[0] || $player[5] == 'DST'){
                     continue;
                 }
 
