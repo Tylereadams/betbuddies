@@ -132,9 +132,9 @@ class ImportPlayersCommand extends Command
                 break;
             case 'nfl':
                 $playerData = [
-                    'name' => $player[1],
-                    'teamName' => $player[2],
-                    'position' => $player[3],
+                    'name' => $player[3],
+                    'teamName' => $player[4],
+                    'position' => preg_replace('/[0-9]+/', '', $player[5]),
                 ];
                 break;
             case 'nhl':
