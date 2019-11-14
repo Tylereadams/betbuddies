@@ -86,8 +86,6 @@ class LogTeamTweetsCommand extends Command
                         continue;
                     }
 
-                    print "Saving tweet... \n";
-
                     $videoUrl = NULL;
                     // Find best video url
                     if(isset($tweet->extended_entities->media[0]->video_info)) {
@@ -108,6 +106,8 @@ class LogTeamTweetsCommand extends Command
                         'game_id' => $game->id,
                         'period' => $game->period
                     ]);
+
+                    print "Tweet saved... \n\n";
 
                     // Save the new tweet
                     $existingTweets[] = $tweet->id;
