@@ -30,16 +30,16 @@ class Kernel extends ConsoleKernel
 //                  ->dailyAt('4:00');
 
         // Update games for today
-        $schedule->command('betbuddies:import-games')
-            ->everyMinute();
+//        $schedule->command('betbuddies:import-games')
+//            ->everyMinute();
 
         // Keep the schedule up to date a week in advance
-        $schedule->command('betbuddies:import-games '.strtotime('+7 days'))
-            ->dailyAt(5);
+//        $schedule->command('betbuddies:import-games '.strtotime('+7 days'))
+//            ->dailyAt(5);
 
         // Tweet the videos for today
-        $schedule->command('betbuddies:tweet-highlights')
-            ->everyMinute();
+//        $schedule->command('betbuddies:tweet-highlights')
+//            ->everyMinute();
 
         // Log the tweets of team accounts
         $schedule->command('betbuddies:log-tweets')
@@ -54,12 +54,12 @@ class Kernel extends ConsoleKernel
             ->everyFiveMinutes();
 
         // Update new bets to the Leaderboard
-        $schedule->command('betbuddies:import-stats 7')
-            ->everyFiveMinutes();
+//        $schedule->command('betbuddies:import-stats 7')
+//            ->everyFiveMinutes();
 
         // Tweet status messages for today
-        $schedule->command('betbuddies:send-final-tweet')
-            ->everyMinute();
+//        $schedule->command('betbuddies:send-final-tweet')
+//            ->everyMinute();
     }
 
     /**
