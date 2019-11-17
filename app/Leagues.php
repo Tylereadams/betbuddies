@@ -37,12 +37,27 @@ class Leagues extends Model
 
     public function getPeriodLabel($period)
     {
-        if(($this->id == Self::NBA_ID || $this->id == Self::NFL_ID) && $period > 5){
+        if(($this->id == Self::NBA_ID || $this->id == Self::NFL_ID) && $period > 4){
             return 'OT';
         } elseif($this->id == Self::NHL_ID  && $period > 3){
             return 'OT';
         } else {
             return $this->period_label;
+        }
+    }
+
+    public function getTotalPeriods()
+    {
+        switch($this->id) {
+            case Self::NBA_ID || Self::NFL_ID:
+                return 4;
+                break;
+            case Self::MLB_ID:
+                return 9;
+                break;
+            case Self::NHL_ID:
+                return 3;
+                break;
         }
     }
 }

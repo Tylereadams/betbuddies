@@ -181,7 +181,7 @@ class Teams extends Model
         foreach($teamHandles as $handle){
             // Cache the twitter timeline for 3 minutes so we don't hit a rate limit
             $timelines[] = Cache::remember($handle.'-twitter-timeline', 3, function () use($handle) {
-                    return Twitter::getUserTimeline(['screen_name' => $handle, 'count' => 50, 'include_entities' => 1]);
+                    return Twitter::getUserTimeline(['screen_name' => $handle, 'count' => 200, 'include_entities' => 1]);
                 });
         }
 

@@ -45,7 +45,7 @@ class HighlightHelper
         // Remember the results of checked tweets for 1 day
         $output = Cache::remember('image-check-'.$tweet->id, 60 * 24, function () use ($imageUrl, $league) {
 
-                print "Checking vision...\n";
+                print "\nChecking vision...\n";
 
                 print $imageUrl." \n";
 
@@ -70,7 +70,7 @@ class HighlightHelper
                         return true;
                     }
 
-                    print "failed: ".$description." ".$score."\n\n";
+                    print "failed: ".$description." ".$score."\n";
                     continue;
                 }
 
